@@ -1,0 +1,222 @@
+window.CHARACTER_PORTRAITS = {
+  ned: {
+    name: "奈德·史塔克",
+    sigil: "狼",
+    image: "",
+    expectedFile: "assets/portraits/ned.webp",
+    alt: "奈德·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用能够体现北境领主与国王之手身份的单人半身剧照。"
+  },
+  catelyn: {
+    name: "凯特琳·史塔克",
+    sigil: "鱼",
+    image: "",
+    expectedFile: "assets/portraits/catelyn.webp",
+    alt: "凯特琳·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用临冬城或五王之战时期的单人剧照。"
+  },
+  robb: {
+    name: "罗柏·史塔克",
+    sigil: "狼",
+    image: "",
+    expectedFile: "assets/portraits/robb.webp",
+    alt: "罗柏·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用北境之王时期、人物正面清晰的剧照。"
+  },
+  sansa: {
+    name: "珊莎·史塔克",
+    sigil: "狼",
+    image: "",
+    expectedFile: "assets/portraits/sansa.webp",
+    alt: "珊莎·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用后期北境造型，突出人物成长后的沉稳气质。"
+  },
+  arya: {
+    name: "艾莉亚·史塔克",
+    sigil: "狼",
+    image: "",
+    expectedFile: "assets/portraits/arya.webp",
+    alt: "艾莉亚·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用人物面部清晰、能够体现无面者训练或归家阶段的剧照。"
+  },
+  bran: {
+    name: "布兰·史塔克",
+    sigil: "鸦",
+    image: "",
+    expectedFile: "assets/portraits/bran.webp",
+    alt: "布兰·史塔克电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用三眼乌鸦阶段的正面人物剧照。"
+  },
+  jon: {
+    name: "琼恩·雪诺",
+    sigil: "雪",
+    image: "",
+    expectedFile: "assets/portraits/jon.webp",
+    alt: "琼恩·雪诺电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用守夜人总司令或北境之王时期的单人剧照。"
+  },
+  tywin: {
+    name: "泰温·兰尼斯特",
+    sigil: "狮",
+    image: "",
+    expectedFile: "assets/portraits/tywin.webp",
+    alt: "泰温·兰尼斯特电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用小议会、战场营帐或凯岩城风格的威严剧照。"
+  },
+  cersei: {
+    name: "瑟曦·兰尼斯特",
+    sigil: "狮",
+    image: "",
+    expectedFile: "assets/portraits/cersei.webp",
+    alt: "瑟曦·兰尼斯特电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用女王时期的正面剧照，人物服装和神情应清晰。"
+  },
+  jaime: {
+    name: "詹姆·兰尼斯特",
+    sigil: "剑",
+    image: "",
+    expectedFile: "assets/portraits/jaime.webp",
+    alt: "詹姆·兰尼斯特电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用御林铁卫或北上抗击亡者时期的单人剧照。"
+  },
+  tyrion: {
+    name: "提利昂·兰尼斯特",
+    sigil: "手",
+    image: "",
+    expectedFile: "assets/portraits/tyrion.webp",
+    alt: "提利昂·兰尼斯特电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用国王之手或女王之手时期、表情清晰的剧照。"
+  },
+  brienne: {
+    name: "布蕾妮·塔斯",
+    sigil: "盾",
+    image: "",
+    expectedFile: "assets/portraits/brienne.webp",
+    alt: "布蕾妮·塔斯电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用册封骑士前后或持守誓剑时期的剧照。"
+  },
+  daenerys: {
+    name: "丹妮莉丝·坦格利安",
+    sigil: "龙",
+    image: "",
+    expectedFile: "assets/portraits/daenerys.webp",
+    alt: "丹妮莉丝·坦格利安电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用龙之母或登陆龙石岛后的单人剧照。"
+  },
+  jorah: {
+    name: "乔拉·莫尔蒙",
+    sigil: "熊",
+    image: "",
+    expectedFile: "assets/portraits/jorah.webp",
+    alt: "乔拉·莫尔蒙电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用守护丹妮莉丝或临冬城大战时期的剧照。"
+  },
+  sam: {
+    name: "山姆威尔·塔利",
+    sigil: "书",
+    image: "",
+    expectedFile: "assets/portraits/sam.webp",
+    alt: "山姆威尔·塔利电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用守夜人或学城阶段、人物面部清晰的剧照。"
+  },
+  stannis: {
+    name: "史坦尼斯·拜拉席恩",
+    sigil: "鹿",
+    image: "",
+    expectedFile: "assets/portraits/stannis.webp",
+    alt: "史坦尼斯·拜拉席恩电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用龙石岛称王或北上长城时期的单人剧照。"
+  },
+  littlefinger: {
+    name: "培提尔·贝里席",
+    sigil: "雀",
+    image: "",
+    expectedFile: "assets/portraits/littlefinger.webp",
+    alt: "小指头培提尔·贝里席电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用君临宫廷或谷地时期，能够体现权谋气质的剧照。"
+  },
+  varys: {
+    name: "瓦里斯",
+    sigil: "蛛",
+    image: "",
+    expectedFile: "assets/portraits/varys.webp",
+    alt: "瓦里斯电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用小议会或与提利昂交谈时期的单人剧照。"
+  },
+  bronn: {
+    name: "波隆",
+    sigil: "弩",
+    image: "",
+    expectedFile: "assets/portraits/bronn.webp",
+    alt: "波隆电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用佣兵、黑水河爵士或持弩谈判时期的剧照。"
+  },
+  nightking: {
+    name: "夜王",
+    sigil: "冰",
+    image: "",
+    expectedFile: "assets/portraits/nightking.webp",
+    alt: "夜王电视剧人物剧照",
+    sourceName: "",
+    sourceUrl: "",
+    rights: "待确认授权或合理使用依据",
+    sceneNote: "建议选用人物正面、冰晶特征清晰的小尺寸剧照。"
+  }
+};
