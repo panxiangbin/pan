@@ -43,9 +43,14 @@
 
   ensureStylesheet("portraits.css");
   ensureStylesheet("seasons.css");
+  ensureStylesheet("season-details.css");
 
   Promise.all([
     loadScript("portraits-data.js").then(() => loadScript("portraits.js")),
-    loadScript("seasons-data.js").then(() => loadScript("seasons.js"))
+    loadScript("season-cover-sprite.js")
+      .then(() => loadScript("seasons-data.js"))
+      .then(() => loadScript("season-media-data.js"))
+      .then(() => loadScript("seasons.js"))
+      .then(() => loadScript("season-details.js"))
   ]).catch(error => console.error("扩展模块加载失败：", error));
 })();
