@@ -76,7 +76,7 @@
     }, 140);
   }
 
-  function chapterMarkup(chapter, index, seasonNumber) {
+  function chapterMarkup(chapter, index) {
     const place = window.WORLD_DATA?.locations?.find(item => item.id === chapter.location);
     return `
       <article class="season-chapter-card">
@@ -102,10 +102,15 @@
     if (!match) return;
     const seasonNumber = Number(match[1]);
     const seasonMedia = media[seasonNumber];
-    if (!seasonMedia || panelContent.dataset.chapterSeason === String(seasonNumber)) return;
+    const alreadyRendered = panelContent.dataset.chapterSeason === String(seasonNumber)
+      && panelContent.querySelector(".season-chapter-section")
+      && panelContent.querySelector(".season-detail-visual");
+    if (!seasonMedia || alreadyRendered) return;
 
     const hero = panelContent.querySelector(".season-detail-hero");
     if (!hero) return;
+
+    panelContent.querySelectorAll(".season-detail-visual, .season-chapter-section").forEach(node => node.remove());
 
     const visual = document.createElement("section");
     visual.className = "season-detail-visual";
@@ -131,7 +136,7 @@
         <span class="season-chapter-total">覆盖本季主要集数</span>
       </div>
       <div class="season-chapter-list">
-        ${seasonMedia.chapters.map((chapter, index) => chapterMarkup(chapter, index, seasonNumber)).join("")}
+        ${seasonMedia.chapters.map((chapter, index) => chapterMarkup(chapter, index)).join("")}
       </div>
     `;
 
