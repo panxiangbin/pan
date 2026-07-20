@@ -16,7 +16,7 @@
   ];
 
   const CHARACTER_IDS = new Map([
-    ["奈德", "ned"], ["劳勃", "ned"], ["凯特琳", "catelyn"], ["罗柏", "robb"],
+    ["奈德", "ned"], ["凯特琳", "catelyn"], ["罗柏", "robb"],
     ["珊莎", "sansa"], ["艾莉亚", "arya"], ["布兰", "bran"], ["琼恩", "jon"],
     ["泰温", "tywin"], ["瑟曦", "cersei"], ["詹姆", "jaime"], ["提利昂", "tyrion"],
     ["布蕾妮", "brienne"], ["丹妮莉丝", "daenerys"], ["乔拉", "jorah"], ["山姆", "sam"],
