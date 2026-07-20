@@ -44,6 +44,7 @@
   ensureStylesheet("portraits.css");
   ensureStylesheet("seasons.css");
   ensureStylesheet("season-details.css");
+  ensureStylesheet("season-navigation.css");
 
   Promise.all([
     loadScript("portraits-data.js").then(() => loadScript("portraits.js")),
