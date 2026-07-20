@@ -1,0 +1,19 @@
+{
+  "name": "七国风云图志",
+  "short_name": "七国图志",
+  "description": "权力的游戏与冰与火之歌非官方中文互动地图资料站",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1014",
+  "theme_color": "#11151a",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
