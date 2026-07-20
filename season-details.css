@@ -119,6 +119,8 @@
     linear-gradient(135deg, rgba(198, 168, 103, .055), transparent 42%),
     rgba(255, 255, 255, .025);
   transition: border-color .2s ease, transform .2s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: 220px;
 }
 
 .season-chapter-card:hover {
@@ -169,7 +171,8 @@
   cursor: pointer;
 }
 
-.season-chapter-place:hover {
+.season-chapter-place:hover,
+.season-chapter-place:focus-visible {
   color: #d8e8e7;
   border-color: rgba(141, 187, 199, .32);
 }
@@ -194,16 +197,37 @@
   margin-top: 10px;
 }
 
-.season-chapter-characters span {
+.season-chapter-characters span,
+.season-chapter-characters button {
   display: inline-flex;
-  min-height: 24px;
+  min-height: 26px;
   align-items: center;
-  padding: 3px 7px;
+  gap: 4px;
+  padding: 3px 8px;
   border-radius: 99px;
   color: #c9bea3;
   background: rgba(255, 255, 255, .04);
   border: 1px solid rgba(255, 255, 255, .055);
+  font: inherit;
   font-size: 10px;
+}
+
+.season-chapter-characters button {
+  cursor: pointer;
+  transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.season-chapter-characters button i {
+  color: #a9c7ce;
+  font-style: normal;
+  opacity: .75;
+}
+
+.season-chapter-characters button:hover,
+.season-chapter-characters button:focus-visible {
+  color: #f0e4c8;
+  border-color: rgba(198, 168, 103, .28);
+  background: rgba(198, 168, 103, .09);
 }
 
 .season-chapter-tension {
@@ -269,6 +293,7 @@
   .season-chapter-card {
     grid-template-columns: 1fr;
     gap: 8px;
+    contain-intrinsic-size: 270px;
   }
 
   .season-chapter-number {
@@ -289,5 +314,19 @@
 
   .season-chapter-topline {
     align-items: flex-start;
+  }
+
+  .season-chapter-characters span,
+  .season-chapter-characters button {
+    min-height: 32px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .season-chapter-card,
+  .season-chapter-characters button {
+    transition: none;
   }
 }
