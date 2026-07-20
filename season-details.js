@@ -26,11 +26,7 @@
 
   function esc(value = "") {
     return String(value).replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
     }[char]));
   }
 
@@ -55,7 +51,6 @@
       const seasonNumber = seasonNumberFromCard(card);
       const seasonMedia = media[seasonNumber];
       if (!seasonNumber || !seasonMedia) return;
-
       const body = card.querySelector(".season-card-body");
       if (!body) return;
 
@@ -72,7 +67,6 @@
         count.textContent = `${seasonMedia.chapters.length}段剧情章节`;
         meta.appendChild(count);
       }
-
       card.dataset.detailsReady = "true";
     });
   }
@@ -80,20 +74,29 @@
   function goToPlace(placeId) {
     modebar?.querySelector('[data-mode="places"]')?.click();
     window.setTimeout(() => {
-      const marker = document.querySelector(`.location-marker[data-location-id="${placeId}"]`);
-      marker?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      document.querySelector(`.location-marker[data-location-id="${placeId}"]`)
+        ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     }, 140);
   }
 
   function openCharacter(characterId) {
     if (!characterId) return;
-    const targetHash = `#character-${characterId}`;
-    if (window.location.hash === targetHash) {
-      window.location.reload();
-      return;
-    }
-    window.location.hash = targetHash;
-    window.location.reload();
+    const relationButton = document.getElementById("relationshipModeButton")
+      || document.querySelector('[data-mode="relationships"]')
+      || document.querySelector(".relationship-mode-button");
+    relationButton?.click();
+
+    window.setTimeout(() => {
+      const node = document.querySelector(`[data-character-id="${characterId}"]`)
+        || document.querySelector(`[data-character="${characterId}"]`)
+        || document.querySelector(`[data-node-id="${characterId}"]`);
+      if (node) {
+        node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        return;
+      }
+      history.replaceState(null, "", `#character-${characterId}`);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    }, 120);
   }
 
   function characterMarkup(name) {
@@ -105,7 +108,7 @@
   function chapterMarkup(chapter, index) {
     const place = window.WORLD_DATA?.locations?.find(item => item.id === chapter.location);
     return `
-      <article class="season-chapter-card" id="season-chapter-${index + 1}">
+      <article class="season-chapter-card" id="season-chapter-${index + 1}" tabindex="-1">
         <div class="season-chapter-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</div>
         <div class="season-chapter-body">
           <div class="season-chapter-topline">
@@ -119,8 +122,14 @@
           </div>
           <div class="season-chapter-tension"><strong>这一段的关键：</strong>${esc(chapter.tension)}</div>
         </div>
-      </article>
-    `;
+      </article>`;
+  }
+
+  function jumpToChapter(index) {
+    const target = panelContent.querySelector(`#season-chapter-${index + 1}`);
+    if (!target) return;
+    target.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    target.focus({ preventScroll: true });
   }
 
   function decorateDetailPanel() {
@@ -135,7 +144,6 @@
 
     const hero = panelContent.querySelector(".season-detail-hero");
     if (!hero) return;
-
     panelContent.querySelectorAll(".season-detail-visual, .season-chapter-section").forEach(node => node.remove());
 
     const visual = document.createElement("section");
@@ -148,8 +156,7 @@
         <span>原创剧情配图</span>
         <strong>第${seasonNumber}季 · 图文导览</strong>
         <small>图片负责气氛和剧情识别，正文提供可放大的准确文字。</small>
-      </div>
-    `;
+      </div>`;
     artStyle(visual, seasonNumber);
     hero.insertAdjacentElement("afterend", visual);
 
@@ -157,35 +164,33 @@
     chapterSection.className = "info-section season-chapter-section";
     chapterSection.innerHTML = `
       <div class="season-chapter-heading">
-        <div>
-          <span class="eyebrow">Episode Story Chapters</span>
-          <h3>剧情细化 · ${seasonMedia.chapters.length}个章节</h3>
-        </div>
+        <div><span class="eyebrow">Episode Story Chapters</span><h3>剧情细化 · ${seasonMedia.chapters.length}个章节</h3></div>
         <span class="season-chapter-total">人物和地点均可联动查看</span>
       </div>
-      <div class="season-chapter-list">
-        ${seasonMedia.chapters.map((chapter, index) => chapterMarkup(chapter, index)).join("")}
-      </div>
-    `;
+      <nav class="season-chapter-nav" aria-label="本季章节快速跳转">
+        ${seasonMedia.chapters.map((chapter, index) => `<button type="button" data-season-chapter-jump="${index}"><strong>${String(index + 1).padStart(2, "0")}</strong><span>${esc(chapter.range)}</span></button>`).join("")}
+      </nav>
+      <div class="season-chapter-list">${seasonMedia.chapters.map(chapterMarkup).join("")}</div>`;
 
     const summarySection = [...panelContent.querySelectorAll(".info-section")]
       .find(section => section.querySelector("h3")?.textContent.trim() === "本季概述");
     if (summarySection) summarySection.insertAdjacentElement("afterend", chapterSection);
     else visual.insertAdjacentElement("afterend", chapterSection);
 
+    chapterSection.querySelectorAll("[data-season-chapter-jump]").forEach(button => {
+      button.addEventListener("click", () => jumpToChapter(Number(button.dataset.seasonChapterJump)));
+    });
     chapterSection.querySelectorAll("[data-season-chapter-place]").forEach(button => {
       button.addEventListener("click", () => goToPlace(button.dataset.seasonChapterPlace));
     });
     chapterSection.querySelectorAll("[data-season-character]").forEach(button => {
       button.addEventListener("click", () => openCharacter(button.dataset.seasonCharacter));
     });
-
     panelContent.dataset.chapterSeason = String(seasonNumber);
   }
 
   function clearPanelMarker() {
-    const match = panelType?.textContent.trim().match(/^第([1-8])季剧情$/);
-    if (!match) delete panelContent.dataset.chapterSeason;
+    if (!panelType?.textContent.trim().match(/^第([1-8])季剧情$/)) delete panelContent.dataset.chapterSeason;
   }
 
   function refresh() {
@@ -198,7 +203,6 @@
   observer.observe(seasonOverlay, { childList: true, subtree: true });
   observer.observe(panelContent, { childList: true, subtree: true });
   if (panelType) observer.observe(panelType, { childList: true, characterData: true, subtree: true });
-
   window.addEventListener("hashchange", () => window.setTimeout(refresh, 80));
   window.addEventListener("pageshow", refresh);
   refresh();
