@@ -1,0 +1,368 @@
+/* 第二版增强：人物关系网络、SEO 与移动端可读性 */
+.relation-mode-button span {
+  color: #d69a9a;
+}
+
+.relationship-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  overflow: auto;
+  padding: 20px;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 18% 15%, rgba(125, 169, 181, .13), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(176, 78, 72, .13), transparent 30%),
+    linear-gradient(180deg, rgba(9, 15, 19, .98), rgba(11, 18, 23, .985));
+  cursor: default;
+  touch-action: pan-y;
+}
+
+.relationship-overlay[hidden] {
+  display: none !important;
+}
+
+.relationship-mode > #worldMap,
+.relationship-mode > .map-legend,
+.relationship-mode > .drag-hint {
+  visibility: hidden;
+}
+
+.relation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 22px;
+  margin-bottom: 14px;
+}
+
+.relation-header h2 {
+  margin: 4px 0 6px;
+  color: #f2e6ca;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 25px;
+}
+
+.relation-header p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 13px;
+}
+
+.relation-controls {
+  display: grid;
+  grid-template-columns: 170px minmax(190px, 250px) auto;
+  align-items: end;
+  gap: 9px;
+}
+
+.relation-controls label {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.relation-controls select,
+.relation-controls input,
+.relation-controls button {
+  width: 100%;
+  height: 39px;
+  margin-top: 5px;
+  border: 1px solid rgba(222, 231, 230, .14);
+  border-radius: 10px;
+  color: var(--text);
+  background: rgba(255, 255, 255, .045);
+}
+
+.relation-controls select,
+.relation-controls input {
+  padding: 0 11px;
+}
+
+.relation-controls button {
+  min-width: 92px;
+  padding-inline: 13px;
+  cursor: pointer;
+  color: #f2e5c7;
+  border-color: rgba(198, 168, 103, .25);
+  background: rgba(198, 168, 103, .1);
+}
+
+.relation-controls button:hover {
+  background: rgba(198, 168, 103, .18);
+}
+
+.relation-canvas-wrap {
+  position: relative;
+  min-height: 610px;
+  overflow: hidden;
+  border: 1px solid rgba(214, 226, 224, .11);
+  border-radius: 17px;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(198, 168, 103, .035), transparent 58%),
+    #0b1217;
+  background-size: 42px 42px, 42px 42px, auto, auto;
+}
+
+#relationshipGraph {
+  display: block;
+  width: 100%;
+  min-height: 600px;
+  user-select: none;
+}
+
+.relation-edge {
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  opacity: .68;
+  transition: opacity .2s ease, stroke-width .2s ease;
+}
+
+.relation-edge.is-active {
+  opacity: .95;
+  stroke-width: 4.8;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.08));
+}
+
+.relation-edge.is-dimmed {
+  opacity: .07;
+}
+
+.relation-node {
+  cursor: pointer;
+  outline: none;
+  transition: opacity .2s ease;
+}
+
+.relation-node.dimmed {
+  opacity: .13;
+}
+
+.relation-node-ring {
+  fill: rgba(5, 10, 13, .92);
+  stroke-width: 3;
+  transition: r .2s ease, filter .2s ease, stroke-width .2s ease;
+}
+
+.relation-node-core {
+  opacity: .38;
+}
+
+.relation-node-sigil {
+  fill: #f8edd4;
+  text-anchor: middle;
+  font-size: 19px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.relation-label-bg {
+  fill: rgba(7, 12, 15, .92);
+  stroke: rgba(230, 213, 174, .15);
+}
+
+.relation-node-label {
+  fill: #f0e5cd;
+  text-anchor: middle;
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.relation-node:hover .relation-node-ring,
+.relation-node:focus .relation-node-ring,
+.relation-node.selected .relation-node-ring {
+  r: 36px;
+  stroke-width: 5;
+  filter: drop-shadow(0 0 9px rgba(229, 211, 168, .42));
+}
+
+.relation-node.selected .relation-node-core {
+  opacity: .72;
+}
+
+.relation-legend {
+  position: absolute;
+  right: 13px;
+  bottom: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px 12px;
+  max-width: 690px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 11px;
+  color: #abb9bb;
+  background: rgba(7, 12, 15, .8);
+  backdrop-filter: blur(9px);
+  font-size: 10px;
+}
+
+.relation-legend span,
+.relation-key-list span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.relation-legend i,
+.relation-key-list i {
+  width: 18px;
+  height: 3px;
+  display: inline-block;
+  border-radius: 99px;
+  background: var(--relation-color);
+}
+
+.relation-person-list {
+  display: grid;
+  gap: 8px;
+}
+
+.relation-person-card {
+  width: 100%;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 11px;
+  color: var(--text);
+  background: rgba(255,255,255,.03);
+  text-align: left;
+  cursor: pointer;
+}
+
+.relation-person-card:hover {
+  border-color: rgba(198,168,103,.3);
+  background: rgba(198,168,103,.065);
+}
+
+.relation-person-card strong,
+.relation-person-card small {
+  display: block;
+}
+
+.relation-person-card small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.relation-person-card > i {
+  width: 16px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--relation-color);
+}
+
+.relation-mini-sigil {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--house-color) 55%, transparent);
+  border-radius: 10px;
+  color: #f6e9cc;
+  background: color-mix(in srgb, var(--house-color) 18%, transparent);
+  font-weight: 900;
+}
+
+.relation-key-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  color: #b4c0c1;
+  font-size: 12px;
+}
+
+.relation-tip {
+  padding: 12px;
+  border: 1px solid rgba(198,168,103,.16);
+  border-radius: 12px;
+  background: rgba(198,168,103,.055);
+}
+
+.relation-tip p {
+  margin: 5px 0 0;
+}
+
+.relation-character-hero {
+  border-color: rgba(198,168,103,.22);
+}
+
+@media (max-width: 1180px) {
+  .relation-header {
+    display: block;
+  }
+
+  .relation-controls {
+    margin-top: 13px;
+  }
+}
+
+@media (max-width: 820px) {
+  .relationship-overlay {
+    padding: 13px 10px 18px;
+  }
+
+  .relation-header h2 {
+    font-size: 21px;
+  }
+
+  .relation-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .relation-controls button {
+    grid-column: 1 / -1;
+  }
+
+  .relation-canvas-wrap {
+    min-height: 560px;
+  }
+
+  #relationshipGraph {
+    min-width: 850px;
+    min-height: 555px;
+  }
+
+  .relation-canvas-wrap {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .relation-legend {
+    position: sticky;
+    left: 8px;
+    right: auto;
+    bottom: 8px;
+    width: max-content;
+    max-width: calc(100% - 16px);
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .relation-header p {
+    font-size: 12px;
+  }
+
+  .relation-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .relation-controls button {
+    grid-column: auto;
+  }
+
+  .relation-key-list {
+    grid-template-columns: 1fr;
+  }
+}
