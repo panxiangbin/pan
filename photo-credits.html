@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#11151a">
+  <meta name="description" content="七国风云图志人物剧照来源、授权状态与版权说明。">
+  <title>剧照来源与版权｜七国风云图志</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="portraits.css">
+</head>
+<body>
+  <main class="photo-credit-page">
+    <header>
+      <span class="eyebrow">Photo Credits & Rights</span>
+      <h1>人物剧照来源与版权</h1>
+      <p>本页记录网站使用的每一张人物图片、素材来源和使用依据。没有完成来源与权利登记的图片不会在人物关系图中启用。当前网站仍以原创符号和文字资料为主。</p>
+    </header>
+
+    <div class="photo-credit-toolbar">
+      <a href="index.html">← 返回互动地图</a>
+      <span id="creditSummary" class="meta-chip">正在读取清单……</span>
+    </div>
+
+    <section class="portrait-policy-callout" style="margin-bottom:16px">
+      <strong>素材使用原则</strong>
+      <p>只使用获得明确授权、具有可再利用许可，或经过具体用途评估后用于评论与人物分析的小尺寸素材；不提供高清原图下载，不建立电视剧剧照图库。收到有效权利通知后会及时核查或移除相关素材。</p>
+    </section>
+
+    <section id="creditGrid" class="photo-credit-grid" aria-live="polite"></section>
+  </main>
+
+  <script src="portraits-data.js"></script>
+  <script>
+    (() => {
+      const data = window.CHARACTER_PORTRAITS || {};
+      const grid = document.getElementById("creditGrid");
+      const summary = document.getElementById("creditSummary");
+      const items = Object.values(data);
+      const ready = items.filter(item => item.image && item.sourceName && item.rights).length;
+      summary.textContent = `已登记 ${ready} / ${items.length} 张`;
+
+      const esc = value => String(value || "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[char]));
+
+      grid.innerHTML = items.map(item => {
+        const readyItem = Boolean(item.image && item.sourceName && item.rights);
+        const source = item.sourceName
+          ? (item.sourceUrl
+            ? `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(item.sourceName)}</a>`
+            : esc(item.sourceName))
+          : "尚未登记";
+        return `
+          <article class="photo-credit-item">
+            <span class="credit-state">${readyItem ? "已登记并启用" : "待添加素材"}</span>
+            <h2>${esc(item.name)}</h2>
+            <p><strong>建议文件：</strong>${esc(item.expectedFile)}</p>
+            <p><strong>来源：</strong>${source}</p>
+            <p><strong>使用依据：</strong>${esc(item.rights)}</p>
+            <p><strong>选图建议：</strong>${esc(item.sceneNote)}</p>
+          </article>
+        `;
+      }).join("");
+    })();
+  </script>
+</body>
+</html>
