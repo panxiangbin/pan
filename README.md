@@ -17,7 +17,28 @@ https://panxiangbin.github.io/pan/
 - 人物关系网络：20 位核心人物、39 条关键关系，可按亲情、爱情、盟友、矛盾和敌对筛选
 - 人物关系与地图地点联动
 - 手机端详情抽屉与横向关系图浏览
+- 真实人物剧照预留位、来源登记、版权状态和缺图占位
+- 独立的剧照来源与版权清单页面
 - 网站图标、安装清单、搜索引擎抓取规则和站点地图
+
+## 人物剧照功能
+
+网站已经支持在人物关系图和人物详情中显示电视剧人物剧照，但仓库默认不附带未经确认授权的影视截图。
+
+启用一张照片需要：
+
+1. 将图片上传到 `assets/portraits/`。
+2. 在 `portraits-data.js` 中填写图片路径。
+3. 同时填写素材来源、来源链接和使用依据。
+4. 提交到 `main` 后自动更新网站。
+
+剧照登记清单：
+
+https://panxiangbin.github.io/pan/photo-credits.html
+
+详细命名和上传规则见：
+
+`assets/portraits/README.md`
 
 ## 使用
 
@@ -41,10 +62,15 @@ https://panxiangbin.github.io/pan/
 - `app.js`：地图、搜索、路线和时间线交互
 - `enhancements.css`：第二版人物关系图样式
 - `enhancements.js`：人物关系数据与交互
-- `runtime-fixes.js`：地图与关系图事件兼容修复
+- `runtime-fixes.js`：地图事件兼容与剧照模块加载
+- `portraits-data.js`：人物剧照路径、来源和版权状态
+- `portraits.css`：人物剧照与来源信息样式
+- `portraits.js`：人物详情、关系图头像和版权提示逻辑
+- `photo-credits.html`：剧照来源与版权清单
+- `assets/portraits/`：已确认可使用的人物图片目录
 - `manifest.webmanifest`：网站安装信息
 - `robots.txt` / `sitemap.xml`：搜索引擎支持
 
 ## 版权说明
 
-本项目为非官方粉丝向资料站。地图、家徽图标和界面均采用原创示意设计，不使用 HBO 官方地图、海报或剧照。人物与世界观相关权利归原作者及相应版权方所有。
+本项目为非官方粉丝向资料站。地图、家徽图标和界面均采用原创示意设计。人物剧照只有在登记来源和使用依据后才应启用，不提供高清原图下载或电视剧剧照图库。人物、剧集与世界观相关权利归原作者及相应版权方所有。
