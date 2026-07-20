@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#11151a">
+  <meta name="description" content="七国风云图志：以原创互动地图探索权力的游戏人物、家族、战争与地点。">
+  <title>七国风云图志｜权力的游戏互动地图</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" id="homeButton" type="button" aria-label="回到地图首页">
+        <span class="brand-mark" aria-hidden="true">♜</span>
+        <span>
+          <strong>七国风云图志</strong>
+          <small>非官方互动资料站</small>
+        </span>
+      </button>
+
+      <div class="search-wrap">
+        <label class="sr-only" for="globalSearch">搜索人物、地点、家族或战争</label>
+        <input id="globalSearch" type="search" autocomplete="off" placeholder="搜索：琼恩、临冬城、史塔克、黑水河……">
+        <button id="clearSearch" type="button" aria-label="清除搜索">×</button>
+        <div id="searchResults" class="search-results" hidden></div>
+      </div>
+
+      <button class="icon-button mobile-only" id="openPanel" type="button" aria-label="打开详情面板">☰</button>
+    </header>
+
+    <nav class="modebar" aria-label="地图模式">
+      <button class="mode-button active" data-mode="places" type="button"><span>⌖</span>地点</button>
+      <button class="mode-button" data-mode="houses" type="button"><span>⚑</span>家族</button>
+      <button class="mode-button" data-mode="routes" type="button"><span>➜</span>人物路线</button>
+      <button class="mode-button" data-mode="timeline" type="button"><span>◷</span>战争时间</button>
+      <button class="mode-button" data-mode="library" type="button"><span>☷</span>资料库</button>
+    </nav>
+
+    <main class="workspace">
+      <section class="map-column" aria-label="互动地图区域">
+        <div class="map-toolbar">
+          <div class="map-status">
+            <span class="pulse-dot"></span>
+            <span id="mapStatus">点击地图地点查看详细资料</span>
+          </div>
+          <div class="map-actions">
+            <button id="zoomOut" type="button" aria-label="缩小地图">−</button>
+            <button id="resetView" type="button">复位</button>
+            <button id="zoomIn" type="button" aria-label="放大地图">＋</button>
+          </div>
+        </div>
+
+        <div class="map-viewport" id="mapViewport">
+          <svg id="worldMap" viewBox="0 0 1400 900" role="img" aria-labelledby="mapTitle mapDesc">
+            <title id="mapTitle">维斯特洛与厄斯索斯原创示意地图</title>
+            <desc id="mapDesc">可点击临冬城、君临、长城、龙石岛、高庭、凯岩城、多恩、铁群岛等地点。</desc>
+            <defs>
+              <filter id="mapShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000000" flood-opacity="0.42"/>
+              </filter>
+              <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <pattern id="seaPattern" width="36" height="18" patternUnits="userSpaceOnUse">
+                <path d="M0 9 Q9 2 18 9 T36 9" fill="none" stroke="rgba(195,214,220,.11)" stroke-width="1"/>
+              </pattern>
+              <pattern id="landTexture" width="28" height="28" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="8" r="1" fill="rgba(80,62,39,.16)"/>
+                <circle cx="20" cy="19" r="1.2" fill="rgba(255,255,255,.08)"/>
+              </pattern>
+              <linearGradient id="seaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#162931"/>
+                <stop offset="100%" stop-color="#09151b"/>
+              </linearGradient>
+              <linearGradient id="westLand" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#b9a77d"/>
+                <stop offset="100%" stop-color="#706449"/>
+              </linearGradient>
+              <linearGradient id="eastLand" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#a78d63"/>
+                <stop offset="100%" stop-color="#5d4d38"/>
+              </linearGradient>
+              <marker id="routeArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L7,3 z" fill="currentColor"/>
+              </marker>
+            </defs>
+
+            <g id="mapScene">
+              <rect width="1400" height="900" fill="url(#seaGradient)"/>
+              <rect width="1400" height="900" fill="url(#seaPattern)"/>
+
+              <g class="map-compass" transform="translate(1270 105)">
+                <circle r="58" fill="rgba(8,14,18,.72)" stroke="#bda36a" stroke-width="2"/>
+                <path d="M0-46 L10-8 L0 0 L-10-8Z M0 46 L9 9 L0 0 L-9 9Z M-46 0 L-9-9 L0 0 L-9 9Z M46 0 L9-9 L0 0 L9 9Z" fill="#bda36a" opacity=".9"/>
+                <text y="-66" text-anchor="middle">北</text>
+              </g>
+
+              <g id="continents" filter="url(#mapShadow)">
+                <path id="westerosLand" class="continent" fill="url(#westLand)" d="M250 75 C330 42 408 70 440 128 C462 168 438 215 455 264 C474 315 538 352 528 414 C521 462 477 486 490 536 C505 595 559 623 535 688 C515 742 456 760 409 819 C366 858 294 838 285 781 C278 741 302 710 281 673 C253 622 208 594 214 529 C220 470 263 443 246 390 C229 338 178 312 192 250 C202 205 240 180 227 138 C218 108 228 87 250 75Z"/>
+                <path class="continent-texture" d="M250 75 C330 42 408 70 440 128 C462 168 438 215 455 264 C474 315 538 352 528 414 C521 462 477 486 490 536 C505 595 559 623 535 688 C515 742 456 760 409 819 C366 858 294 838 285 781 C278 741 302 710 281 673 C253 622 208 594 214 529 C220 470 263 443 246 390 C229 338 178 312 192 250 C202 205 240 180 227 138 C218 108 228 87 250 75Z" fill="url(#landTexture)"/>
+                <path id="essosLand" class="continent" fill="url(#eastLand)" d="M805 185 C912 116 1048 107 1162 150 C1249 182 1317 247 1282 318 C1258 368 1197 374 1179 423 C1163 467 1200 505 1168 545 C1127 596 1042 570 986 602 C925 636 887 704 810 684 C749 668 737 610 693 580 C647 548 599 560 586 511 C572 458 621 426 642 380 C663 333 649 278 693 243 C726 216 763 214 805 185Z"/>
+                <path class="continent-texture" d="M805 185 C912 116 1048 107 1162 150 C1249 182 1317 247 1282 318 C1258 368 1197 374 1179 423 C1163 467 1200 505 1168 545 C1127 596 1042 570 986 602 C925 636 887 704 810 684 C749 668 737 610 693 580 C647 548 599 560 586 511 C572 458 621 426 642 380 C663 333 649 278 693 243 C726 216 763 214 805 185Z" fill="url(#landTexture)"/>
+                <path id="ironIslands" class="island" d="M126 414 l31-17 25 20-17 31-31 4-18-23Z M101 468 l21-12 23 17-10 26-26 3-15-18Z M146 520 l23-11 21 20-16 25-28-3-11-18Z"/>
+                <path id="dragonstoneIsland" class="island" d="M559 494 l28-17 26 12 4 28-24 18-29-9Z"/>
+                <path id="braavosIsland" class="island" d="M730 188 l24-14 26 12-6 27-29 6-17-16Z"/>
+              </g>
+
+              <g id="terrainDetails" opacity=".58">
+                <path class="mountain-line" d="M315 164 l18-28 16 26 22-36 22 39 18-25 20 31"/>
+                <path class="mountain-line" d="M376 511 l18-25 16 24 22-34 20 38 23-28 22 34"/>
+                <path class="mountain-line" d="M430 610 l16-24 18 24 20-31 24 36"/>
+                <path class="river-line" d="M345 244 C316 289 362 329 330 376 C300 420 332 470 315 515"/>
+                <path class="river-line" d="M427 388 C402 430 422 468 402 509 C384 548 414 575 396 612"/>
+                <path class="river-line" d="M1010 280 C953 333 995 372 944 421 C917 447 905 493 938 536"/>
+              </g>
+
+              <g class="region-labels" aria-hidden="true">
+                <text x="350" y="110">塞外</text>
+                <text x="344" y="225">北境</text>
+                <text x="300" y="430">河间地</text>
+                <text x="425" y="500">谷地</text>
+                <text x="260" y="568">西境</text>
+                <text x="420" y="650">河湾地</text>
+                <text x="365" y="776">多恩</text>
+                <text x="840" y="255">自由贸易城邦</text>
+                <text x="1018" y="485">多斯拉克海</text>
+                <text x="1060" y="630">奴隶湾</text>
+              </g>
+
+              <g id="territoryLayer"></g>
+              <g id="routeLayer"></g>
+              <g id="locationLayer"></g>
+              <g id="eventLayer"></g>
+            </g>
+          </svg>
+
+          <div class="map-legend" id="mapLegend">
+            <strong>地图图例</strong>
+            <span><i class="legend-dot capital"></i>主要地点</span>
+            <span><i class="legend-dot castle"></i>城堡与要塞</span>
+            <span><i class="legend-line"></i>人物路线</span>
+          </div>
+
+          <div class="drag-hint" id="dragHint">拖动地图 · 滚轮缩放 · 点击地点</div>
+        </div>
+
+        <section class="timeline-panel" id="timelinePanel" hidden>
+          <div class="timeline-heading">
+            <div>
+              <span class="eyebrow">剧情进程</span>
+              <h2 id="timelineTitle">战争与权力时间线</h2>
+            </div>
+            <output id="timelineYear">序幕</output>
+          </div>
+          <input id="timelineRange" type="range" min="0" max="6" value="0" step="1" aria-label="选择战争时间节点">
+          <div id="timelineTicks" class="timeline-ticks"></div>
+          <article id="timelineDetail" class="timeline-detail"></article>
+        </section>
+      </section>
+
+      <aside class="side-panel" id="sidePanel" aria-label="详细资料">
+        <div class="side-panel-handle mobile-only"></div>
+        <div class="panel-topline">
+          <span class="eyebrow" id="panelType">地图导览</span>
+          <button id="closePanel" class="mobile-only" type="button" aria-label="关闭详情面板">×</button>
+        </div>
+        <div id="panelContent" class="panel-content"></div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p>原创同人示意地图 · 非官方粉丝资料站 · 不使用官方剧照与官方地图</p>
+      <p>第一版持续补充中</p>
+    </footer>
+  </div>
+
+  <noscript>本网站需要启用 JavaScript 才能使用互动地图。</noscript>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
