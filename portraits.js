@@ -168,9 +168,16 @@
   }
 
   function addFooterCreditLink() {
-    if (!footer || footer.querySelector(".photo-credit-link")) return;
+    if (!footer) return;
     const firstLine = footer.querySelector("p");
     if (!firstLine) return;
+
+    if (!firstLine.dataset.portraitPolicyUpdated) {
+      firstLine.replaceChildren(document.createTextNode("原创同人示意地图 · 非官方粉丝资料站 · 剧照仅在登记来源和使用依据后启用 "));
+      firstLine.dataset.portraitPolicyUpdated = "true";
+    }
+
+    if (firstLine.querySelector(".photo-credit-link")) return;
     const link = document.createElement("a");
     link.className = "photo-credit-link";
     link.href = "photo-credits.html";
