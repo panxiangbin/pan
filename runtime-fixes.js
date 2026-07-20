@@ -42,7 +42,10 @@
   }
 
   ensureStylesheet("portraits.css");
-  loadScript("portraits-data.js")
-    .then(() => loadScript("portraits.js"))
-    .catch(error => console.error("人物剧照模块加载失败：", error));
+  ensureStylesheet("seasons.css");
+
+  Promise.all([
+    loadScript("portraits-data.js").then(() => loadScript("portraits.js")),
+    loadScript("seasons-data.js").then(() => loadScript("seasons.js"))
+  ]).catch(error => console.error("扩展模块加载失败：", error));
 })();
