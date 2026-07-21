@@ -10,7 +10,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,16 +36,42 @@ jobs:
           cat /tmp/pan-http.log
           exit 1
 
-      - name: Run production cover browser test
+      - name: Test production code locally
+        env:
+          OUTPUT_PREFIX: local-cover-browser
         run: node tests/cover-browser-smoke.mjs
 
-      - name: Upload screenshot and result
+      - name: Wait for GitHub Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..72}; do
+            html="$(curl -fsSL --max-time 20 'https://panxiangbin.github.io/pan/?v=cover-art-10' || true)"
+            if grep -q 'runtime-fixes.js?v=cover-art-10' <<<"$html"; then
+              echo "GitHub Pages 已发布 cover-art-10"
+              exit 0
+            fi
+            echo "等待 GitHub Pages 发布：第 $i 次"
+            sleep 10
+          done
+          echo "GitHub Pages 在等待时间内未发布 cover-art-10"
+          exit 1
+
+      - name: Test public GitHub Pages in Chromium
+        env:
+          BASE_URL: https://panxiangbin.github.io/pan
+          OUTPUT_PREFIX: public-cover-browser
+        run: node tests/cover-browser-smoke.mjs
+
+      - name: Upload screenshots and results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: production-cover-browser-result
           path: |
-            cover-browser-result.json
-            cover-browser-screenshot.png
+            local-cover-browser-result.json
+            local-cover-browser-screenshot.png
+            public-cover-browser-result.json
+            public-cover-browser-screenshot.png
           if-no-files-found: ignore
           retention-days: 1
