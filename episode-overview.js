@@ -8,6 +8,7 @@
 
   const PROGRESS_KEY = "seven-kingdoms-episode-progress-v1";
   const SPOILER_KEY = "seven-kingdoms-spoiler-season";
+  let refreshFrame = 0;
 
   function readProgress() {
     try {
@@ -21,6 +22,14 @@
   function spoilerLevel() {
     const value = Number(localStorage.getItem(SPOILER_KEY));
     return Number.isFinite(value) && value >= 1 && value <= 8 ? value : 8;
+  }
+
+  function setText(node, value) {
+    if (node && node.textContent !== value) node.textContent = value;
+  }
+
+  function setWidth(node, value) {
+    if (node && node.style.width !== value) node.style.width = value;
   }
 
   function seasonStats(seasonNumber, progress) {
@@ -81,19 +90,23 @@
     const bar = block.querySelector("[data-overall-episode-bar]");
     const continueButton = block.querySelector("[data-overall-episode-continue]");
 
-    if (text) text.textContent = `逐集阅读：${stats.read} / ${stats.total} 集`;
-    if (bar) bar.style.width = `${stats.total ? Math.round(stats.read / stats.total * 100) : 0}%`;
+    setText(text, `逐集阅读：${stats.read} / ${stats.total} 集`);
+    setWidth(bar, `${stats.total ? Math.round(stats.read / stats.total * 100) : 0}%`);
     if (continueButton) {
-      continueButton.dataset.season = String(next.season);
-      continueButton.dataset.episode = String(next.episode);
-      continueButton.dataset.lockedComplete = String(next.lockedComplete);
+      const seasonValue = String(next.season);
+      const episodeValue = String(next.episode);
+      const lockedValue = String(next.lockedComplete);
+      if (continueButton.dataset.season !== seasonValue) continueButton.dataset.season = seasonValue;
+      if (continueButton.dataset.episode !== episodeValue) continueButton.dataset.episode = episodeValue;
+      if (continueButton.dataset.lockedComplete !== lockedValue) continueButton.dataset.lockedComplete = lockedValue;
       continueButton.classList.toggle("locked-complete", next.lockedComplete);
       const label = continueButton.querySelector("span");
-      if (label) {
-        if (next.lockedComplete) label.textContent = `已读完前${spoilerLevel()}季，解锁后继续`;
-        else if (stats.read === stats.total) label.textContent = "八季已读完，重新从第1集浏览";
-        else label.textContent = `继续：第${next.season}季第${next.episode}集`;
-      }
+      const labelText = next.lockedComplete
+        ? `已读完前${spoilerLevel()}季，解锁后继续`
+        : stats.read === stats.total
+          ? "八季已读完，重新从第1集浏览"
+          : `继续：第${next.season}季第${next.episode}集`;
+      setText(label, labelText);
     }
   }
 
@@ -112,26 +125,32 @@
         body.appendChild(block);
       }
 
-      block.querySelector("[data-card-episode-text]").textContent = `逐集 ${stats.read}/${stats.total}`;
-      block.querySelector("[data-card-episode-percent]").textContent = stats.read === stats.total ? "全部读完" : `${stats.percent}%`;
-      block.querySelector("[data-card-episode-bar]").style.width = `${stats.percent}%`;
+      setText(block.querySelector("[data-card-episode-text]"), `逐集 ${stats.read}/${stats.total}`);
+      setText(block.querySelector("[data-card-episode-percent]"), stats.read === stats.total ? "全部读完" : `${stats.percent}%`);
+      setWidth(block.querySelector("[data-card-episode-bar]"), `${stats.percent}%`);
       card.classList.toggle("episodes-complete", stats.read === stats.total);
     });
   }
 
   function refresh() {
+    refreshFrame = 0;
     const progress = readProgress();
     ensureOverall(progress);
     ensureSeasonCards(progress);
   }
 
-  const observer = new MutationObserver(() => window.requestAnimationFrame(refresh));
+  function scheduleRefresh() {
+    if (refreshFrame) return;
+    refreshFrame = window.requestAnimationFrame(refresh);
+  }
+
+  const observer = new MutationObserver(scheduleRefresh);
   observer.observe(overlay, { childList: true, subtree: true });
   if (panelContent) observer.observe(panelContent, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
-  overlay.querySelector("#seasonSpoilerLevel")?.addEventListener("change", refresh);
+  overlay.querySelector("#seasonSpoilerLevel")?.addEventListener("change", scheduleRefresh);
   window.addEventListener("storage", event => {
-    if (event.key === PROGRESS_KEY || event.key === SPOILER_KEY) refresh();
+    if (event.key === PROGRESS_KEY || event.key === SPOILER_KEY) scheduleRefresh();
   });
-  window.addEventListener("pageshow", refresh);
-  refresh();
+  window.addEventListener("pageshow", scheduleRefresh);
+  scheduleRefresh();
 })();
