@@ -24,8 +24,13 @@ https://panxiangbin.github.io/pan/
 - 剧透保护：可选择自己看到第几季，自动遮挡后续季度内容
 - 本地观看与阅读进度：可标记季度、章节和单集是否读完，无需登录
 - 剧情章节和逐集卡片可直接联动人物关系图与地图地点
+- 单集卡片进一步联动相关家族与关键战争时间线
 - 逐集内容支持本季搜索、继续阅读、全部标记和单集分享链接
+- 八季 73 集全局搜索会自动遵守当前剧透保护等级
+- 八季总进度和每季逐集进度会显示在剧情总览卡片中
+- 逐集模块采用延迟加载，失败时提供可见提示和手动重试
 - 手机端详情抽屉、横向关系图、粘性导航和大字图文剧情卡片
+- GitHub Actions 自动检查 JavaScript 语法、剧情数量、地点引用和模块接入
 - 真实人物剧照预留位、来源登记、版权状态和缺图占位
 - 独立的剧照来源与版权清单页面
 - 网站图标、安装清单、搜索引擎抓取规则和站点地图
@@ -41,11 +46,31 @@ https://panxiangbin.github.io/pan/
 - 每季卡片和详情页显示对应原创剧情配图
 - 从人物标签直接进入人物关系网络
 - 从地点按钮直接跳回地图定位
+- 从单集卡片直接进入相关家族势力和关键战争时间线
 - 搜索当前季度中的人物、地点或剧情关键词
+- 在八季总览中跨季度搜索 73 集内容，同时隐藏未解锁季度结果
 - 保存季度、章节和单集三层阅读进度
 - 复制单集深链接，例如 `#season-1-episode-9`
 - 调整剧透保护等级
 - 通过 `#season-1` 到 `#season-8` 直接打开指定季度
+
+## 自动校验
+
+仓库中的 `.github/workflows/validate-site.yml` 会在提交到 `main` 或创建 Pull Request 时执行：
+
+```bash
+node tests/validate-site.mjs
+```
+
+校验范围包括：
+
+- 根目录 JavaScript 文件语法
+- 八季概述数量与顺序
+- 40 个章节导读的字段和地图地点引用
+- 73 集逐集数据的集数连续性、字段和地点引用
+- 八季封面压缩图集格式
+- 逐集搜索、进度、家族战争联动和加载重试模块是否完整接入
+- 关键文件中是否出现乱码替换字符
 
 ## 人物剧照功能
 
@@ -88,7 +113,7 @@ https://panxiangbin.github.io/pan/photo-credits.html
 - `app.js`：地图、搜索、路线和时间线交互
 - `enhancements.css`：人物关系图样式
 - `enhancements.js`：人物关系数据与交互
-- `runtime-fixes.js`：地图事件兼容与扩展模块加载
+- `runtime-fixes.js`：地图事件兼容、延迟加载和失败重试
 - `seasons-data.js`：八季概述、人物和地点数据
 - `seasons.css`：八季剧情卡片、剧透保护和进度样式
 - `seasons.js`：剧情导览、剧透等级、观看进度和地图跳转
@@ -100,6 +125,12 @@ https://panxiangbin.github.io/pan/photo-credits.html
 - `episode-data.js`：八季 73 集逐集剧情数据
 - `episode-guide.js`：逐集搜索、进度、人物地点联动和深链接
 - `episode-guide.css`：逐集卡片、双阅读模式和手机端粘性导航样式
+- `episode-overview.js` / `episode-overview.css`：八季总进度与季度逐集进度
+- `episode-search.js` / `episode-search.css`：尊重剧透保护的跨季度搜索
+- `episode-links.js` / `episode-links.css`：单集与家族、战争时间线联动
+- `module-fallback.css`：逐集模块加载提示与重试样式
+- `tests/validate-site.mjs`：静态内容、语法和模块接入校验
+- `.github/workflows/validate-site.yml`：GitHub Actions 自动校验工作流
 - `portraits-data.js`：人物剧照路径、来源和版权状态
 - `portraits.css`：人物剧照与来源信息样式
 - `portraits.js`：人物详情、关系图头像和版权提示逻辑
