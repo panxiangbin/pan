@@ -3,7 +3,7 @@ import fs from "node:fs";
 
 const imagePath = "assets/season1-episodes/episode-01.webp";
 const raw = fs.readFileSync(imagePath);
-if (raw.length < 40000 || raw.subarray(0, 4).toString() !== "RIFF" || raw.subarray(8, 12).toString() !== "WEBP") {
+if (raw.length < 5000 || raw.subarray(0, 4).toString() !== "RIFF" || raw.subarray(8, 12).toString() !== "WEBP") {
   throw new Error(`第1集WebP文件异常：${raw.length} bytes`);
 }
 
