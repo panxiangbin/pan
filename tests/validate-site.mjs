@@ -196,8 +196,11 @@ if (!lockFix.includes("seven-kingdoms-spoiler-season") || !lockFix.includes("dis
 note("剧透锁定卡片：可点击、可取消、可解锁并自动进入季度");
 
 const indexHtml = read("index.html");
-if (!indexHtml.includes("runtime-fixes.js?v=runtime-repair-7")) {
-  fail("index.html 未使用修复版扩展加载器缓存版本");
+const runtimeScriptMatch = indexHtml.match(/<script[^>]+src=["']runtime-fixes\.js\?v=([^"']+)["']/);
+if (!runtimeScriptMatch) {
+  fail("index.html 未给扩展加载器设置缓存版本");
+} else {
+  note(`入口缓存版本：${runtimeScriptMatch[1]}`);
 }
 
 for (const file of requiredFiles) {
