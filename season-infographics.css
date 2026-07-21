@@ -1,0 +1,151 @@
+.season-infographic {
+  position: relative;
+  overflow: hidden;
+  margin: 14px 0 18px;
+  border: 1px solid rgba(198, 168, 103, .18);
+  border-radius: 16px;
+  background: rgba(7, 13, 17, .82);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .22);
+  content-visibility: auto;
+  contain-intrinsic-size: 900px 506px;
+}
+
+.season-infographic-image {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(112, 150, 163, .12), rgba(190, 157, 91, .08));
+}
+
+.season-infographic-image::after {
+  content: "点击打开高清大图";
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 999px;
+  color: #e7dcc2;
+  background: rgba(6, 11, 14, .78);
+  font-size: 11px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events: none;
+}
+
+.season-infographic-image:hover::after,
+.season-infographic-image:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.season-infographic img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  opacity: .7;
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.season-infographic.is-loaded img {
+  opacity: 1;
+}
+
+.season-infographic-image:hover img {
+  transform: scale(1.006);
+}
+
+.season-infographic figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, .055);
+}
+
+.season-infographic figcaption span,
+.season-infographic figcaption strong,
+.season-infographic figcaption small {
+  display: block;
+}
+
+.season-infographic figcaption strong {
+  color: #e4d8bc;
+  font-size: 13px;
+}
+
+.season-infographic figcaption small {
+  margin-top: 3px;
+  color: #829397;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.season-infographic figcaption > a {
+  flex: 0 0 auto;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 11px;
+  border: 1px solid rgba(198, 168, 103, .18);
+  border-radius: 10px;
+  color: #d9caa7;
+  background: rgba(198, 168, 103, .065);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.season-infographic figcaption > a:hover,
+.season-infographic figcaption > a:focus-visible {
+  color: #f1e5c9;
+  border-color: rgba(198, 168, 103, .38);
+  background: rgba(198, 168, 103, .12);
+}
+
+.season-infographic.has-error {
+  border-color: rgba(190, 86, 72, .35);
+}
+
+@media (max-width: 520px) {
+  .season-infographic {
+    margin: 12px 0 16px;
+    border-radius: 13px;
+  }
+
+  .season-infographic figcaption {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+    padding: 11px;
+  }
+
+  .season-infographic figcaption strong {
+    font-size: 14px;
+  }
+
+  .season-infographic figcaption small {
+    font-size: 11px;
+  }
+
+  .season-infographic figcaption > a {
+    width: 100%;
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .season-infographic-image::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .season-infographic img,
+  .season-infographic-image::after {
+    transition: none;
+  }
+}
