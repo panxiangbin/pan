@@ -1,0 +1,43 @@
+name: Season 1 realistic cover V12
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Chromium
+        run: |
+          npm init -y
+          npm install playwright@1.54.1
+          npx playwright install --with-deps chromium
+      - name: Start site
+        run: |
+          python3 -m http.server 4173 >/tmp/pan-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0
+            sleep 1
+          done
+          exit 1
+      - name: Verify realistic cover
+        run: node tests/season1-real-v12.mjs
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: season1-real-v12-result
+          path: |
+            season1-real-v12.json
+            season1-real-v12.png
+          if-no-files-found: ignore
+          retention-days: 1
