@@ -15,6 +15,8 @@ jobs:
           set -euo pipefail
           git clone -q --depth 20 --branch validate-s1-episode-media-batch1 https://github.com/panxiangbin/pan.git repo
           cd repo
+          git config user.name "automation-test"
+          git config user.email "automation-test@example.com"
           git fetch -q origin main:refs/remotes/origin/main
           git merge -q --no-edit origin/main
           npm init -y >/dev/null 2>&1
