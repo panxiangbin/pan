@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4000 1125" role="img" aria-labelledby="title desc">
+  <title id="title">八季原创高清剧情封面图集</title>
+  <desc id="desc">八幅原创暗黑奇幻矢量插画，分别表现北境、五王之战、联盟崩塌、审判与复仇、信仰与统治、史塔克归来、龙与亡者和终局。</desc>
+  <defs>
+    <linearGradient id="s1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071522"/><stop offset=".58" stop-color="#163c58"/><stop offset="1" stop-color="#061018"/></linearGradient>
+    <linearGradient id="s2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#160806"/><stop offset=".55" stop-color="#72240d"/><stop offset="1" stop-color="#120606"/></linearGradient>
+    <linearGradient id="s3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#130b10"/><stop offset=".52" stop-color="#651927"/><stop offset="1" stop-color="#0a080b"/></linearGradient>
+    <linearGradient id="s4" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#171019"/><stop offset=".6" stop-color="#654426"/><stop offset="1" stop-color="#0d0a0d"/></linearGradient>
+    <linearGradient id="s5" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07150f"/><stop offset=".6" stop-color="#315f40"/><stop offset="1" stop-color="#160c0c"/></linearGradient>
+    <linearGradient id="s6" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#061522"/><stop offset=".58" stop-color="#31566b"/><stop offset="1" stop-color="#0e1720"/></linearGradient>
+    <linearGradient id="s7" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#051225"/><stop offset=".6" stop-color="#1e4d72"/><stop offset="1" stop-color="#07111a"/></linearGradient>
+    <linearGradient id="s8" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090b10"/><stop offset=".58" stop-color="#3d2930"/><stop offset="1" stop-color="#07080b"/></linearGradient>
+    <radialGradient id="iceGlow"><stop stop-color="#c4ebff" stop-opacity=".75"/><stop offset="1" stop-color="#7ec8f0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="fireGlow"><stop stop-color="#ffb03b" stop-opacity=".8"/><stop offset="1" stop-color="#ff4a13" stop-opacity="0"/></radialGradient>
+    <radialGradient id="goldGlow"><stop stop-color="#ecc879" stop-opacity=".72"/><stop offset="1" stop-color="#c9953c" stop-opacity="0"/></radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="grain" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence baseFrequency=".7" numOctaves="2" seed="8" type="fractalNoise"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter>
+    <symbol id="castle" viewBox="0 0 700 330">
+      <path fill="#05090d" d="M28 282V154h55v-43l31-31 31 31v43h45V98h66V59l36-36 36 36v39h62v56h44V89h67v-34l34-34 34 34v34h71v65h45v128H28Z"/>
+      <path fill="#142733" d="M105 144h12v28h-12zm103-27h13v33h-13zm95-53h14v36h-14zm164 45h13v34h-13zm106-47h13v35h-13z"/>
+      <path fill="#081017" d="M0 282h700v48H0z"/>
+    </symbol>
+    <symbol id="cloaked" viewBox="0 0 260 420">
+      <circle cx="130" cy="72" r="38" fill="#05080b"/>
+      <path d="M117 105 48 391h173L145 105Z" fill="#05080b"/>
+      <path d="M114 107 6 400h82l54-293Z" fill="#080d12"/>
+      <path d="m71 168 59-37 62 37-14 26-48-28-47 28Z" fill="#192933" opacity=".75"/>
+    </symbol>
+    <symbol id="wolf" viewBox="0 0 360 220">
+      <path fill="#d9e9f0" d="M47 92c31-48 102-63 163-35l44-37 15 53 43 15-43 23-26 41-41-23c-49 35-118 38-172 10l-26-41 43-6Z"/>
+      <path fill="#b9ced9" d="m250 55 34-39 7 49Z"/>
+      <path fill="#091218" d="M286 84a7 7 0 1 1 0 14 7 7 0 0 1 0-14Z"/>
+      <path stroke="#d9e9f0" stroke-width="16" stroke-linecap="round" d="M69 142v60m66-52v55m70-62v60"/>
+      <path stroke="#d9e9f0" stroke-width="20" stroke-linecap="round" d="M42 107 8 82"/>
+    </symbol>
+    <symbol id="crown" viewBox="0 0 420 300">
+      <path fill="#dcb45c" d="M31 247 49 49l88 105L210 18l75 136 87-105 18 198H31Z"/>
+      <path fill="#f2d88c" d="M18 232h384v55H18z"/>
+      <circle cx="49" cy="49" r="19" fill="#f7e7b0"/><circle cx="210" cy="18" r="18" fill="#f7e7b0"/><circle cx="372" cy="49" r="19" fill="#f7e7b0"/>
+    </symbol>
+    <symbol id="sword" viewBox="0 0 70 430">
+      <path fill="#c8d1d6" d="M30 0h10l5 300H25L30 0Z"/><path fill="#e6eef1" d="m35 0 14 35H21L35 0Z"/><path fill="#b89850" d="M4 300h62v17H4zM27 317h16v91H27z"/><circle cx="35" cy="412" r="17" fill="#b89850"/>
+    </symbol>
+    <symbol id="throne" viewBox="0 0 420 500">
+      <path fill="#050608" d="M105 458 68 185l54-83 38 52 50-128 48 128 40-59 55 91-37 272H105Z"/>
+      <path fill="#0d1013" d="M73 394h274v87H73z"/>
+      <g stroke="#14191e" stroke-width="12" stroke-linecap="round"><path d="m82 221-67-146m104 114L76 22m81 151L140 0m58 164L207 0m43 164L274 0m14 183L340 18m-11 195 78-126"/></g>
+    </symbol>
+    <symbol id="dragon" viewBox="0 0 620 350">
+      <path fill="#03070b" d="M279 168c45-34 113-34 160 0l95-93-50 128 120 67-157-20-73 63-61-64-169 25 122-73-56-128 69 95Z"/>
+      <path fill="#020507" d="m218 201-151 113 172-53 46 43 16-72Zm228 19 149 96-170-44-48 45-12-70Z"/>
+      <path fill="#03070b" d="m409 176 145-71-109 116Z"/>
+    </symbol>
+    <symbol id="army" viewBox="0 0 1000 170">
+      <g fill="#06080a"><path d="M0 170V86l18-19 18 19v84m20 0V71l19-20 19 20v99m20 0V88l18-19 18 19v82m23 0V65l20-20 20 20v105m22 0V84l18-19 18 19v86m22 0V73l19-20 19 20v97m22 0V89l18-19 18 19v81m25 0V70l19-20 19 20v100m22 0V85l18-19 18 19v85m24 0V66l20-21 20 21v104m22 0V88l18-19 18 19v82m23 0V72l19-20 19 20v98m23 0V86l18-19 18 19v84m22 0V66l20-21 20 21v104m24 0V85l18-19 18 19v85m22 0V74l19-20 19 20v96m23 0V87l18-19 18 19v83m24 0V67l20-21 20 21v103m22 0V86l18-19 18 19v84m23 0V74l19-20 19 20v96m23 0V86l18-19 18 19v84"/></g>
+    </symbol>
+    <clipPath id="c1"><rect width="1000" height="562.5"/></clipPath>
+    <clipPath id="c2"><rect x="1000" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c3"><rect x="2000" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c4"><rect x="3000" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c5"><rect y="562.5" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c6"><rect x="1000" y="562.5" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c7"><rect x="2000" y="562.5" width="1000" height="562.5"/></clipPath>
+    <clipPath id="c8"><rect x="3000" y="562.5" width="1000" height="562.5"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#c1)">
+    <rect width="1000" height="562.5" fill="url(#s1)"/><circle cx="760" cy="110" r="230" fill="url(#iceGlow)"/>
+    <use href="#castle" x="20" y="95" width="690" height="330"/><use href="#wolf" x="95" y="305" width="330" height="202"/><use href="#cloaked" x="570" y="175" width="260" height="420"/>
+    <g fill="#d9eff8" opacity=".76"><circle cx="70" cy="65" r="3"/><circle cx="132" cy="112" r="2"/><circle cx="190" cy="45" r="3"/><circle cx="282" cy="91" r="2"/><circle cx="347" cy="48" r="2"/><circle cx="845" cy="72" r="3"/><circle cx="918" cy="148" r="2"/><circle cx="533" cy="82" r="2"/><circle cx="468" cy="136" r="3"/></g><rect width="1000" height="562.5" filter="url(#grain)" opacity=".3"/>
+  </g>
+  <g clip-path="url(#c2)" transform="translate(1000)">
+    <rect width="1000" height="562.5" fill="url(#s2)"/><circle cx="500" cy="250" r="330" fill="url(#fireGlow)" filter="url(#soft)"/>
+    <use href="#crown" x="305" y="80" width="390" height="280" filter="url(#glow)"/><use href="#army" x="0" y="390" width="1000" height="170"/>
+    <path fill="#ff7b1a" opacity=".85" d="M0 535 55 455l44 80 55-129 53 129 61-95 43 95 62-151 58 151 46-111 61 111 52-142 64 142 51-91 50 91 65-137 60 137 48-94 54 94 58-155 62 155v27H0Z"/><rect width="1000" height="562.5" filter="url(#grain)" opacity=".3"/>
+  </g>
+  <g clip-path="url(#c3)" transform="translate(2000)">
+    <rect width="1000" height="562.5" fill="url(#s3)"/><circle cx="510" cy="270" r="300" fill="#b92f40" opacity=".18" filter="url(#soft)"/>
+    <g fill="#9f3544" opacity=".48"><rect x="90" y="90" width="115" height="255" rx="55"/><rect x="275" y="70" width="115" height="275" rx="55"/><rect x="610" y="70" width="115" height="275" rx="55"/><rect x="795" y="90" width="115" height="255" rx="55"/></g>
+    <use href="#sword" x="350" y="70" width="70" height="430" transform="rotate(-38 385 285)"/><use href="#sword" x="580" y="70" width="70" height="430" transform="rotate(38 615 285)"/><use href="#army" x="0" y="390" width="1000" height="170"/>
+    <path stroke="#d35d68" stroke-width="5" opacity=".7" d="M70 365h860"/><rect width="1000" height="562.5" filter="url(#grain)" opacity=".32"/>
+  </g>
+  <g clip-path="url(#c4)" transform="translate(3000)">
+    <rect width="1000" height="562.5" fill="url(#s4)"/><circle cx="690" cy="210" r="340" fill="url(#goldGlow)" filter="url(#soft)"/>
+    <use href="#throne" x="520" y="45" width="390" height="465"/><g stroke="#e0bd68" fill="none" stroke-width="8" opacity=".9"><path d="M220 120v300M95 175h250"/><path d="M125 175 80 330m235-155 45 155"/><ellipse cx="80" cy="347" rx="72" ry="27"/><ellipse cx="360" cy="347" rx="72" ry="27"/></g>
+    <use href="#sword" x="870" y="55" width="60" height="390" transform="rotate(18 900 250)"/><rect width="1000" height="562.5" filter="url(#grain)" opacity=".28"/>
+  </g>
+
+  <g clip-path="url(#c5)" transform="translate(0 562.5)">
+    <rect width="1000" height="562.5" fill="url(#s5)"/><circle cx="330" cy="250" r="270" fill="#59c57a" opacity=".22" filter="url(#soft)"/>
+    <path fill="#06100b" d="M185 470V250l160-171 160 171v220H185Z"/><circle cx="345" cy="254" r="150" fill="none" stroke="#73d28b" stroke-width="18" opacity=".6"/>
+    <use href="#dragon" x="440" y="80" width="520" height="300"/><use href="#army" x="0" y="395" width="1000" height="167"/>
+    <g fill="#e8d49a" opacity=".55"><circle cx="345" cy="250" r="13"/><circle cx="310" cy="295" r="7"/><circle cx="382" cy="296" r="7"/></g><rect width="1000" height="562.5" filter="url(#grain)" opacity=".3"/>
+  </g>
+  <g clip-path="url(#c6)" transform="translate(1000 562.5)">
+    <rect width="1000" height="562.5" fill="url(#s6)"/><circle cx="760" cy="100" r="230" fill="url(#iceGlow)"/>
+    <use href="#castle" x="70" y="95" width="700" height="330"/><use href="#cloaked" x="470" y="160" width="270" height="420"/>
+    <path stroke="#d1dde2" stroke-width="13" d="M815 105v390"/><path fill="#8f2832" d="M822 120 995 176 822 275Z"/><use href="#wolf" x="835" y="132" width="150" height="95"/>
+    <g fill="#d9eff8" opacity=".78"><circle cx="61" cy="72" r="3"/><circle cx="129" cy="118" r="2"/><circle cx="215" cy="48" r="3"/><circle cx="913" cy="80" r="3"/><circle cx="760" cy="160" r="2"/><circle cx="420" cy="98" r="2"/></g><rect width="1000" height="562.5" filter="url(#grain)" opacity=".3"/>
+  </g>
+  <g clip-path="url(#c7)" transform="translate(2000 562.5)">
+    <rect width="1000" height="562.5" fill="url(#s7)"/><circle cx="550" cy="180" r="300" fill="#56b8ff" opacity=".19" filter="url(#soft)"/>
+    <path fill="#9fcbe4" opacity=".38" d="M0 480 160 335l165 102 165-162 166 151 179-125 165 179v82H0Z"/>
+    <use href="#dragon" x="190" y="40" width="620" height="350"/><use href="#army" x="0" y="400" width="1000" height="162"/>
+    <g fill="#e8f7ff" opacity=".72"><circle cx="68" cy="70" r="3"/><circle cx="170" cy="120" r="2"/><circle cx="298" cy="55" r="3"/><circle cx="820" cy="92" r="3"/><circle cx="930" cy="165" r="2"/></g><rect width="1000" height="562.5" filter="url(#grain)" opacity=".3"/>
+  </g>
+  <g clip-path="url(#c8)" transform="translate(3000 562.5)">
+    <rect width="1000" height="562.5" fill="url(#s8)"/><circle cx="680" cy="230" r="290" fill="#b65d63" opacity=".16" filter="url(#soft)"/>
+    <use href="#throne" x="540" y="55" width="390" height="455"/><use href="#cloaked" x="250" y="185" width="235" height="380"/>
+    <g fill="#07090c"><rect x="45" y="245" width="85" height="310"/><rect x="145" y="180" width="72" height="375"/><rect x="825" y="220" width="68" height="335"/><rect x="910" y="150" width="62" height="405"/></g>
+    <g fill="#ded7d8" opacity=".62"><circle cx="73" cy="65" r="3"/><circle cx="158" cy="118" r="2"/><circle cx="290" cy="47" r="3"/><circle cx="820" cy="92" r="3"/><circle cx="930" cy="168" r="2"/><circle cx="510" cy="82" r="2"/></g><rect width="1000" height="562.5" filter="url(#grain)" opacity=".34"/>
+  </g>
+</svg>
