@@ -147,6 +147,7 @@
     .then(() => loadScript("seasons-data.js"))
     .then(() => loadScript("season-media-data.js"))
     .then(() => loadScript("seasons.js"))
+    .then(() => loadScript("season-lock-fix.js"))
     .then(() => loadScript("season-details.js"))
     .then(() => loadScript("season-infographics.js"))
     .then(() => {
