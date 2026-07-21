@@ -59,12 +59,12 @@
   }
 
   ensureStylesheet("portraits.css");
-  ensureStylesheet("seasons.css?v=visual-7");
-  ensureStylesheet("season-details.css?v=visual-7");
-  ensureStylesheet("season-navigation.css?v=visual-7");
-  ensureStylesheet("season-infographics.css?v=visual-7");
-  ensureStylesheet("season-visual-refresh.css?v=visual-7");
-  ensureStylesheet("module-fallback.css?v=visual-7");
+  ensureStylesheet("seasons.css?v=cover-art-10");
+  ensureStylesheet("season-details.css?v=cover-art-10");
+  ensureStylesheet("season-navigation.css?v=cover-art-10");
+  ensureStylesheet("season-infographics.css?v=cover-art-10");
+  ensureStylesheet("season-visual-refresh.css?v=cover-art-10");
+  ensureStylesheet("module-fallback.css?v=cover-art-10");
 
   let episodeFeaturesPromise = null;
 
@@ -115,18 +115,18 @@
     if (episodeFeaturesPromise) return episodeFeaturesPromise;
 
     setEpisodeLoading(true);
-    ensureStylesheet("episode-guide.css?v=runtime-repair-7");
-    ensureStylesheet("episode-overview.css?v=runtime-repair-7");
-    ensureStylesheet("episode-search.css?v=runtime-repair-7");
-    ensureStylesheet("episode-links.css?v=runtime-repair-7");
-    ensureStylesheet("story-backlinks.css?v=runtime-repair-7");
+    ensureStylesheet("episode-guide.css?v=cover-art-10");
+    ensureStylesheet("episode-overview.css?v=cover-art-10");
+    ensureStylesheet("episode-search.css?v=cover-art-10");
+    ensureStylesheet("episode-links.css?v=cover-art-10");
+    ensureStylesheet("story-backlinks.css?v=cover-art-10");
 
-    episodeFeaturesPromise = loadScript("episode-data.js?v=runtime-repair-7")
-      .then(() => loadScript("episode-guide.js?v=runtime-repair-7"))
-      .then(() => loadScript("episode-overview.js?v=runtime-repair-7"))
-      .then(() => loadScript("episode-search.js?v=runtime-repair-7"))
-      .then(() => loadScript("episode-links.js?v=runtime-repair-7"))
-      .then(() => loadScript("story-backlinks.js?v=runtime-repair-7"))
+    episodeFeaturesPromise = loadScript("episode-data.js?v=cover-art-10")
+      .then(() => loadScript("episode-guide.js?v=cover-art-10"))
+      .then(() => loadScript("episode-overview.js?v=cover-art-10"))
+      .then(() => loadScript("episode-search.js?v=cover-art-10"))
+      .then(() => loadScript("episode-links.js?v=cover-art-10"))
+      .then(() => loadScript("story-backlinks.js?v=cover-art-10"))
       .then(() => {
         clearEpisodeLoadError();
         setEpisodeLoading(false);
@@ -141,18 +141,19 @@
     return episodeFeaturesPromise;
   }
 
-  const portraitFeatures = loadScript("portraits-data.js?v=runtime-repair-7")
-    .then(() => loadScript("portraits.js?v=runtime-repair-7"));
+  const portraitFeatures = loadScript("portraits-data.js?v=cover-art-10")
+    .then(() => loadScript("portraits.js?v=cover-art-10"));
 
-  const seasonFeatures = loadScript("season-cover-sprite.js?v=hd-cover-7")
-    .then(() => loadScript("seasons-data.js?v=runtime-repair-7"))
-    .then(() => loadScript("season-media-data.js?v=runtime-repair-7"))
-    .then(() => loadScript("seasons.js?v=runtime-repair-7"))
-    .then(() => loadScript("season-lock-fix.js?v=runtime-repair-7"))
-    .then(() => loadScript("season-pointer-rescue.js?v=runtime-repair-7"))
-    .then(() => loadScript("season-details.js?v=visual-7"))
-    .then(() => loadScript("season-cover-polish.js?v=visual-7"))
-    .then(() => loadScript("season-infographics.js?v=visual-7"))
+  const seasonFeatures = loadScript("season-cover-sprite.js?v=cover-art-10")
+    .then(() => loadScript("seasons-data.js?v=cover-art-10"))
+    .then(() => loadScript("season-media-data.js?v=cover-art-10"))
+    .then(() => loadScript("seasons.js?v=cover-art-10"))
+    .then(() => loadScript("season-lock-fix.js?v=cover-art-10"))
+    .then(() => loadScript("season-pointer-rescue.js?v=cover-art-10"))
+    .then(() => loadScript("season-details.js?v=cover-art-10"))
+    .then(() => loadScript("season-cover-polish.js?v=cover-art-10"))
+    .then(() => loadScript("season-cover-direct.js?v=cover-art-10"))
+    .then(() => loadScript("season-infographics.js?v=cover-art-10"))
     .then(() => {
       seasonButton()?.addEventListener("click", () => {
         loadEpisodeFeatures().catch(error => console.error("逐集剧情模块加载失败：", error));
