@@ -1,0 +1,87 @@
+.season-episode-power-links {
+  display: grid;
+  gap: 7px;
+  margin: 0 0 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .018);
+}
+
+.season-episode-power-links > strong {
+  color: #829598;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.season-episode-power-links > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.season-episode-power-links button {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid rgba(198, 168, 103, .13);
+  border-radius: 999px;
+  color: #cfc19d;
+  background: rgba(198, 168, 103, .045);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.season-episode-power-links button span {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #d9c783;
+  background: rgba(198, 168, 103, .1);
+  font-size: 10px;
+}
+
+.season-episode-power-links button.war-link {
+  color: #d5aaa0;
+  border-color: rgba(171, 87, 67, .2);
+  background: rgba(171, 87, 67, .06);
+}
+
+.season-episode-power-links button.war-link span {
+  color: #e1b0a5;
+  background: rgba(171, 87, 67, .12);
+}
+
+.season-episode-power-links button:hover,
+.season-episode-power-links button:focus-visible {
+  color: #f0e4c8;
+  border-color: rgba(198, 168, 103, .34);
+  background: rgba(198, 168, 103, .1);
+}
+
+.season-episode-power-links button.war-link:hover,
+.season-episode-power-links button.war-link:focus-visible {
+  color: #f0cec5;
+  border-color: rgba(183, 91, 70, .38);
+  background: rgba(171, 87, 67, .12);
+}
+
+@media (max-width: 520px) {
+  .season-episode-power-links {
+    padding: 10px;
+  }
+
+  .season-episode-power-links > strong {
+    font-size: 11px;
+  }
+
+  .season-episode-power-links button {
+    min-height: 38px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
