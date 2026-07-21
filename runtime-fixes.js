@@ -62,6 +62,7 @@
   ensureStylesheet("seasons.css");
   ensureStylesheet("season-details.css");
   ensureStylesheet("season-navigation.css");
+  ensureStylesheet("season-infographics.css");
   ensureStylesheet("module-fallback.css");
 
   let episodeFeaturesPromise = null;
@@ -147,6 +148,7 @@
     .then(() => loadScript("season-media-data.js"))
     .then(() => loadScript("seasons.js"))
     .then(() => loadScript("season-details.js"))
+    .then(() => loadScript("season-infographics.js"))
     .then(() => {
       seasonButton()?.addEventListener("click", () => {
         loadEpisodeFeatures().catch(error => console.error("逐集剧情模块加载失败：", error));
