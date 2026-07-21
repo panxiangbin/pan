@@ -1,0 +1,35 @@
+name: Finalize season 1 realistic cover V13
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - assets/upload-season1/CACHE_V13
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bump cache versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/season1-real-12/season1-real-13/g' index.html runtime-fixes.js
+          grep -q 'runtime-fixes.js?v=season1-real-13' index.html
+          grep -q 'season1-real-cover.js?v=season1-real-13' runtime-fixes.js
+      - name: Commit cache bump
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html runtime-fixes.js
+          git commit -m "发布第1季写实封面V13缓存版本"
+          git push origin HEAD:main
