@@ -1,0 +1,92 @@
+.episode-load-error {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 12px 13px;
+  border: 1px solid rgba(190, 99, 76, .3);
+  border-radius: 13px;
+  background:
+    linear-gradient(135deg, rgba(175, 74, 56, .1), rgba(255, 255, 255, .018)),
+    rgba(18, 25, 29, .96);
+}
+
+.episode-load-error > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #ecc2b6;
+  background: rgba(183, 82, 62, .14);
+  border: 1px solid rgba(190, 99, 76, .24);
+  font-weight: 800;
+}
+
+.episode-load-error strong,
+.episode-load-error small {
+  display: block;
+}
+
+.episode-load-error strong {
+  color: #ead8cf;
+  font-size: 13px;
+}
+
+.episode-load-error small {
+  margin-top: 3px;
+  color: #9e8c87;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.episode-load-error button {
+  min-height: 40px;
+  padding: 7px 12px;
+  border: 1px solid rgba(190, 99, 76, .28);
+  border-radius: 10px;
+  color: #eccbc1;
+  background: rgba(183, 82, 62, .09);
+  cursor: pointer;
+}
+
+.episode-load-error button:hover,
+.episode-load-error button:focus-visible {
+  border-color: rgba(212, 123, 100, .5);
+  background: rgba(183, 82, 62, .16);
+}
+
+.episode-module-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: .74;
+}
+
+.episode-module-loading::after {
+  content: "正在加载逐集剧情…";
+  position: absolute;
+  left: 50%;
+  bottom: -31px;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #cfc4aa;
+  background: rgba(11, 17, 21, .92);
+  border: 1px solid rgba(198, 168, 103, .13);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .episode-load-error {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .episode-load-error button {
+    grid-column: 1 / -1;
+    min-height: 48px;
+    width: 100%;
+    font-size: 14px;
+  }
+}
