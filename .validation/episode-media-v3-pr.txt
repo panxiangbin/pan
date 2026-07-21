@@ -1,0 +1,1 @@
+Trigger static validation for season1 episode media v3.
