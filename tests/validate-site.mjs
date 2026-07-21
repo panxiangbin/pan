@@ -54,6 +54,7 @@ const requiredFiles = [
   "episode-search.css",
   "episode-links.js",
   "episode-links.css",
+  "module-fallback.css",
   "runtime-fixes.js"
 ];
 requiredFiles.forEach(read);
@@ -149,9 +150,13 @@ for (const file of [
   "episode-guide.css",
   "episode-overview.css",
   "episode-search.css",
-  "episode-links.css"
+  "episode-links.css",
+  "module-fallback.css"
 ]) {
   if (!runtime.includes(file)) fail(`runtime-fixes.js 未接入：${file}`);
+}
+if (!runtime.includes("dataset.failed") || !runtime.includes("重新加载逐集剧情")) {
+  fail("逐集模块缺少加载失败重试机制");
 }
 
 const indexHtml = read("index.html");
@@ -171,4 +176,4 @@ if (failures.length) {
 console.log("网站校验通过：");
 notes.forEach(message => console.log(`- ${message}`));
 console.log(`- 地图地点：${locations.length} 个，家族：${houses.length} 个，战争节点：${timeline.length} 个`);
-console.log("- 八季配图、40 个章节、73 集逐集剧情、全局搜索及家族战争联动均已接入");
+console.log("- 八季配图、40 个章节、73 集逐集剧情、全局搜索、联动和加载容错均已接入");
