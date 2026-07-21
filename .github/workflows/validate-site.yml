@@ -24,3 +24,6 @@ jobs:
 
       - name: Validate JavaScript and story data
         run: node tests/validate-site.mjs
+
+      - name: Validate season infographics
+        run: node tests/validate-season-infographics.mjs
