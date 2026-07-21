@@ -111,6 +111,52 @@
   border-color: rgba(190, 86, 72, .35);
 }
 
+/*
+ * 季度卡片原先从一张低分辨率八宫格图集中裁切，因此四列布局时会被放大而发虚。
+ * 这里直接复用已经上传的 1600×900 矢量剧情信息图，每季独立加载，缩放时保持清晰。
+ */
+.season-card[data-season-number="1"],
+.season-detail-visual[data-season-art="1"] { --season-hd-art: url("assets/season-detail/season-1.svg"); }
+.season-card[data-season-number="2"],
+.season-detail-visual[data-season-art="2"] { --season-hd-art: url("assets/season-detail/season-2.svg"); }
+.season-card[data-season-number="3"],
+.season-detail-visual[data-season-art="3"] { --season-hd-art: url("assets/season-detail/season-3.svg"); }
+.season-card[data-season-number="4"],
+.season-detail-visual[data-season-art="4"] { --season-hd-art: url("assets/season-detail/season-4.svg"); }
+.season-card[data-season-number="5"],
+.season-detail-visual[data-season-art="5"] { --season-hd-art: url("assets/season-detail/season-5.svg"); }
+.season-card[data-season-number="6"],
+.season-detail-visual[data-season-art="6"] { --season-hd-art: url("assets/season-detail/season-6.svg"); }
+.season-card[data-season-number="7"],
+.season-detail-visual[data-season-art="7"] { --season-hd-art: url("assets/season-detail/season-7.svg"); }
+.season-card[data-season-number="8"],
+.season-detail-visual[data-season-art="8"] { --season-hd-art: url("assets/season-detail/season-8.svg"); }
+
+.season-card-art {
+  background-image:
+    linear-gradient(180deg, rgba(5, 9, 12, .01), rgba(5, 9, 12, .24)),
+    var(--season-hd-art) !important;
+  background-size: 100% 100%, cover !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat !important;
+  image-rendering: auto;
+  filter: none;
+}
+
+.season-detail-visual {
+  background-image:
+    linear-gradient(180deg, rgba(5, 9, 12, .02), rgba(5, 9, 12, .58)),
+    var(--season-hd-art) !important;
+  background-size: 100% 100%, cover !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat !important;
+  image-rendering: auto;
+}
+
+.season-card.locked .season-card-art {
+  filter: blur(2px) saturate(.55);
+}
+
 @media (max-width: 520px) {
   .season-infographic {
     margin: 12px 0 16px;
