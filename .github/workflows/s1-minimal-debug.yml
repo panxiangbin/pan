@@ -15,7 +15,7 @@ jobs:
           set -euo pipefail
           git clone -q --depth 20 --branch validate-s1-episode-media-batch1 https://github.com/panxiangbin/pan.git repo
           cd repo
-          git fetch -q origin main
+          git fetch -q origin main:refs/remotes/origin/main
           git merge -q --no-edit origin/main
           npm init -y >/dev/null 2>&1
           npm install playwright@1.54.1 >/dev/null 2>&1
