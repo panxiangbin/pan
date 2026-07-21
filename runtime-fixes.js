@@ -59,10 +59,11 @@
   }
 
   ensureStylesheet("portraits.css");
-  ensureStylesheet("seasons.css");
-  ensureStylesheet("season-details.css");
+  ensureStylesheet("seasons.css?v=visual-6");
+  ensureStylesheet("season-details.css?v=visual-6");
   ensureStylesheet("season-navigation.css");
-  ensureStylesheet("season-infographics.css?v=cover-fix-4");
+  ensureStylesheet("season-infographics.css?v=visual-6");
+  ensureStylesheet("season-visual-refresh.css?v=visual-6");
   ensureStylesheet("module-fallback.css");
 
   let episodeFeaturesPromise = null;
@@ -143,13 +144,14 @@
   const portraitFeatures = loadScript("portraits-data.js")
     .then(() => loadScript("portraits.js"));
 
-  const seasonFeatures = loadScript("season-cover-sprite.js")
+  const seasonFeatures = loadScript("season-cover-sprite.js?v=hd-cover-6")
     .then(() => loadScript("seasons-data.js"))
     .then(() => loadScript("season-media-data.js"))
     .then(() => loadScript("seasons.js"))
     .then(() => loadScript("season-lock-fix.js?v=click-fix-3"))
     .then(() => loadScript("season-pointer-rescue.js?v=click-fix-3"))
-    .then(() => loadScript("season-details.js"))
+    .then(() => loadScript("season-details.js?v=visual-6"))
+    .then(() => loadScript("season-cover-polish.js?v=visual-6"))
     .then(() => loadScript("season-infographics.js"))
     .then(() => {
       seasonButton()?.addEventListener("click", () => {
