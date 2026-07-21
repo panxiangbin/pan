@@ -43,9 +43,12 @@ const requiredFiles = [
   "season-cover-sprite.js",
   "seasons.js",
   "season-lock-fix.js",
+  "season-pointer-rescue.js",
   "season-details.js",
+  "season-cover-polish.js",
   "season-details.css",
   "season-navigation.css",
+  "season-visual-refresh.css",
   "season-infographics.js",
   "season-infographics.css",
   "episode-data.js",
@@ -153,10 +156,17 @@ for (let seasonNumber = 1; seasonNumber <= 8; seasonNumber += 1) {
 note("八季高清剧情信息图：8 张");
 
 const runtime = read("runtime-fixes.js");
+if (!runtime.trimStart().startsWith("(() => {")) fail("runtime-fixes.js 文件开头缺失，扩展加载器可能被截断");
+if (!runtime.trimEnd().endsWith("})();")) fail("runtime-fixes.js 文件结尾缺失，扩展加载器可能被截断");
+if (!runtime.includes("function ensureStylesheet") || !runtime.includes("function loadScript")) {
+  fail("runtime-fixes.js 缺少样式或脚本加载函数");
+}
 for (const file of [
   "season-cover-sprite.js",
   "season-media-data.js",
   "season-lock-fix.js",
+  "season-pointer-rescue.js",
+  "season-cover-polish.js",
   "season-infographics.js",
   "episode-data.js",
   "episode-guide.js",
@@ -174,6 +184,7 @@ for (const file of [
 if (!runtime.includes("dataset.failed") || !runtime.includes("重新加载逐集剧情")) {
   fail("逐集模块缺少加载失败重试机制");
 }
+note("扩展加载器：文件完整、高清封面链路和失败重试均已接入");
 
 const lockFix = read("season-lock-fix.js");
 if (!lockFix.includes(".season-card.locked") || !lockFix.includes("data-season-lock-dialog")) {
@@ -185,7 +196,9 @@ if (!lockFix.includes("seven-kingdoms-spoiler-season") || !lockFix.includes("dis
 note("剧透锁定卡片：可点击、可取消、可解锁并自动进入季度");
 
 const indexHtml = read("index.html");
-if (!indexHtml.includes("runtime-fixes.js")) fail("index.html 未加载 runtime-fixes.js");
+if (!indexHtml.includes("runtime-fixes.js?v=runtime-repair-7")) {
+  fail("index.html 未使用修复版扩展加载器缓存版本");
+}
 
 for (const file of requiredFiles) {
   const content = read(file);
