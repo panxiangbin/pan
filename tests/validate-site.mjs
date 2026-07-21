@@ -50,6 +50,8 @@ const requiredFiles = [
   "episode-guide.css",
   "episode-overview.js",
   "episode-overview.css",
+  "episode-search.js",
+  "episode-search.css",
   "runtime-fixes.js"
 ];
 requiredFiles.forEach(read);
@@ -135,8 +137,10 @@ for (const file of [
   "episode-data.js",
   "episode-guide.js",
   "episode-overview.js",
+  "episode-search.js",
   "episode-guide.css",
-  "episode-overview.css"
+  "episode-overview.css",
+  "episode-search.css"
 ]) {
   if (!runtime.includes(file)) fail(`runtime-fixes.js 未接入：${file}`);
 }
@@ -158,4 +162,4 @@ if (failures.length) {
 console.log("网站校验通过：");
 notes.forEach(message => console.log(`- ${message}`));
 console.log(`- 地图地点：${locations.length} 个`);
-console.log("- 八季配图、40 个章节和 73 集逐集剧情均已接入");
+console.log("- 八季配图、40 个章节、73 集逐集剧情和全局搜索均已接入");
