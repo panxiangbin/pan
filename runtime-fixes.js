@@ -59,12 +59,12 @@
   }
 
   ensureStylesheet("portraits.css");
-  ensureStylesheet("seasons.css?v=visual-6");
-  ensureStylesheet("season-details.css?v=visual-6");
-  ensureStylesheet("season-navigation.css");
-  ensureStylesheet("season-infographics.css?v=visual-6");
-  ensureStylesheet("season-visual-refresh.css?v=visual-6");
-  ensureStylesheet("module-fallback.css");
+  ensureStylesheet("seasons.css?v=visual-7");
+  ensureStylesheet("season-details.css?v=visual-7");
+  ensureStylesheet("season-navigation.css?v=visual-7");
+  ensureStylesheet("season-infographics.css?v=visual-7");
+  ensureStylesheet("season-visual-refresh.css?v=visual-7");
+  ensureStylesheet("module-fallback.css?v=visual-7");
 
   let episodeFeaturesPromise = null;
 
@@ -115,18 +115,18 @@
     if (episodeFeaturesPromise) return episodeFeaturesPromise;
 
     setEpisodeLoading(true);
-    ensureStylesheet("episode-guide.css");
-    ensureStylesheet("episode-overview.css");
-    ensureStylesheet("episode-search.css");
-    ensureStylesheet("episode-links.css");
-    ensureStylesheet("story-backlinks.css");
+    ensureStylesheet("episode-guide.css?v=runtime-repair-7");
+    ensureStylesheet("episode-overview.css?v=runtime-repair-7");
+    ensureStylesheet("episode-search.css?v=runtime-repair-7");
+    ensureStylesheet("episode-links.css?v=runtime-repair-7");
+    ensureStylesheet("story-backlinks.css?v=runtime-repair-7");
 
-    episodeFeaturesPromise = loadScript("episode-data.js")
-      .then(() => loadScript("episode-guide.js"))
-      .then(() => loadScript("episode-overview.js?v=click-fix-3"))
-      .then(() => loadScript("episode-search.js"))
-      .then(() => loadScript("episode-links.js"))
-      .then(() => loadScript("story-backlinks.js"))
+    episodeFeaturesPromise = loadScript("episode-data.js?v=runtime-repair-7")
+      .then(() => loadScript("episode-guide.js?v=runtime-repair-7"))
+      .then(() => loadScript("episode-overview.js?v=runtime-repair-7"))
+      .then(() => loadScript("episode-search.js?v=runtime-repair-7"))
+      .then(() => loadScript("episode-links.js?v=runtime-repair-7"))
+      .then(() => loadScript("story-backlinks.js?v=runtime-repair-7"))
       .then(() => {
         clearEpisodeLoadError();
         setEpisodeLoading(false);
@@ -141,18 +141,18 @@
     return episodeFeaturesPromise;
   }
 
-  const portraitFeatures = loadScript("portraits-data.js")
-    .then(() => loadScript("portraits.js"));
+  const portraitFeatures = loadScript("portraits-data.js?v=runtime-repair-7")
+    .then(() => loadScript("portraits.js?v=runtime-repair-7"));
 
-  const seasonFeatures = loadScript("season-cover-sprite.js?v=hd-cover-6")
-    .then(() => loadScript("seasons-data.js"))
-    .then(() => loadScript("season-media-data.js"))
-    .then(() => loadScript("seasons.js"))
-    .then(() => loadScript("season-lock-fix.js?v=click-fix-3"))
-    .then(() => loadScript("season-pointer-rescue.js?v=click-fix-3"))
-    .then(() => loadScript("season-details.js?v=visual-6"))
-    .then(() => loadScript("season-cover-polish.js?v=visual-6"))
-    .then(() => loadScript("season-infographics.js"))
+  const seasonFeatures = loadScript("season-cover-sprite.js?v=hd-cover-7")
+    .then(() => loadScript("seasons-data.js?v=runtime-repair-7"))
+    .then(() => loadScript("season-media-data.js?v=runtime-repair-7"))
+    .then(() => loadScript("seasons.js?v=runtime-repair-7"))
+    .then(() => loadScript("season-lock-fix.js?v=runtime-repair-7"))
+    .then(() => loadScript("season-pointer-rescue.js?v=runtime-repair-7"))
+    .then(() => loadScript("season-details.js?v=visual-7"))
+    .then(() => loadScript("season-cover-polish.js?v=visual-7"))
+    .then(() => loadScript("season-infographics.js?v=visual-7"))
     .then(() => {
       seasonButton()?.addEventListener("click", () => {
         loadEpisodeFeatures().catch(error => console.error("逐集剧情模块加载失败：", error));
