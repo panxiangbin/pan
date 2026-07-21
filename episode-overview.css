@@ -1,0 +1,144 @@
+.season-progress-card:has(.episode-overall-progress) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.episode-overall-progress {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 38%);
+  align-items: center;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+.episode-overall-progress strong,
+.episode-overall-progress small {
+  display: block;
+}
+
+.episode-overall-progress strong {
+  color: #e3d7bb;
+  font-size: 13px;
+}
+
+.episode-overall-progress small {
+  margin-top: 2px;
+  color: #7f9296;
+  font-size: 10px;
+}
+
+.episode-overall-progress > span {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .075);
+}
+
+.episode-overall-progress > span i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #739aa4, #c2a45e, #84aa8b);
+  transition: width .25s ease;
+}
+
+.season-card-episode-progress {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(64px, 34%);
+  align-items: center;
+  gap: 9px;
+  margin-top: 13px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, .055);
+}
+
+.season-card-episode-progress > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 7px;
+  min-width: 0;
+}
+
+.season-card-episode-progress strong {
+  color: #cbbd9a;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.season-card-episode-progress small {
+  color: #77898d;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.season-card-episode-progress > i {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .07);
+}
+
+.season-card-episode-progress > i b {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #789ba4, #bfa35e);
+  transition: width .25s ease;
+}
+
+.season-card.episodes-complete {
+  border-color: rgba(103, 158, 116, .34);
+  box-shadow: inset 0 0 0 1px rgba(103, 158, 116, .05);
+}
+
+.season-card.episodes-complete .season-card-episode-progress strong,
+.season-card.episodes-complete .season-card-episode-progress small {
+  color: #a9cfb0;
+}
+
+.season-card.episodes-complete .season-card-episode-progress > i b {
+  background: linear-gradient(90deg, #6d9f79, #9bc1a3);
+}
+
+@media (max-width: 820px) {
+  .episode-overall-progress {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .episode-overall-progress {
+    gap: 8px;
+  }
+
+  .episode-overall-progress strong {
+    font-size: 14px;
+  }
+
+  .episode-overall-progress small {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .season-card-episode-progress {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .season-card-episode-progress strong {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .episode-overall-progress > span i,
+  .season-card-episode-progress > i b {
+    transition: none;
+  }
+}
