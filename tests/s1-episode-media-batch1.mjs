@@ -14,7 +14,7 @@ page.on("pageerror", error => errors.push(error.stack || error.message));
 page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
 
 await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2", { waitUntil: "networkidle" });
-await page.waitForFunction(() => [...document.scripts].some(script => script.src.includes("season1-episode-visuals.js")), null, { timeout: 30000 });
+await page.locator(".episode-story-dialog").waitFor({ state: "attached", timeout: 30000 });
 await page.evaluate(() => {
   window.SEASON_EPISODE_DATA = {
     1: [{ episode: 1, title: "王室抵达临冬城", summary: "劳勃国王率王室北上，布兰发现王室秘密后从高塔坠落。", turning: "史塔克一家被迫离开北境的安全边界。" }]
