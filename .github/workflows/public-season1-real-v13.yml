@@ -1,0 +1,50 @@
+name: Public season 1 realistic cover V13
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  public-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Chromium
+        run: |
+          npm init -y
+          npm install playwright@1.54.1
+          npx playwright install --with-deps chromium
+      - name: Wait for Pages V13
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            html="$(curl -fsSL 'https://panxiangbin.github.io/pan/?wait=season1-real-13' || true)"
+            runtime="$(curl -fsSL 'https://panxiangbin.github.io/pan/runtime-fixes.js?v=season1-real-13' || true)"
+            if grep -q 'runtime-fixes.js?v=season1-real-13' <<<"$html" && grep -q 'season1-real-cover.js?v=season1-real-13' <<<"$runtime"; then
+              echo "GitHub Pages V13 is ready"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "GitHub Pages did not publish V13 in time"
+          exit 1
+      - name: Test public Pages
+        run: node tests/public-season1-real-v13.mjs
+      - name: Upload public screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-season1-real-v13-result
+          path: |
+            public-season1-real-v13.json
+            public-season1-real-v13.png
+          if-no-files-found: ignore
+          retention-days: 1
