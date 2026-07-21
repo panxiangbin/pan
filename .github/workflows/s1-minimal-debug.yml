@@ -1,0 +1,25 @@
+name: S1 minimal browser debug
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Clone and test quietly
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone -q --depth 20 --branch validate-s1-episode-media-batch1 https://github.com/panxiangbin/pan.git repo
+          cd repo
+          git fetch -q origin main
+          git merge -q --no-edit origin/main
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.1 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          python3 -m http.server 4173 >/tmp/pan-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          node tests/s1-episode-media-batch1.mjs
