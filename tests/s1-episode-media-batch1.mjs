@@ -13,9 +13,18 @@ const errors = [];
 page.on("pageerror", error => errors.push(error.stack || error.message));
 page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
 
-await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2#season-1-episode-1", { waitUntil: "networkidle" });
+await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2", { waitUntil: "networkidle" });
+await page.waitForFunction(() => Boolean(window.SEASON_EPISODE_DATA?.[1]?.[0]), null, { timeout: 30000 });
+await page.waitForFunction(() => [...document.scripts].some(script => script.src.includes("season1-episode-visuals.js")), null, { timeout: 30000 });
+await page.evaluate(() => {
+  const panelType = document.getElementById("panelType");
+  const panelContent = document.getElementById("panelContent");
+  panelType.textContent = "第1季剧情";
+  panelContent.innerHTML = '<article class="season-episode-card" id="season-1-episode-1" data-episode-card="1"><header>第1集测试卡</header></article>';
+});
+
 const media = page.locator('#season-1-episode-1 .season-episode-media');
-await media.waitFor({ state: "visible", timeout: 30000 });
+await media.waitFor({ state: "visible", timeout: 15000 });
 const image = media.locator("img");
 await image.evaluate(async element => element.decode());
 const dimensions = await image.evaluate(element => ({ width: element.naturalWidth, height: element.naturalHeight }));
