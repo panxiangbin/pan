@@ -82,20 +82,27 @@
 
   function openEpisode(season, episode) {
     history.replaceState(null, "", `#season-${season}-episode-${episode}`);
-    const button = modebar?.querySelector(".season-mode-button");
-    button?.click();
+    modebar?.querySelector(".season-mode-button")?.click();
     window.dispatchEvent(new HashChangeEvent("hashchange"));
   }
 
   function render() {
-    panelContent.querySelector(".story-backlinks")?.remove();
     const context = currentContext();
-    if (!context) return;
+    const existing = panelContent.querySelector(".story-backlinks");
+    if (!context) {
+      existing?.remove();
+      return;
+    }
+
     const items = matches(context).slice(0, 8);
+    const signature = `${context.kind}:${context.id}:${spoilerLevel()}:${items.map(item => `${item.season}-${item.episode}`).join(",")}`;
+    if (existing?.dataset.signature === signature) return;
+    existing?.remove();
     if (!items.length) return;
 
     const section = document.createElement("section");
     section.className = "info-section story-backlinks";
+    section.dataset.signature = signature;
     section.innerHTML = `
       <div class="story-backlinks-heading">
         <div><span class="eyebrow">Story Connections</span><h3>相关逐集剧情</h3></div>
