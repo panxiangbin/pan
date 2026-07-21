@@ -122,7 +122,7 @@
 
     episodeFeaturesPromise = loadScript("episode-data.js")
       .then(() => loadScript("episode-guide.js"))
-      .then(() => loadScript("episode-overview.js?v=click-fix-2"))
+      .then(() => loadScript("episode-overview.js?v=click-fix-3"))
       .then(() => loadScript("episode-search.js"))
       .then(() => loadScript("episode-links.js"))
       .then(() => loadScript("story-backlinks.js"))
@@ -147,7 +147,8 @@
     .then(() => loadScript("seasons-data.js"))
     .then(() => loadScript("season-media-data.js"))
     .then(() => loadScript("seasons.js"))
-    .then(() => loadScript("season-lock-fix.js?v=click-fix-2"))
+    .then(() => loadScript("season-lock-fix.js?v=click-fix-3"))
+    .then(() => loadScript("season-pointer-rescue.js?v=click-fix-3"))
     .then(() => loadScript("season-details.js"))
     .then(() => loadScript("season-infographics.js"))
     .then(() => {
