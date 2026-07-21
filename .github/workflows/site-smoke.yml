@@ -35,3 +35,6 @@ jobs:
 
       - name: Validate site data and modules
         run: node tests/validate-site.mjs
+
+      - name: Validate independent season covers
+        run: node tests/cover-static.mjs
