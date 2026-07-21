@@ -42,9 +42,12 @@ const requiredFiles = [
   "season-media-data.js",
   "season-cover-sprite.js",
   "seasons.js",
+  "season-lock-fix.js",
   "season-details.js",
   "season-details.css",
   "season-navigation.css",
+  "season-infographics.js",
+  "season-infographics.css",
   "episode-data.js",
   "episode-guide.js",
   "episode-guide.css",
@@ -138,10 +141,23 @@ const sprite = windowObject.SEASON_COVER_SPRITE || "";
 if (!sprite.startsWith("data:image/")) fail("八季封面压缩图集不是有效的 data:image URI");
 else note(`封面图集字符数：${sprite.length}`);
 
+for (let seasonNumber = 1; seasonNumber <= 8; seasonNumber += 1) {
+  const infographic = read(`assets/season-detail/season-${seasonNumber}.svg`);
+  if (!infographic.includes(`<title id="title">第${seasonNumber}季`)) {
+    fail(`第 ${seasonNumber} 季高清剧情信息图标题异常`);
+  }
+  if (!infographic.includes("原创同人剧情信息图")) {
+    fail(`第 ${seasonNumber} 季高清剧情信息图缺少原创说明`);
+  }
+}
+note("八季高清剧情信息图：8 张");
+
 const runtime = read("runtime-fixes.js");
 for (const file of [
   "season-cover-sprite.js",
   "season-media-data.js",
+  "season-lock-fix.js",
+  "season-infographics.js",
   "episode-data.js",
   "episode-guide.js",
   "episode-overview.js",
@@ -158,6 +174,15 @@ for (const file of [
 if (!runtime.includes("dataset.failed") || !runtime.includes("重新加载逐集剧情")) {
   fail("逐集模块缺少加载失败重试机制");
 }
+
+const lockFix = read("season-lock-fix.js");
+if (!lockFix.includes(".season-card.locked") || !lockFix.includes("data-season-lock-dialog")) {
+  fail("剧透锁定卡片缺少可见解锁弹窗");
+}
+if (!lockFix.includes("seven-kingdoms-spoiler-season") || !lockFix.includes("dispatchEvent(new Event(\"change\"")) {
+  fail("剧透锁定卡片未同步更新剧透等级");
+}
+note("剧透锁定卡片：可点击、可取消、可解锁并自动进入季度");
 
 const indexHtml = read("index.html");
 if (!indexHtml.includes("runtime-fixes.js")) fail("index.html 未加载 runtime-fixes.js");
@@ -176,4 +201,4 @@ if (failures.length) {
 console.log("网站校验通过：");
 notes.forEach(message => console.log(`- ${message}`));
 console.log(`- 地图地点：${locations.length} 个，家族：${houses.length} 个，战争节点：${timeline.length} 个`);
-console.log("- 八季配图、40 个章节、73 集逐集剧情、全局搜索、联动和加载容错均已接入");
+console.log("- 八季配图、40 个章节、73 集逐集剧情、剧透解锁、全局搜索、联动和加载容错均已接入");
