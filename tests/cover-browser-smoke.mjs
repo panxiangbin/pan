@@ -1,6 +1,8 @@
 import { chromium } from "playwright";
 import fs from "node:fs";
 
+const baseUrl = (process.env.BASE_URL || "http://127.0.0.1:4173").replace(/\/$/, "");
+const outputPrefix = process.env.OUTPUT_PREFIX || "cover-browser";
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
 const consoleMessages = [];
@@ -9,12 +11,12 @@ const pageErrors = [];
 page.on("console", message => consoleMessages.push(`${message.type()}: ${message.text()}`));
 page.on("pageerror", error => pageErrors.push(error.stack || error.message));
 
-await page.goto("http://127.0.0.1:4173/?v=cover-art-10", { waitUntil: "networkidle" });
+await page.goto(`${baseUrl}/?v=cover-art-10`, { waitUntil: "networkidle", timeout: 90000 });
 await page.locator(".season-mode-button").click();
-await page.locator(".season-card").first().waitFor({ state: "visible" });
+await page.locator(".season-card").first().waitFor({ state: "visible", timeout: 30000 });
 await page.waitForTimeout(900);
 await page.locator(".season-card").first().click();
-await page.locator(".season-detail-visual").waitFor({ state: "visible" });
+await page.locator(".season-detail-visual").waitFor({ state: "visible", timeout: 30000 });
 await page.waitForTimeout(900);
 
 const result = await page.evaluate(async () => {
@@ -52,6 +54,7 @@ const result = await page.evaluate(async () => {
   const detailStyle = detail ? getComputedStyle(detail) : null;
   const detailRect = detail?.getBoundingClientRect();
   return {
+    href: location.href,
     coverKeys: Object.keys(coverMap),
     decodeResults,
     cardResults,
@@ -65,9 +68,9 @@ const result = await page.evaluate(async () => {
   };
 });
 
-const output = { result, consoleMessages, pageErrors };
-fs.writeFileSync("cover-browser-result.json", JSON.stringify(output, null, 2));
-await page.screenshot({ path: "cover-browser-screenshot.png", fullPage: true });
+const output = { baseUrl, result, consoleMessages, pageErrors };
+fs.writeFileSync(`${outputPrefix}-result.json`, JSON.stringify(output, null, 2));
+await page.screenshot({ path: `${outputPrefix}-screenshot.png`, fullPage: true });
 await browser.close();
 console.log(JSON.stringify(output, null, 2));
 
@@ -94,4 +97,4 @@ if (failures.length) {
   failures.forEach((failure, index) => console.error(`${index + 1}. ${failure}`));
   process.exit(1);
 }
-console.log("正式八季独立封面浏览器测试通过");
+console.log(`正式八季独立封面浏览器测试通过：${baseUrl}`);
