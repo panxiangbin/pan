@@ -13,6 +13,8 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          show-progress: false
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -22,11 +24,11 @@ jobs:
           node --check runtime-fixes.js
           node tests/entry-smoke.mjs
           node tests/validate-site.mjs
-      - name: Install Chromium
+      - name: Install Chromium quietly
         run: |
-          npm init -y
-          npm install playwright@1.54.1
-          npx playwright install --with-deps chromium
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.1 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
       - name: Start site
         run: |
           python3 -m http.server 4173 >/tmp/pan-http.log 2>&1 &
