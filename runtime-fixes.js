@@ -117,12 +117,14 @@
     ensureStylesheet("episode-overview.css");
     ensureStylesheet("episode-search.css");
     ensureStylesheet("episode-links.css");
+    ensureStylesheet("story-backlinks.css");
 
     episodeFeaturesPromise = loadScript("episode-data.js")
       .then(() => loadScript("episode-guide.js"))
       .then(() => loadScript("episode-overview.js"))
       .then(() => loadScript("episode-search.js"))
       .then(() => loadScript("episode-links.js"))
+      .then(() => loadScript("story-backlinks.js"))
       .then(() => {
         clearEpisodeLoadError();
         setEpisodeLoading(false);
