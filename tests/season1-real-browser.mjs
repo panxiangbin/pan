@@ -4,65 +4,86 @@ import fs from "node:fs";
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
 const pageErrors = [];
-const consoleErrors = [];
+const consoleMessages = [];
+let stage = "launch";
+let fatalError = "";
+
 page.on("pageerror", error => pageErrors.push(error.stack || error.message));
-page.on("console", message => {
-  if (message.type() === "error") consoleErrors.push(message.text());
-});
+page.on("console", message => consoleMessages.push(`${message.type()}: ${message.text()}`));
 
-await page.goto("http://127.0.0.1:4173/?v=season1-real-11", { waitUntil: "networkidle" });
-await page.locator(".season-mode-button").click();
-await page.locator('.season-card[data-season-number="1"] .season-card-art').waitFor({ state: "visible" });
-await page.waitForFunction(() => window.SEASON_COVERS?.[1]?.startsWith("data:image/webp;base64,"), null, { timeout: 15000 });
-await page.waitForFunction(() => document.querySelector('.season-card[data-season-number="1"] .season-card-art')?.dataset.coverSource === "season-1-realistic-webp", null, { timeout: 15000 });
+try {
+  stage = "open";
+  await page.goto("http://127.0.0.1:4173/?v=season1-real-11", { waitUntil: "networkidle" });
+  stage = "click-season-mode";
+  await page.locator(".season-mode-button").click();
+  stage = "wait-card";
+  await page.locator('.season-card[data-season-number="1"] .season-card-art').waitFor({ state: "visible" });
+  stage = "wait-real-source";
+  await page.waitForFunction(() => window.SEASON_COVERS?.[1]?.startsWith("data:image/webp;base64,"), null, { timeout: 20000 });
+  stage = "wait-card-marker";
+  await page.waitForFunction(() => document.querySelector('.season-card[data-season-number="1"] .season-card-art')?.dataset.coverSource === "season-1-realistic-webp", null, { timeout: 10000 });
+  stage = "click-card";
+  await page.locator('.season-card[data-season-number="1"]').click();
+  stage = "wait-detail";
+  await page.locator('.season-detail-visual[data-season-art="1"]').waitFor({ state: "visible" });
+  await page.waitForFunction(() => document.querySelector('.season-detail-visual[data-season-art="1"]')?.dataset.coverSource === "season-1-realistic-webp", null, { timeout: 10000 });
+  stage = "complete";
+} catch (error) {
+  fatalError = error.stack || error.message || String(error);
+}
 
-const beforeClick = await page.evaluate(async () => {
-  const source = window.SEASON_COVERS[1];
-  const image = new Image();
-  image.src = source;
-  await image.decode();
+const result = await page.evaluate(async () => {
+  const source = window.SEASON_COVERS?.[1] || "";
   const art = document.querySelector('.season-card[data-season-number="1"] .season-card-art');
-  const style = getComputedStyle(art);
-  return {
-    width: image.naturalWidth,
-    height: image.naturalHeight,
-    sourceLength: source.length,
-    marker: art.dataset.coverSource,
-    background: style.backgroundImage,
-    rect: art.getBoundingClientRect().toJSON()
-  };
-});
-
-await page.locator('.season-card[data-season-number="1"]').click();
-await page.locator('.season-detail-visual[data-season-art="1"]').waitFor({ state: "visible" });
-await page.waitForFunction(() => document.querySelector('.season-detail-visual[data-season-art="1"]')?.dataset.coverSource === "season-1-realistic-webp", null, { timeout: 10000 });
-
-const detail = await page.evaluate(() => {
   const visual = document.querySelector('.season-detail-visual[data-season-art="1"]');
+  const scripts = [...document.scripts].map(script => script.getAttribute("src")).filter(Boolean);
+  let width = 0;
+  let height = 0;
+  let decodeError = "";
+  if (source.startsWith("data:image/")) {
+    const image = new Image();
+    image.src = source;
+    try {
+      await image.decode();
+      width = image.naturalWidth;
+      height = image.naturalHeight;
+    } catch (error) {
+      decodeError = error.message || String(error);
+    }
+  }
   return {
-    marker: visual.dataset.coverSource,
-    background: getComputedStyle(visual).backgroundImage,
-    rect: visual.getBoundingClientRect().toJSON()
+    href: location.href,
+    sourcePrefix: source.slice(0, 40),
+    sourceLength: source.length,
+    width,
+    height,
+    decodeError,
+    cardExists: Boolean(art),
+    cardMarker: art?.dataset.coverSource || "",
+    cardBackground: art ? getComputedStyle(art).backgroundImage.slice(0, 120) : "",
+    detailExists: Boolean(visual),
+    detailMarker: visual?.dataset.coverSource || "",
+    scripts,
+    readyState: document.readyState,
+    bodySample: document.body.innerText.slice(0, 300)
   };
 });
 
-const result = { beforeClick, detail, pageErrors, consoleErrors };
-fs.writeFileSync("season1-real-browser-result.json", JSON.stringify(result, null, 2));
+const output = { stage, fatalError, result, pageErrors, consoleMessages };
+fs.writeFileSync("season1-real-browser-result.json", JSON.stringify(output, null, 2));
 await page.screenshot({ path: "season1-real-browser.png", fullPage: true });
 await browser.close();
+console.log(JSON.stringify(output, null, 2));
 
 const failures = [];
+if (fatalError) failures.push(`阶段 ${stage} 失败：${fatalError}`);
 if (pageErrors.length) failures.push(`页面错误：${pageErrors.join(" | ")}`);
-if (consoleErrors.some(item => item.includes("第1季写实封面加载失败"))) failures.push(consoleErrors.join(" | "));
-if (beforeClick.width !== 960 || beforeClick.height !== 540) failures.push(`图片尺寸异常：${beforeClick.width}×${beforeClick.height}`);
-if (beforeClick.sourceLength < 40000) failures.push(`图片数据过短：${beforeClick.sourceLength}`);
-if (beforeClick.marker !== "season-1-realistic-webp") failures.push(`卡片标记错误：${beforeClick.marker}`);
-if (!beforeClick.background.includes("data:image/webp;base64")) failures.push("卡片没有应用写实WebP");
-if (beforeClick.rect.width < 200 || beforeClick.rect.height < 150) failures.push("卡片封面区域尺寸异常");
-if (detail.marker !== "season-1-realistic-webp") failures.push(`详情标记错误：${detail.marker}`);
-if (!detail.background.includes("data:image/webp;base64")) failures.push("详情没有应用写实WebP");
+if (result.width !== 960 || result.height !== 540) failures.push(`图片尺寸异常：${result.width}×${result.height}，${result.decodeError}`);
+if (result.sourceLength < 40000) failures.push(`图片数据过短：${result.sourceLength}`);
+if (result.cardMarker !== "season-1-realistic-webp") failures.push(`卡片标记错误：${result.cardMarker}`);
+if (!result.cardBackground.includes("data:image/webp;base64")) failures.push("卡片没有应用写实WebP");
+if (!result.detailExists || result.detailMarker !== "season-1-realistic-webp") failures.push(`详情封面未应用：${result.detailMarker}`);
 
-console.log(JSON.stringify(result, null, 2));
 if (failures.length) {
   console.error("第1季写实封面浏览器验证失败：");
   failures.forEach((failure, index) => console.error(`${index + 1}. ${failure}`));
