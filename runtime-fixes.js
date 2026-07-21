@@ -153,6 +153,7 @@
     .then(() => loadScript("season-details.js?v=cover-art-10"))
     .then(() => loadScript("season-cover-polish.js?v=cover-art-10"))
     .then(() => loadScript("season-cover-direct.js?v=cover-art-10"))
+    .then(() => loadScript("season1-real-cover.js?v=season1-real-11"))
     .then(() => loadScript("season-infographics.js?v=cover-art-10"))
     .then(() => {
       seasonButton()?.addEventListener("click", () => {
