@@ -1,0 +1,47 @@
+name: Publish S1 episode image batch 1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - assets/season1-episodes/.publish-batch-1
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore episode 1 image from verified Git blob
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/season1-episodes
+          gh api /repos/${GITHUB_REPOSITORY}/git/blobs/e0f78ce0f577ba5519f50a5fcd0d3c887d4bf5da \
+            --jq .content | tr -d '\n' | base64 -d > assets/season1-episodes/episode-01.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('assets/season1-episodes/episode-01.webp')
+          raw = p.read_bytes()
+          if len(raw) < 40000:
+              raise SystemExit(f'image too small: {len(raw)}')
+          if raw[:4] != b'RIFF' or raw[8:12] != b'WEBP':
+              raise SystemExit('not a valid WebP container')
+          print(f'episode-01.webp: {len(raw)} bytes')
+          PY
+      - name: Commit image
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/season1-episodes/episode-01.webp
+          git commit -m "上传第1季第1集剧情配图"
+          git push origin HEAD:main
