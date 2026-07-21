@@ -13,7 +13,7 @@ const errors = [];
 page.on("pageerror", error => errors.push(error.stack || error.message));
 page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
 
-await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-1#season-1-episode-1", { waitUntil: "networkidle" });
+await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2#season-1-episode-1", { waitUntil: "networkidle" });
 const media = page.locator('#season-1-episode-1 .season-episode-media');
 await media.waitFor({ state: "visible", timeout: 30000 });
 const image = media.locator("img");
