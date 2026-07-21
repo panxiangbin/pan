@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "season1-real-12";
+  const VERSION = "season1-real-13";
   const PART_URLS = [
     "assets/upload-season1/part-01.txt",
     "assets/upload-season1/part-02.txt",
@@ -15,16 +15,22 @@
 
   function setCover(element, source) {
     if (!element) return;
-    element.style.backgroundImage = `linear-gradient(180deg, rgba(3,7,10,.02), rgba(3,7,10,.38)), url("${source}")`;
-    element.style.backgroundSize = "100% 100%, cover";
-    element.style.backgroundPosition = "center, center";
-    element.style.backgroundRepeat = "no-repeat";
+    element.style.setProperty(
+      "background-image",
+      `linear-gradient(180deg, rgba(3,7,10,.02), rgba(3,7,10,.38)), url("${source}")`,
+      "important"
+    );
+    element.style.setProperty("background-size", "100% 100%, cover", "important");
+    element.style.setProperty("background-position", "center, center", "important");
+    element.style.setProperty("background-repeat", "no-repeat", "important");
     element.dataset.coverSource = "season-1-realistic-webp";
   }
 
   function applyCover(source) {
-    window.SEASON_COVERS = window.SEASON_COVERS || {};
-    window.SEASON_COVERS[1] = source;
+    window.SEASON_COVERS = Object.freeze({
+      ...(window.SEASON_COVERS || {}),
+      1: source
+    });
 
     document.querySelectorAll('.season-card[data-season-number="1"] .season-card-art')
       .forEach(element => setCover(element, source));
@@ -58,10 +64,18 @@
     await decodeSource(source);
     applyCover(source);
 
-    const observer = new MutationObserver(() => requestAnimationFrame(() => applyCover(source)));
+    let frame = 0;
+    const refresh = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        applyCover(source);
+      });
+    };
+    const observer = new MutationObserver(refresh);
     observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener("pageshow", () => applyCover(source));
-    window.addEventListener("hashchange", () => setTimeout(() => applyCover(source), 80));
+    window.addEventListener("pageshow", refresh);
+    window.addEventListener("hashchange", () => setTimeout(refresh, 80));
     window.dispatchEvent(new CustomEvent("season-real-cover-ready", { detail: { season: 1 } }));
   }
 
