@@ -7,6 +7,7 @@
   if (!overlay || !Object.keys(episodeData).length) return;
 
   const PROGRESS_KEY = "seven-kingdoms-episode-progress-v1";
+  const SPOILER_KEY = "seven-kingdoms-spoiler-season";
 
   function readProgress() {
     try {
@@ -15,6 +16,11 @@
     } catch {
       return {};
     }
+  }
+
+  function spoilerLevel() {
+    const value = Number(localStorage.getItem(SPOILER_KEY));
+    return Number.isFinite(value) && value >= 1 && value <= 8 ? value : 8;
   }
 
   function seasonStats(seasonNumber, progress) {
@@ -32,6 +38,21 @@
     }, { read: 0, total: 0 });
   }
 
+  function nextUnlockedEpisode(progress) {
+    const level = spoilerLevel();
+    for (let season = 1; season <= level; season += 1) {
+      const next = (episodeData[season] || []).find(item => !progress[`${season}:${item.episode}`]);
+      if (next) return { season, episode: next.episode, lockedComplete: false };
+    }
+    return { season: 1, episode: 1, lockedComplete: level < 8 };
+  }
+
+  function openEpisode(season, episode) {
+    const hash = `#season-${season}-episode-${episode}`;
+    if (location.hash === hash) window.dispatchEvent(new HashChangeEvent("hashchange"));
+    else location.hash = hash;
+  }
+
   function ensureOverall(progress) {
     const host = overlay.querySelector(".season-progress-card");
     if (!host) return;
@@ -41,14 +62,39 @@
       block.className = "episode-overall-progress";
       block.innerHTML = `
         <div><strong data-overall-episode-text>逐集阅读进度</strong><small>八季 73 集，记录保存在当前浏览器</small></div>
-        <span aria-hidden="true"><i data-overall-episode-bar></i></span>`;
+        <span aria-hidden="true"><i data-overall-episode-bar></i></span>
+        <button type="button" data-overall-episode-continue><span>继续全剧阅读</span><strong aria-hidden="true">→</strong></button>`;
       host.appendChild(block);
+      block.querySelector("[data-overall-episode-continue]")?.addEventListener("click", event => {
+        const button = event.currentTarget;
+        if (button.dataset.lockedComplete === "true") {
+          overlay.querySelector("#seasonSpoilerLevel")?.focus();
+          return;
+        }
+        openEpisode(Number(button.dataset.season), Number(button.dataset.episode));
+      });
     }
+
     const stats = totalStats(progress);
+    const next = nextUnlockedEpisode(progress);
     const text = block.querySelector("[data-overall-episode-text]");
     const bar = block.querySelector("[data-overall-episode-bar]");
+    const continueButton = block.querySelector("[data-overall-episode-continue]");
+
     if (text) text.textContent = `逐集阅读：${stats.read} / ${stats.total} 集`;
     if (bar) bar.style.width = `${stats.total ? Math.round(stats.read / stats.total * 100) : 0}%`;
+    if (continueButton) {
+      continueButton.dataset.season = String(next.season);
+      continueButton.dataset.episode = String(next.episode);
+      continueButton.dataset.lockedComplete = String(next.lockedComplete);
+      continueButton.classList.toggle("locked-complete", next.lockedComplete);
+      const label = continueButton.querySelector("span");
+      if (label) {
+        if (next.lockedComplete) label.textContent = `已读完前${spoilerLevel()}季，解锁后继续`;
+        else if (stats.read === stats.total) label.textContent = "八季已读完，重新从第1集浏览";
+        else label.textContent = `继续：第${next.season}季第${next.episode}集`;
+      }
+    }
   }
 
   function ensureSeasonCards(progress) {
@@ -82,8 +128,9 @@
   const observer = new MutationObserver(() => window.requestAnimationFrame(refresh));
   observer.observe(overlay, { childList: true, subtree: true });
   if (panelContent) observer.observe(panelContent, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+  overlay.querySelector("#seasonSpoilerLevel")?.addEventListener("change", refresh);
   window.addEventListener("storage", event => {
-    if (event.key === PROGRESS_KEY) refresh();
+    if (event.key === PROGRESS_KEY || event.key === SPOILER_KEY) refresh();
   });
   window.addEventListener("pageshow", refresh);
   refresh();
