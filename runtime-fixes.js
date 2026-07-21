@@ -62,7 +62,7 @@
   ensureStylesheet("seasons.css");
   ensureStylesheet("season-details.css");
   ensureStylesheet("season-navigation.css");
-  ensureStylesheet("season-infographics.css");
+  ensureStylesheet("season-infographics.css?v=cover-fix-4");
   ensureStylesheet("module-fallback.css");
 
   let episodeFeaturesPromise = null;
