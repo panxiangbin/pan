@@ -8,4 +8,4 @@ window.SEASON_COVERS = Object.freeze({
   7: "assets/season-covers/season-7.svg?v=cover-art-10",
   8: "assets/season-covers/season-8.svg?v=cover-art-10"
 });
-window.SEASON_COVER_SPRITE = "";
+window.SEASON_COVER_SPRITE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E";
