@@ -51,9 +51,11 @@
     if (episodeFeaturesPromise) return episodeFeaturesPromise;
     ensureStylesheet("episode-guide.css");
     ensureStylesheet("episode-overview.css");
+    ensureStylesheet("episode-search.css");
     episodeFeaturesPromise = loadScript("episode-data.js")
       .then(() => loadScript("episode-guide.js"))
-      .then(() => loadScript("episode-overview.js"));
+      .then(() => loadScript("episode-overview.js"))
+      .then(() => loadScript("episode-search.js"));
     return episodeFeaturesPromise;
   }
 
