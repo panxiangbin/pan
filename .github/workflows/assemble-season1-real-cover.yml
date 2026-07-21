@@ -1,0 +1,58 @@
+name: Assemble season 1 realistic cover
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - assets/upload-season1/READY
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assemble validated SVG cover
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f assets/upload-season1/part-01.txt
+          cat assets/upload-season1/part-*.txt | tr -d '\n\r' > /tmp/season1.b64
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+
+          b64 = Path('/tmp/season1.b64').read_text().strip()
+          raw = base64.b64decode(b64, validate=True)
+          if not raw.startswith(b'RIFF') or b'WEBP' not in raw[:16]:
+              raise SystemExit('assembled payload is not a valid WebP container')
+          svg = (
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" '
+              'width="960" height="540" role="img" aria-labelledby="title desc">'
+              '<title id="title">第1季写实剧情封面</title>'
+              '<desc id="desc">原创写实电影感同人画面：雪中的北境城堡、披风领主、青年守夜人、白色冰原狼与远方王室队伍。非官方剧照。</desc>'
+              '<image width="960" height="540" preserveAspectRatio="xMidYMid slice" '
+              f'href="data:image/webp;base64,{b64}"/></svg>'
+          )
+          Path('assets/season-covers/season-1.svg').write_text(svg, encoding='utf-8')
+          PY
+          sed -i 's/cover-art-10/cover-art-11/g' season-covers.js
+          grep -q 'season-1.svg?v=cover-art-11' season-covers.js
+          grep -q 'data:image/webp;base64,' assets/season-covers/season-1.svg
+
+      - name: Commit assembled cover
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/season-covers/season-1.svg season-covers.js
+          git commit -m "替换第1季为写实电影感封面"
+          git push origin HEAD:main
