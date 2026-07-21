@@ -120,6 +120,7 @@
     ensureStylesheet("episode-search.css?v=cover-art-10");
     ensureStylesheet("episode-links.css?v=cover-art-10");
     ensureStylesheet("story-backlinks.css?v=cover-art-10");
+    ensureStylesheet("season1-episode-visuals.css?v=s1-episode-media-1");
 
     episodeFeaturesPromise = loadScript("episode-data.js?v=cover-art-10")
       .then(() => loadScript("episode-guide.js?v=cover-art-10"))
@@ -127,6 +128,7 @@
       .then(() => loadScript("episode-search.js?v=cover-art-10"))
       .then(() => loadScript("episode-links.js?v=cover-art-10"))
       .then(() => loadScript("story-backlinks.js?v=cover-art-10"))
+      .then(() => loadScript("season1-episode-visuals.js?v=s1-episode-media-1"))
       .then(() => {
         clearEpisodeLoadError();
         setEpisodeLoading(false);
