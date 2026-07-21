@@ -52,6 +52,8 @@ const requiredFiles = [
   "episode-overview.css",
   "episode-search.js",
   "episode-search.css",
+  "episode-links.js",
+  "episode-links.css",
   "runtime-fixes.js"
 ];
 requiredFiles.forEach(read);
@@ -76,6 +78,11 @@ evaluateDataFile("season-cover-sprite.js", windowObject);
 const locations = windowObject.WORLD_DATA?.locations || [];
 const locationIds = new Set(locations.map(item => item.id));
 if (locations.length < 10) fail(`地图地点数量异常：${locations.length}`);
+
+const houses = windowObject.WORLD_DATA?.houses || [];
+const timeline = windowObject.WORLD_DATA?.timeline || [];
+if (houses.length < 8) fail(`家族数量异常：${houses.length}`);
+if (timeline.length < 6) fail(`战争时间线数量异常：${timeline.length}`);
 
 const seasons = windowObject.SEASON_GUIDE_DATA || [];
 if (seasons.length !== 8) fail(`季度概述应为 8 季，当前为 ${seasons.length}`);
@@ -138,9 +145,11 @@ for (const file of [
   "episode-guide.js",
   "episode-overview.js",
   "episode-search.js",
+  "episode-links.js",
   "episode-guide.css",
   "episode-overview.css",
-  "episode-search.css"
+  "episode-search.css",
+  "episode-links.css"
 ]) {
   if (!runtime.includes(file)) fail(`runtime-fixes.js 未接入：${file}`);
 }
@@ -161,5 +170,5 @@ if (failures.length) {
 
 console.log("网站校验通过：");
 notes.forEach(message => console.log(`- ${message}`));
-console.log(`- 地图地点：${locations.length} 个`);
-console.log("- 八季配图、40 个章节、73 集逐集剧情和全局搜索均已接入");
+console.log(`- 地图地点：${locations.length} 个，家族：${houses.length} 个，战争节点：${timeline.length} 个`);
+console.log("- 八季配图、40 个章节、73 集逐集剧情、全局搜索及家族战争联动均已接入");
