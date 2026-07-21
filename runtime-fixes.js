@@ -65,6 +65,7 @@
   ensureStylesheet("season-infographics.css?v=cover-art-10");
   ensureStylesheet("season-visual-refresh.css?v=cover-art-10");
   ensureStylesheet("module-fallback.css?v=cover-art-10");
+  ensureStylesheet("season1-episode-visuals.css?v=s1-episode-media-2");
 
   let episodeFeaturesPromise = null;
 
@@ -120,7 +121,6 @@
     ensureStylesheet("episode-search.css?v=cover-art-10");
     ensureStylesheet("episode-links.css?v=cover-art-10");
     ensureStylesheet("story-backlinks.css?v=cover-art-10");
-    ensureStylesheet("season1-episode-visuals.css?v=s1-episode-media-1");
 
     episodeFeaturesPromise = loadScript("episode-data.js?v=cover-art-10")
       .then(() => loadScript("episode-guide.js?v=cover-art-10"))
@@ -128,7 +128,6 @@
       .then(() => loadScript("episode-search.js?v=cover-art-10"))
       .then(() => loadScript("episode-links.js?v=cover-art-10"))
       .then(() => loadScript("story-backlinks.js?v=cover-art-10"))
-      .then(() => loadScript("season1-episode-visuals.js?v=s1-episode-media-1"))
       .then(() => {
         clearEpisodeLoadError();
         setEpisodeLoading(false);
@@ -143,6 +142,7 @@
     return episodeFeaturesPromise;
   }
 
+  const episodeVisuals = loadScript("season1-episode-visuals.js?v=s1-episode-media-2");
   const portraitFeatures = loadScript("portraits-data.js?v=cover-art-10")
     .then(() => loadScript("portraits.js?v=cover-art-10"));
 
@@ -173,6 +173,6 @@
       return null;
     });
 
-  Promise.all([portraitFeatures, seasonFeatures])
+  Promise.all([episodeVisuals, portraitFeatures, seasonFeatures])
     .catch(error => console.error("扩展模块加载失败：", error));
 })();
