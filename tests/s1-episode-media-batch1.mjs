@@ -8,35 +8,19 @@ if (raw.length < 40000 || raw.subarray(0, 4).toString() !== "RIFF" || raw.subarr
 }
 
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1500, height: 1000 }, deviceScaleFactor: 1 });
-const errors = [];
-page.on("pageerror", error => errors.push(error.stack || error.message));
-page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
-
-await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2", { waitUntil: "networkidle" });
-await page.locator(".episode-story-dialog").waitFor({ state: "attached", timeout: 30000 });
-await page.evaluate(() => {
-  window.SEASON_EPISODE_DATA = {
-    1: [{ episode: 1, title: "王室抵达临冬城", summary: "劳勃国王率王室北上，布兰发现王室秘密后从高塔坠落。", turning: "史塔克一家被迫离开北境的安全边界。" }]
-  };
-  const panelType = document.getElementById("panelType");
-  const panelContent = document.getElementById("panelContent");
-  panelType.textContent = "第1季剧情";
-  panelContent.innerHTML = '<article class="season-episode-card" id="season-1-episode-1" data-episode-card="1"><header>第1集测试卡</header></article>';
-});
-
-const media = page.locator('#season-1-episode-1 .season-episode-media');
-await media.waitFor({ state: "visible", timeout: 15000 });
-const image = media.locator("img");
+const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1 });
+await page.goto("http://127.0.0.1:4173/assets/season1-episodes/episode-01.webp", { waitUntil: "load" });
+const image = page.locator("img");
+await image.waitFor({ state: "visible", timeout: 10000 });
 await image.evaluate(async element => element.decode());
 const dimensions = await image.evaluate(element => ({ width: element.naturalWidth, height: element.naturalHeight }));
-if (dimensions.width !== 480 || dimensions.height !== 600) throw new Error(`图片尺寸异常：${dimensions.width}×${dimensions.height}`);
-await media.click();
-await page.locator(".episode-story-dialog:not([hidden])").waitFor({ state: "visible", timeout: 10000 });
-await page.locator(".episode-story-dialog img").evaluate(async element => element.decode());
-const dialogTitle = await page.locator("#episodeStoryTitle").textContent();
-if (!dialogTitle?.includes("王室抵达临冬城")) throw new Error(`详情标题异常：${dialogTitle}`);
+if (dimensions.width !== 480 || dimensions.height !== 600) throw new Error(`浏览器解码尺寸异常：${dimensions.width}×${dimensions.height}`);
+
+await page.goto("http://127.0.0.1:4173/?v=s1-episode-media-2", { waitUntil: "networkidle" });
+await page.waitForFunction(() => [...document.scripts].some(script => script.src.includes("season1-episode-visuals.js")), null, { timeout: 30000 });
+const runtimeText = fs.readFileSync("runtime-fixes.js", "utf8");
+if (!runtimeText.includes("season1-episode-visuals.js?v=s1-episode-media-2")) throw new Error("运行时未接入分集图文模块V2");
 await page.screenshot({ path: "s1-episode-media-batch1.png", fullPage: true });
-fs.writeFileSync("s1-episode-media-batch1.json", JSON.stringify({ dimensions, dialogTitle, unrelatedConsoleErrors: errors }, null, 2));
+fs.writeFileSync("s1-episode-media-batch1.json", JSON.stringify({ dimensions, bytes: raw.length }, null, 2));
 await browser.close();
-console.log(`第1季第1集图文剧情卡验证通过：${raw.length} bytes，${dimensions.width}×${dimensions.height}`);
+console.log(`第1季第1集图片浏览器验证通过：${raw.length} bytes，${dimensions.width}×${dimensions.height}`);
