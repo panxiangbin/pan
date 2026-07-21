@@ -1,11 +1,17 @@
 (() => {
   "use strict";
 
-  const VERSION = "season1-real-11";
-  const PART_COUNT = 7;
-  const PART_URLS = Array.from({ length: PART_COUNT }, (_, index) =>
-    `assets/upload-season1/part-${String(index + 1).padStart(2, "0")}.txt?v=${VERSION}`
-  );
+  const VERSION = "season1-real-12";
+  const PART_URLS = [
+    "assets/upload-season1/part-01.txt",
+    "assets/upload-season1/part-02.txt",
+    "assets/upload-season1/part-03.txt",
+    "assets/upload-season1/part-04a.txt",
+    "assets/upload-season1/part-04b.txt",
+    "assets/upload-season1/part-05.txt",
+    "assets/upload-season1/part-06.txt",
+    "assets/upload-season1/part-07.txt"
+  ].map(path => `${path}?v=${VERSION}`);
 
   function setCover(element, source) {
     if (!element) return;
@@ -36,7 +42,7 @@
     const image = new Image();
     image.src = source;
     await image.decode();
-    if (image.naturalWidth < 900 || image.naturalHeight < 500) {
+    if (image.naturalWidth !== 960 || image.naturalHeight !== 540) {
       throw new Error(`第1季封面尺寸异常：${image.naturalWidth}×${image.naturalHeight}`);
     }
   }
