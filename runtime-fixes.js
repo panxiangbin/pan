@@ -45,16 +45,40 @@
   ensureStylesheet("seasons.css");
   ensureStylesheet("season-details.css");
   ensureStylesheet("season-navigation.css");
-  ensureStylesheet("episode-guide.css");
 
-  Promise.all([
-    loadScript("portraits-data.js").then(() => loadScript("portraits.js")),
-    loadScript("season-cover-sprite.js")
-      .then(() => loadScript("seasons-data.js"))
-      .then(() => loadScript("season-media-data.js"))
-      .then(() => loadScript("episode-data.js"))
-      .then(() => loadScript("seasons.js"))
-      .then(() => loadScript("season-details.js"))
+  let episodeFeaturesPromise = null;
+  function loadEpisodeFeatures() {
+    if (episodeFeaturesPromise) return episodeFeaturesPromise;
+    ensureStylesheet("episode-guide.css");
+    ensureStylesheet("episode-overview.css");
+    episodeFeaturesPromise = loadScript("episode-data.js")
       .then(() => loadScript("episode-guide.js"))
-  ]).catch(error => console.error("扩展模块加载失败：", error));
+      .then(() => loadScript("episode-overview.js"));
+    return episodeFeaturesPromise;
+  }
+
+  const portraitFeatures = loadScript("portraits-data.js")
+    .then(() => loadScript("portraits.js"));
+
+  const seasonFeatures = loadScript("season-cover-sprite.js")
+    .then(() => loadScript("seasons-data.js"))
+    .then(() => loadScript("season-media-data.js"))
+    .then(() => loadScript("seasons.js"))
+    .then(() => loadScript("season-details.js"))
+    .then(() => {
+      const seasonButton = document.querySelector(".season-mode-button");
+      seasonButton?.addEventListener("click", loadEpisodeFeatures, { once: true });
+
+      if (/^#season-[1-8]-episode-\d{1,2}$/.test(location.hash)) {
+        return loadEpisodeFeatures();
+      }
+
+      const preload = () => loadEpisodeFeatures().catch(error => console.error("逐集剧情模块加载失败：", error));
+      if ("requestIdleCallback" in window) window.requestIdleCallback(preload, { timeout: 5000 });
+      else window.setTimeout(preload, 3200);
+      return null;
+    });
+
+  Promise.all([portraitFeatures, seasonFeatures])
+    .catch(error => console.error("扩展模块加载失败：", error));
 })();
