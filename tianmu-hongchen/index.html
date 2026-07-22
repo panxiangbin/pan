@@ -1,1 +1,120 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fffaf1"><title>天幕红尘·第一章</title><style>*{box-sizing:border-box}body{margin:0;background:#eee6da;color:#2b251e;font-family:"Noto Serif SC","Songti SC",serif}.app{max-width:430px;margin:auto;background:#fffaf1;min-height:100vh}.top{position:sticky;top:0;z-index:9;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fffaf1f2;border-bottom:1px solid #eadcc7;backdrop-filter:blur(12px)}.brand{color:#9d7134;font-weight:700;letter-spacing:.12em}.chapter{text-align:center;padding:30px 16px 18px}.chapter small{color:#b98536;letter-spacing:.24em;font-weight:700}.chapter h1{font-size:28px;margin:10px 0 4px}.reader{padding:0 14px 88px}.scene{margin:0 0 18px;background:#fffdf8;border:1px solid #eadcc7;border-radius:18px;overflow:hidden;box-shadow:0 8px 22px #5c3b1512}.scene img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#16130f}.scene figcaption{padding:10px 14px;color:#8b6939;font-size:13px}.text{font-size:18px;line-height:2.02;letter-spacing:.02em;text-align:justify}.text p{white-space:pre-wrap;text-indent:2em;margin:0 0 1.05em}.bottom{position:fixed;left:0;right:0;bottom:0;height:62px;max-width:430px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);background:#fffaf1f4;border-top:1px solid #eadcc7;backdrop-filter:blur(12px);z-index:10}.bottom button{border:0;background:none;color:#766b5f;font-size:11px}.bottom .active{color:#b98536;font-weight:700}.tools{position:fixed;right:max(12px,calc((100vw - 430px)/2 + 12px));bottom:75px;display:grid;gap:8px;z-index:11}.tools button{width:40px;height:40px;border-radius:50%;border:1px solid #eadcc7;background:#fffdf8}.night{background:#12100d}.night .app,.night .top,.night .bottom{background:#1d1915;color:#f0e5d5}.night .scene{background:#27211b;border-color:#4b3e31}.night .text{color:#f0e5d5}@media(min-width:700px){body{padding:24px 0}.app{border-radius:34px;overflow:hidden;box-shadow:0 25px 70px #0003}.top{border-radius:34px 34px 0 0}}</style></head><body><main class="app"><header class="top"><div class="brand">天幕红尘</div><div>⌕　☰</div></header><section class="chapter"><small>CHAPTER 01</small><h1>第一章 · 莫斯科之夜</h1><div style="color:#b98536">— ◇ —</div></section><article class="reader" id="reader"></article><div class="tools"><button id="down">A−</button><button id="up">A＋</button><button id="night">◐</button></div><nav class="bottom"><button>⌂<br>首页</button><button>▤<br>书架</button><button class="active">▥<br>阅读</button><button>☆<br>书签</button><button>♙<br>我的</button></nav></main><script src="chapter-01.js?v=3"></script><script src="pack-1.js?v=3"></script><script src="pack-2.js?v=3"></script><script src="pack-3.js?v=3"></script><script src="pack-4.js?v=3"></script><script src="pack-5.js?v=3"></script><script src="pack-6.js?v=3"></script><script>try{eval(atob(window.TM_PACK))}catch(e){console.error(e)}const labels=['莫斯科雨夜','午夜办公室','窗前沉默','油井投资崩塌','想起家人','打开抽屉','二战时期左轮手枪','留下遗言','见路不走','最后一刻'];const corrected='https://cdn-editing-temp.picsart.com/editing-temp/4a82a7b9-8379-466e-ab11-001e7cfaa1fa.webp';const ps=(window.CHAPTERS?.[0]?.body||'').split(/\n\n+/).filter(Boolean);const r=document.getElementById('reader');for(let i=0;i<10;i++){const f=document.createElement('figure');f.className='scene';const im=document.createElement('img');im.loading=i<2?'eager':'lazy';im.alt=labels[i];im.src=i===4?corrected:(window.TM_IMAGES?.[i]||'');f.appendChild(im);const c=document.createElement('figcaption');c.textContent='场景 '+String(i+1).padStart(2,'0')+' · '+labels[i];f.appendChild(c);r.appendChild(f);if(ps[i]){const s=document.createElement('section');s.className='text';const p=document.createElement('p');p.textContent=ps[i];s.appendChild(p);r.appendChild(s)}}for(let i=10;i<ps.length;i++){const s=document.createElement('section');s.className='text';const p=document.createElement('p');p.textContent=ps[i];s.appendChild(p);r.appendChild(s)}let size=18;up.onclick=()=>{size=Math.min(24,size+1);document.querySelectorAll('.text').forEach(e=>e.style.fontSize=size+'px')};down.onclick=()=>{size=Math.max(15,size-1);document.querySelectorAll('.text').forEach(e=>e.style.fontSize=size+'px')};night.onclick=()=>document.body.classList.toggle('night');</script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffaf1">
+<meta name="description" content="《天幕红尘》第一章原著图文阅读版，高清剧情图与原文逐段穿插。">
+<title>天幕红尘·第一章｜高清图文阅读</title>
+<style>
+:root{--paper:#fffaf1;--paper2:#efe5d6;--ink:#2c251d;--muted:#776b5f;--gold:#ad7b37;--line:#e7d7c0;--size:18px;--leading:2}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#e8dece,#f6efe5 40%,#e9dfd1);color:var(--ink);font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif}
+button{font:inherit}
+.progress{position:fixed;left:0;top:0;width:0;height:3px;background:var(--gold);z-index:100}
+.app{width:min(100%,720px);min-height:100vh;margin:auto;background:var(--paper);box-shadow:0 0 70px #3b2a171b}
+.top{position:sticky;top:0;z-index:30;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fffaf1ef;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+.brand{color:#95672d;font-weight:800;letter-spacing:.12em}
+.top-actions{display:flex;gap:8px}
+.round{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#fffdf8;color:#6e6255}
+.chapter{text-align:center;padding:34px 18px 20px}
+.chapter small{color:var(--gold);letter-spacing:.22em;font-weight:800}
+.chapter h1{font-size:clamp(28px,7vw,42px);line-height:1.25;margin:10px 0 8px}
+.chapter p{margin:0;color:var(--muted);font-size:13px}
+.reader{padding:0 14px 104px}
+.scene{margin:0 0 25px;background:#fffdf8;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 10px 28px #5d3e1915}
+.scene a{display:block;background:#17130f}
+.scene img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;image-rendering:auto}
+.scene figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;color:#886536;font-size:13px}
+.scene figcaption span:last-child{color:#9c9082;font-size:11px;white-space:nowrap}
+.text{padding:1px 8px 8px;font-size:var(--size);line-height:var(--leading);letter-spacing:.025em;text-align:justify}
+.text p{white-space:pre-wrap;text-indent:2em;margin:0 0 1.25em}
+.text p.note{text-indent:0;text-align:center;padding:20px 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:20px;line-height:2.1}
+.hint{margin:4px 0 24px;text-align:center;color:#9a8d7d;font-size:12px}
+.tools{position:fixed;right:max(12px,calc((100vw - 720px)/2 + 12px));bottom:78px;display:grid;gap:8px;z-index:40}
+.tools button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fffdf8ee;color:#65594c;box-shadow:0 6px 18px #30200f20}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,720px);height:64px;padding-bottom:env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(5,1fr);background:#fffaf1f3;border-top:1px solid var(--line);backdrop-filter:blur(14px);z-index:35}
+.bottom button{border:0;background:none;color:#756a5e;font-size:11px}
+.bottom .active{color:var(--gold);font-weight:800}
+body.night{background:#0f0d0b;--paper:#1c1814;--paper2:#262019;--ink:#eee3d4;--muted:#aea08e;--line:#4a3d30;--gold:#d0a15c}
+body.night .top,body.night .bottom{background:#1c1814ef}
+body.night .scene,body.night .tools button{background:#27211b}
+body.night .scene a{background:#090807}
+@media(max-width:480px){
+ .app{box-shadow:none}
+ .reader{padding-left:10px;padding-right:10px}
+ .scene{border-radius:14px;margin-bottom:21px}
+ .text{padding-left:10px;padding-right:10px;text-align:left}
+ .chapter{padding-top:28px}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<main class="app">
+<header class="top">
+  <div class="brand">天幕红尘</div>
+  <div class="top-actions"><button class="round" id="nightTop" aria-label="夜间模式">◐</button><button class="round" id="topBtn" aria-label="回到顶部">↑</button></div>
+</header>
+<section class="chapter">
+  <small>CHAPTER 01</small>
+  <h1>第一章 · 莫斯科之夜</h1>
+  <p>原著原文 · 10张高清剧情图 · 点击图片查看原图</p>
+</section>
+<article class="reader" id="reader"></article>
+<div class="tools"><button id="down" aria-label="缩小字号">A−</button><button id="up" aria-label="放大字号">A＋</button><button id="night" aria-label="夜间模式">◐</button></div>
+<nav class="bottom" aria-label="底部导航"><button>⌂<br>首页</button><button>▤<br>书架</button><button class="active">▥<br>阅读</button><button>☆<br>书签</button><button>♙<br>我的</button></nav>
+</main>
+<script>
+const scenes=[{"url":"https://cdn-editing-temp.picsart.com/editing-temp/2038b282-c3b9-4753-a778-f933671dc980.png","label":"窗前的莫斯科夏夜","w":1672,"h":941,"text":"1991年8月24日夜，莫斯科。\n\n罗家明站在办公室的窗前静静地抽着烟，静静地从12楼俯看楼下的大街。大街上的坦克和武装部队已经不见了，随着苏联国防部长亚佐夫的被捕和内务部长普戈的自杀，莫斯科在经历了“8·19事变”的短暂动荡之后渐渐恢复了秩序，午夜的大街上冷冷清清，街道两边的店铺大部分都关门了，偶尔有汽车和行人匆匆而过。"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/83ac9049-4bc4-451a-b7a4-9aeab7fb217e.png","label":"电视重播戈尔巴乔夫声明","w":941,"h":1672,"text":"办公室里只有办公桌的台灯开着，光线很暗。电视机的国际频道正在重播苏共总书记戈尔巴乔夫的声明，声明他已经没有可能继续履行苏共中央总书记的职能，正在交出权力，苏共中央自行解散……戈尔巴乔夫的声明无异于一个历史的宣告：这个走过了69年历程的苏维埃社会主义共和国联盟将不复存在……"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/2fb1d98e-dfa9-478f-9c76-8759fd1a7fcf.png","label":"石油投资崩塌","w":941,"h":1672,"text":"这场震惊世界的事变无论结果如何，对于绝大多数普通中国人几乎不会意味着什么，但是对于罗家明这个投资苏联石油开采的中国商人却是一场生死赌注，150口油井的开采权几乎要让他成为亿万富翁，他的诺尔库克石油公司几乎要创造一个辉煌……然而他输了！倾尽家产的投资、即将到期的巨额债务、一家老小的生存……一切的一切都因为这次投资是依托于苏共政权个别高官的“权力经济”而崩溃。从22号到24号的两天时间里，公司秘密股东协议里的5个权力股高官已经有3个被逮捕，查封、清算、起诉……只是个时间问题了。经济要重新洗牌，利益要重新分配，他的诺尔库克石油公司既是“权力经济”的附着物，也是这场政治斗争的牺牲品，那是以他个人之力根本无法抗拒的毁灭。"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/aee9dd7e-7840-4f62-9a0f-259247e69588.png","label":"想起远在纽约的家人","w":1536,"h":1024,"text":"他想着远在纽约的母亲、女儿、妻子、妹妹，她们往后可怎么活呢？想着那些借给他钱的亲朋好友，没法交代啊……没办法了，有办法就不用死了……他觉得自己连句道歉的话都不能说，没资格。他知道母亲的心脏很可能承受不住破产丧子的打击，但他甚至觉得那样或许更好，母亲就解脱了，就不用再受煎熬了。"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/7453dffc-8c74-463d-9625-bdb5493f90ec.png","label":"最后一支烟","w":1448,"h":1086,"text":"他用力深吸了一口烟，让烟雾在胸腔里停留了一会儿，徐徐吐出，然后往窗外弹了一下烟灰，烟灰立刻从12层楼的高度悄然飞落，转眼间在夏日的风里分解为尘埃。他下意识地侧身瞥了一眼电视，马上又面向窗外了，他不想再看见戈尔巴乔夫这张脸了，这张脸再也唤不起他的期待了，他在心里冷冷地骂了一句：这个笨蛋！"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/a6ee8b23-bf41-4154-8a54-74986de8368e.png","label":"关掉电视","w":941,"h":1672,"text":"就在这支烟将要抽完的时候，他走过去关掉电视机，把烟蒂拧进办公桌上的烟灰缸，"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/ee73424a-f754-4240-9322-9e22c532ac74.png","label":"打开抽屉","w":941,"h":1672,"text":"坐下来拿出钥匙打开抽屉，取出一个礼品盒，"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/96bacaea-68ff-483f-9f48-c4d996b915c6.png","label":"礼品盒里的左轮手枪","w":1448,"h":1086,"text":"里面是一支二战时期的左轮手枪和一盒子弹。这支枪原本是一位苏联将军的儿子送给他的礼物，现在却要成为结束他生命的工具。他将一颗子弹塞进枪膛，转到击发的位置，放到右手边，"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/3ff5b33f-43cc-483b-a75e-f78263c1009b.png","label":"留下两句遗言","w":941,"h":1672,"text":"然后拿来纸笔留遗言，只写了两句——\n\n我撑不住了。\n\n我不能请求原谅，这不是可以原谅的事！\n\n办公室的东墙上挂着一幅古色古香、装裱精美的中国书法横幅，上面是苍劲有力的四个大字——见路不走。这张横幅跟着他从北京到纽约，又从纽约来到莫斯科。这是他生命的最后一刻了，他最后看了一眼横幅，用生命最后一刻的意识在想：见路不走……可我现在能见到的只有一条死路，不走也得走了……"},{"url":"https://cdn-editing-temp.picsart.com/editing-temp/ebad6f1e-b76d-4887-a0f2-8cfee4f8fb00.png","label":"枪声之后的空办公室","w":941,"h":1672,"text":"他将遗言放到电话上以免被血染红了，拿起枪对准太阳穴，随着一声枪响身体前倾倒伏在办公桌上，鲜血顺着办公桌的边沿往下流淌……"}];
+const reader=document.getElementById('reader');
+scenes.forEach((s,i)=>{
+  const figure=document.createElement('figure');
+  figure.className='scene';
+  const link=document.createElement('a');
+  link.href=s.url;
+  link.target='_blank';
+  link.rel='noopener';
+  link.title='打开高清原图';
+  const img=document.createElement('img');
+  img.src=s.url;
+  img.alt=s.label;
+  img.width=s.w;
+  img.height=s.h;
+  img.loading=i<2?'eager':'lazy';
+  img.decoding='async';
+  if(i===0) img.fetchPriority='high';
+  link.appendChild(img);
+  figure.appendChild(link);
+  const cap=document.createElement('figcaption');
+  cap.innerHTML='<span>场景 '+String(i+1).padStart(2,'0')+' · '+s.label+'</span><span>查看原图 ↗</span>';
+  figure.appendChild(cap);
+  reader.appendChild(figure);
+  const section=document.createElement('section');
+  section.className='text';
+  const p=document.createElement('p');
+  if(i===8) p.className='note';
+  p.textContent=s.text;
+  section.appendChild(p);
+  reader.appendChild(section);
+});
+const hint=document.createElement('div');
+hint.className='hint';
+hint.textContent='图片保持原始比例完整显示，不拉伸、不强制裁切。';
+reader.appendChild(hint);
+let size=18;
+function applySize(){document.documentElement.style.setProperty('--size',size+'px')}
+document.getElementById('up').onclick=()=>{size=Math.min(24,size+1);applySize()};
+document.getElementById('down').onclick=()=>{size=Math.max(15,size-1);applySize()};
+function toggleNight(){document.body.classList.toggle('night')}
+document.getElementById('night').onclick=toggleNight;
+document.getElementById('nightTop').onclick=toggleNight;
+document.getElementById('topBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+addEventListener('scroll',()=>{
+ const h=document.documentElement.scrollHeight-innerHeight;
+ document.getElementById('progress').style.width=(h>0?scrollY/h*100:0)+'%';
+},{passive:true});
+</script>
+</body>
+</html>
