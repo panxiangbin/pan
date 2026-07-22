@@ -57,7 +57,7 @@ const flow=[
  {type:'text',parts:[smoke[0]]},{type:'image',i:4},{type:'text',parts:[smoke[1],a1[0]]},
  {type:'image',i:5},{type:'text',parts:[a2[0]]},{type:'image',i:6},
  {type:'text',parts:[a3[0]]},{type:'image',i:7},{type:'text',parts:[a4[0]]},{type:'image',i:8},
- {type:'text',parts:[a4[1],paras[7],paras[8],paras[9],paras[10]],center:true},{type:'image',i:9}
+ {type:'text',parts:[a4[1]]},{type:'text',parts:[paras[7],paras[8]],center:true},{type:'text',parts:[paras[9],paras[10]]},{type:'image',i:9}
 ];
 const reader=document.getElementById('reader');
 function addText(item){const parts=item.parts.filter(Boolean);if(!parts.length)return;const section=document.createElement('section');section.className='prose'+(item.center?' center':'');parts.forEach(t=>{const p=document.createElement('p');p.textContent=t;section.appendChild(p)});reader.appendChild(section)}
