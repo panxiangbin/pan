@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -80,3 +80,44 @@ jobs:
       - name: Deploy complete site
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Publish deployment status receipt
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          DEPLOY_OUTCOME: ${{ steps.deployment.outcome }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          SOURCE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          status_dir="$(mktemp -d)"
+          cd "$status_dir"
+          git init
+          git checkout --orphan pages-status
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+
+          payload = {
+              "jobStatus": os.environ.get("JOB_STATUS", "unknown"),
+              "deploymentOutcome": os.environ.get("DEPLOY_OUTCOME", "unknown"),
+              "pageUrl": os.environ.get("PAGE_URL", ""),
+              "sourceSha": os.environ.get("SOURCE_SHA", ""),
+              "runId": os.environ.get("RUN_ID", ""),
+              "runAttempt": os.environ.get("RUN_ATTEMPT", ""),
+              "recordedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+          }
+          Path("deploy-status.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+          git add deploy-status.json
+          git commit -m "记录Pages部署状态"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin HEAD:pages-status
