@@ -67,6 +67,7 @@ jobs:
           grep -q '/pan/50k/assets/' _site/50k/index.html
           grep -R -q 'landscape-r3' _site/50k/assets
           grep -R -q 'r3-visible-home' _site/50k/assets
+          grep -R -q 'compact-guidance-final' _site/50k/assets
           grep -R -q '请横屏使用' _site/50k/assets
           grep -R -q '直接进入横屏' _site/50k/assets
           grep -R -q 'force-landscape-active' _site/50k/assets
