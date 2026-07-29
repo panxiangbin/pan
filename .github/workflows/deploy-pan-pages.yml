@@ -43,13 +43,10 @@ jobs:
 
       - name: Test and build Henan 50K for nested Pages path
         working-directory: .build/henan-50k/client
-        env:
-          DEPLOY_TARGET: github-pages
-          PAGES_BASE_PATH: /pan/50k/
         run: |
           npm ci --include=dev --no-audit --no-fund
           npm test
-          npm run build
+          DEPLOY_TARGET=github-pages PAGES_BASE_PATH=/pan/50k/ npm run build
 
       - name: Assemble existing site with Henan 50K
         shell: bash
