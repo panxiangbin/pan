@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -18,7 +18,7 @@ jobs:
   build-and-deploy:
     name: Build site and deploy Pages
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -65,8 +65,10 @@ jobs:
           test -s _site/50k/index.html
           test -s _site/50k/audio/langaishou-v2.mp3
           grep -q '/pan/50k/assets/' _site/50k/index.html
-          grep -R -q 'landscape-r1' _site/50k/assets
+          grep -R -q 'landscape-r2' _site/50k/assets
           grep -R -q '请横屏使用' _site/50k/assets
+          grep -R -q '直接进入横屏' _site/50k/assets
+          grep -R -q 'force-landscape-active' _site/50k/assets
           grep -R -q 'actionStatusKind' _site/50k/assets
 
       - name: Configure GitHub Pages
@@ -80,44 +82,3 @@ jobs:
       - name: Deploy complete site
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Publish deployment status receipt
-        if: always()
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_STATUS: ${{ job.status }}
-          DEPLOY_OUTCOME: ${{ steps.deployment.outcome }}
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-          SOURCE_SHA: ${{ github.sha }}
-          RUN_ID: ${{ github.run_id }}
-          RUN_ATTEMPT: ${{ github.run_attempt }}
-        run: |
-          set -euo pipefail
-          status_dir="$(mktemp -d)"
-          cd "$status_dir"
-          git init
-          git checkout --orphan pages-status
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          python3 - <<'PY'
-          import datetime
-          import json
-          import os
-          from pathlib import Path
-
-          payload = {
-              "jobStatus": os.environ.get("JOB_STATUS", "unknown"),
-              "deploymentOutcome": os.environ.get("DEPLOY_OUTCOME", "unknown"),
-              "pageUrl": os.environ.get("PAGE_URL", ""),
-              "sourceSha": os.environ.get("SOURCE_SHA", ""),
-              "runId": os.environ.get("RUN_ID", ""),
-              "runAttempt": os.environ.get("RUN_ATTEMPT", ""),
-              "recordedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          }
-          Path("deploy-status.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-          PY
-          git add deploy-status.json
-          git commit -m "记录Pages部署状态"
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin HEAD:pages-status
