@@ -67,6 +67,7 @@ jobs:
           grep -q '/pan/50k/assets/' _site/50k/index.html
           grep -R -q 'landscape-r1' _site/50k/assets
           grep -R -q '请横屏使用' _site/50k/assets
+          grep -R -q 'actionStatusKind' _site/50k/assets
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
