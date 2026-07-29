@@ -1,0 +1,82 @@
+name: Deploy combined Pan Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: Build site and deploy Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout pan site
+        uses: actions/checkout@v4
+
+      - name: Checkout verified Henan 50K source
+        uses: actions/checkout@v4
+        with:
+          repository: panxiangbin/-K
+          ref: main
+          path: .build/henan-50k
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: .build/henan-50k/client/package-lock.json
+
+      - name: Test and build Henan 50K for nested Pages path
+        working-directory: .build/henan-50k/client
+        env:
+          DEPLOY_TARGET: github-pages
+          PAGES_BASE_PATH: /pan/50k/
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm test
+          npm run build
+
+      - name: Assemble existing site with Henan 50K
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -a ./ _site/ \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '.build' \
+            --exclude '_site'
+          rm -rf _site/50k
+          mkdir -p _site/50k
+          cp -R .build/henan-50k/client/dist/. _site/50k/
+          touch _site/.nojekyll
+          test -s _site/50k/index.html
+          test -s _site/50k/audio/langaishou-v2.mp3
+          grep -q '/pan/50k/assets/' _site/50k/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload complete Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy complete site
+        id: deployment
+        uses: actions/deploy-pages@v4
