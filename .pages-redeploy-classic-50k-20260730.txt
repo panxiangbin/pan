@@ -1,0 +1,3 @@
+Force GitHub Pages to rebuild Henan 50K from the restored classic UI source.
+Triggered: 2026-07-30 16:43 Asia/Shanghai
+Expected source tree: panxiangbin/-K main, identical to 6e60ddd3aa40381967138544f1458bb871277ce9
