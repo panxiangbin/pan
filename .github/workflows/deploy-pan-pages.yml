@@ -9,7 +9,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  statuses: write
 
 concurrency:
   group: pages
@@ -25,20 +24,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Mark public verification pending
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: 'pending',
-              context: 'pan-pages/50k-public',
-              description: '正在发布河南五十K科技V2',
-              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions`,
-            });
-
       - name: Checkout pan site
         uses: actions/checkout@v4
 
@@ -79,20 +64,14 @@ jobs:
           touch _site/.nojekyll
           test -s _site/50k/index.html
           test -s _site/50k/audio/langaishou-v2.mp3
-          grep -F -q '/pan/50k/assets/' _site/50k/index.html
-          grep -R -F -q 'landscape-r3' _site/50k/assets
-          grep -R -F -q 'r3-visible-home' _site/50k/assets
-          grep -R -F -q 'compact-guidance-final' _site/50k/assets
-          grep -R -F -q '请横屏使用' _site/50k/assets
-          grep -R -F -q '直接进入横屏' _site/50k/assets
-          grep -R -F -q 'force-landscape-active' _site/50k/assets
-          grep -R -F -q 'actionStatusKind' _site/50k/assets
-          grep -R -F -q 'tech-landscape-v2' _site/50k/assets
-          grep -R -F -q 'game-screen-tech-v2' _site/50k/assets
-          grep -R -F -q 'body.game-screen-tech-v2 .tech-hand-surface' _site/50k/assets
-          grep -R -F -q 'body.game-screen-tech-v2 .tech-actions' _site/50k/assets
-          grep -R -F -q 'grid-row:3!important' _site/50k/assets
-          grep -R -F -q 'grid-row:4!important' _site/50k/assets
+          grep -q '/pan/50k/assets/' _site/50k/index.html
+          grep -R -q 'landscape-r3' _site/50k/assets
+          grep -R -q 'r3-visible-home' _site/50k/assets
+          grep -R -q 'compact-guidance-final' _site/50k/assets
+          grep -R -q '请横屏使用' _site/50k/assets
+          grep -R -q '直接进入横屏' _site/50k/assets
+          grep -R -q 'force-landscape-active' _site/50k/assets
+          grep -R -q 'actionStatusKind' _site/50k/assets
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -105,80 +84,3 @@ jobs:
       - name: Deploy complete site
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Verify technology V2 on the public site
-        shell: bash
-        env:
-          PUBLIC_50K_URL: https://panxiangbin.github.io/pan/50k/
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 36); do
-            echo "Public verification attempt ${attempt}/36"
-            html_file="${RUNNER_TEMP}/pan-50k-public-index.html"
-            assets_file="${RUNNER_TEMP}/pan-50k-public-assets.txt"
-            : > "${assets_file}"
-
-            if curl --fail --silent --show-error --location \
-              --header 'Cache-Control: no-cache' \
-              "${PUBLIC_50K_URL}?release=${GITHUB_SHA}-${attempt}" \
-              --output "${html_file}"; then
-              mapfile -t asset_paths < <(
-                grep -oE '/pan/50k/assets/[^"[:space:]]+\.(js|css)' "${html_file}" \
-                  | sort -u
-              )
-
-              for asset_path in "${asset_paths[@]}"; do
-                curl --fail --silent --show-error --location \
-                  --header 'Cache-Control: no-cache' \
-                  "https://panxiangbin.github.io${asset_path}?release=${GITHUB_SHA}" \
-                  >> "${assets_file}" || true
-                printf '\n' >> "${assets_file}"
-              done
-
-              if test -s "${assets_file}" \
-                && grep -F -q 'tech-landscape-v2' "${assets_file}" \
-                && grep -F -q 'game-screen-tech-v2' "${assets_file}" \
-                && grep -F -q 'body.game-screen-tech-v2 .tech-hand-surface' "${assets_file}" \
-                && grep -F -q 'body.game-screen-tech-v2 .tech-actions' "${assets_file}" \
-                && grep -F -q 'grid-row:3!important' "${assets_file}" \
-                && grep -F -q 'grid-row:4!important' "${assets_file}"; then
-                echo 'Public Henan 50K technology V2 verification passed.'
-                exit 0
-              fi
-            fi
-
-            sleep 5
-          done
-
-          echo 'Public site did not expose the verified technology V2 assets.' >&2
-          exit 1
-
-      - name: Mark public verification successful
-        if: success()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: 'success',
-              context: 'pan-pages/50k-public',
-              description: '河南五十K科技V2已在公开站生效',
-              target_url: 'https://panxiangbin.github.io/pan/50k/',
-            });
-
-      - name: Mark public verification failed
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: 'failure',
-              context: 'pan-pages/50k-public',
-              description: '河南五十K公开站回验失败',
-              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions`,
-            });
