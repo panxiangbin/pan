@@ -64,14 +64,20 @@ jobs:
           touch _site/.nojekyll
           test -s _site/50k/index.html
           test -s _site/50k/audio/langaishou-v2.mp3
-          grep -q '/pan/50k/assets/' _site/50k/index.html
-          grep -R -q 'landscape-r3' _site/50k/assets
-          grep -R -q 'r3-visible-home' _site/50k/assets
-          grep -R -q 'compact-guidance-final' _site/50k/assets
-          grep -R -q '请横屏使用' _site/50k/assets
-          grep -R -q '直接进入横屏' _site/50k/assets
-          grep -R -q 'force-landscape-active' _site/50k/assets
-          grep -R -q 'actionStatusKind' _site/50k/assets
+          grep -F -q '/pan/50k/assets/' _site/50k/index.html
+          grep -R -F -q 'landscape-r3' _site/50k/assets
+          grep -R -F -q 'r3-visible-home' _site/50k/assets
+          grep -R -F -q 'compact-guidance-final' _site/50k/assets
+          grep -R -F -q '请横屏使用' _site/50k/assets
+          grep -R -F -q '直接进入横屏' _site/50k/assets
+          grep -R -F -q 'force-landscape-active' _site/50k/assets
+          grep -R -F -q 'actionStatusKind' _site/50k/assets
+          grep -R -F -q 'tech-landscape-v2' _site/50k/assets
+          grep -R -F -q 'game-screen-tech-v2' _site/50k/assets
+          grep -R -F -q 'body.game-screen-tech-v2 .tech-hand-surface' _site/50k/assets
+          grep -R -F -q 'body.game-screen-tech-v2 .tech-actions' _site/50k/assets
+          grep -R -F -q 'grid-row:3!important' _site/50k/assets
+          grep -R -F -q 'grid-row:4!important' _site/50k/assets
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
