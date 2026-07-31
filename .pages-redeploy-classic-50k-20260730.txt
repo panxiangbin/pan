@@ -1,3 +1,6 @@
-Force GitHub Pages to rebuild Henan 50K from the restored classic UI source.
-Triggered: 2026-07-30 16:43 Asia/Shanghai
-Expected source tree: panxiangbin/-K main, identical to 6e60ddd3aa40381967138544f1458bb871277ce9
+Force GitHub Pages to rebuild Henan 50K from the verified wood-green landscape table source.
+Triggered: 2026-07-31 10:50 Asia/Shanghai
+Expected source repository: panxiangbin/-K main
+Expected source merge commit: 77603b5907fae02fd65c11550a3fa77b53459cca
+Verified PR head: d131ce2f4c6b0aa6ffaac8249ca35fcffab0b595
+Validation: Chromium Android + WebKit iPhone, three real plays, 36/36 cards visible, long pattern labels passed.
