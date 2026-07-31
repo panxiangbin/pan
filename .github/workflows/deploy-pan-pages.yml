@@ -34,7 +34,7 @@ jobs:
             -H "Authorization: Bearer ${{ github.token }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
-            -d '{"state":"pending","context":"pan-pages/50k-classic","description":"正在重新构建经典横屏牌桌"}'
+            -d '{"state":"pending","context":"pan-pages/50k-classic","description":"正在构建木质绿色横屏牌桌"}'
 
       - name: Checkout pan site
         uses: actions/checkout@v4
@@ -102,6 +102,39 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Verify public 50K Pages matches this build
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_js="$(grep -oE '/pan/50k/assets/[^\" ]+\.js' _site/50k/index.html | head -n 1)"
+          expected_css="$(grep -oE '/pan/50k/assets/[^\" ]+\.css' _site/50k/index.html | head -n 1)"
+          test -n "$expected_js"
+          test -n "$expected_css"
+
+          for attempt in $(seq 1 30); do
+            public_html="$(curl --fail --silent --show-error --location --retry 2 \
+              "https://panxiangbin.github.io/pan/50k/?deploy=${GITHUB_SHA}&attempt=${attempt}" || true)"
+            if printf '%s' "$public_html" | grep -Fq "$expected_js" \
+              && printf '%s' "$public_html" | grep -Fq "$expected_css"; then
+              curl --fail --silent --show-error --location --retry 2 \
+                "https://panxiangbin.github.io${expected_js}?deploy=${GITHUB_SHA}" \
+                -o /tmp/public-50k.js
+              curl --fail --silent --show-error --location --retry 2 \
+                "https://panxiangbin.github.io${expected_css}?deploy=${GITHUB_SHA}" \
+                -o /tmp/public-50k.css
+              grep -q 'clean-landscape-v1' /tmp/public-50k.js
+              grep -q 'game-screen-clean-v1' /tmp/public-50k.css
+              grep -q 'trick-board-summary__meta' /tmp/public-50k.css
+              echo "Public 50K Pages verified: $expected_js + $expected_css"
+              exit 0
+            fi
+            echo "Public Pages still serving an older asset set (attempt ${attempt}/30)"
+            sleep 10
+          done
+
+          echo "公开 Pages 在等待时间内未切换到本次构建资源" >&2
+          exit 1
+
       - name: Mark classic 50K deployment successful
         shell: bash
         run: |
@@ -111,7 +144,7 @@ jobs:
             -H "Authorization: Bearer ${{ github.token }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
-            -d '{"state":"success","context":"pan-pages/50k-classic","description":"经典横屏牌桌已重新部署"}'
+            -d '{"state":"success","context":"pan-pages/50k-classic","description":"木质绿色横屏牌桌已部署并核验公开地址"}'
 
       - name: Mark classic 50K deployment failed
         if: failure()
@@ -123,4 +156,4 @@ jobs:
             -H "Authorization: Bearer ${{ github.token }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
-            -d '{"state":"failure","context":"pan-pages/50k-classic","description":"经典横屏牌桌部署失败，请检查 Actions"}'
+            -d '{"state":"failure","context":"pan-pages/50k-classic","description":"木质绿色横屏牌桌部署或公开地址核验失败"}'
