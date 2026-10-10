@@ -2,7 +2,7 @@
  * 无网络请求，无默认工程常数，无设备型号推荐。
  * 统一采用SI中间量；所有受限相关式均附来源/工况提示。
  */
-export const VERSION = '0.5.0';
+export const VERSION = '0.6.0';
 export const REFERENCES = {
   takahashi: {label:'Takahashi, Arai & Saito, J. Chem. Eng. Japan 15(1), 77–79 (1982), Eq.(4), Table 1',url:'https://doi.org/10.1252/jcej.15.77'},
   wankat: {label:'Wankat, Separation Process Engineering, 第7章（Fenske）',url:'https://www.informit.com/articles/article.aspx?p=3167983&seqNum=2'},

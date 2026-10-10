@@ -15,7 +15,7 @@ export const REACTOR_GROUPS=[
  {id:'circulation',title:'热源循环',accent:'#0c9d8c',description:'流量、出口温度及循环介质物性',fields:[
    field('flow','循环体积流量','L/min'),field('outlet','固定出口温度','°C'),field('oilCp','循环介质比热','J/(kg·K)'),field('oilDensity','循环介质密度','kg/m³')]},
  {id:'power',title:'加热功率与余量',accent:'#b18528',description:'设备额定功率、利用率与预算系数',fields:[
-   field('heater','额定加热功率','kW'),field('utilization','有效功率比例','%'),field('margin','设计预算余量','%')]},
+   field('heater','额定加热功率','kW'),field('utilization','有效功率比例','%'),field('margin','设计预算余量','%'),field('heatLossFactor','热损耗系数','%')]},
  {id:'startup',title:'夹套冷油启动负载',accent:'#7995c3',description:'夹套油的体积、质量及预热能量',fields:[
    field('oilVolume','冷态夹套油容积','L'),field('oilFillDensity','冷态油密度','kg/m³'),field('oilMass','夹套油质量','kg'),field('oilHeatCp','油预热平均比热','J/(kg·K)'),field('oilStart','油初始温度','°C'),field('oilTarget','油预热目标','°C')]},
  {id:'transfer',title:'传热与环境散热',accent:'#39a4a6',description:'K、面积、外壁热损参数',fields:[
@@ -30,6 +30,7 @@ export const REACTOR_EXAMPLE=Object.freeze((()=>{
  p.flow=Number((p.flow/.06).toFixed(6));
  p.utilization=Number((p.utilization*100).toFixed(6));
  p.margin=Number((p.margin*100).toFixed(6));
+ p.heatLossFactor=20; // 新增独立可编辑的热量账预算系数（百分数），不替换旧版设计余量
  p.viscosity=Number((p.viscosity*1000).toFixed(6)); // 旧Pa·s演示转换为新界面的mPa·s
  p.mode='flow';
  return p;
@@ -55,6 +56,9 @@ function readValues(v){
  p.flow=p.flow*.06; // 页面 L/min -> 引擎 m³/h
  p.utilization=p.utilization/100;
  p.margin=p.margin/100;
+ if(!(p.heatLossFactor>=0&&p.heatLossFactor<=100))
+  return {bad:deny('热损耗系数必须在0%到100%之间。',['heatLossFactor'])};
+ p.heatLossFactor=p.heatLossFactor/100;
  p.viscosity=p.viscosity/1000; // mobile mPa·s -> engine Pa·s
  return {p};
 }
@@ -72,10 +76,13 @@ export function calculateReactorFull(v){
  try {r=Thermal.calculate(parsed.p);}catch(ex){return deny('原版热工模型计算失败：'+String(ex.message||ex));}
  if(!r.ok)return deny((r.errors||['参数条件不成立']).join('；'));
  const p=r.p;
- const refTotal=r.referenceMinutes*(1+p.margin); // 与电脑版相同的二次预算显示
+ const refTotal=r.referenceMinutes*(1+p.margin); // 仅保留旧版历史对照
+ // 新系数只用于热量账附加预算，环境散热积分由旧物理模型单独计算；防止暗中改变设计时间。
+ const heatLossMJ=r.totalMJ*p.heatLossFactor;
+ const designHeatMJ=r.totalMJ+heatLossMJ;
  const flags=[
- '沿用原电脑版31项参数及同一计算引擎；结果可与旧版对照，不代表这些参数已经完成实验校准。',
- '原版将同一预算余量用于设计时间和参考总时间两层显示；参考总时间不是独立物理计算。环境散热积分与预算系数应分开理解。',
+ '保留原电脑版31项计算参数，另增加一项可编辑热损耗系数；原工程模型未改变，不代表新增系数经过实验标定。',
+ '设计预算余量控制设计时间；热损耗系数控制热量账附加预算。环境散热已在旧模型中积分，新增预算并非额外测得的散热，需避免重复计入。',
  '冷油启动和物料升温采用顺序预算，不模拟并行升温。两者相加可能偏长，但不构成设备实际时间的上限保证。',
  '搅拌功率使用旧版未校核的层流常数，仅演算，不可用于确定电机与减速机。',
  '热工物性按输入常数处理；修改温区不会自动重选相应的物性参数。'
@@ -91,19 +98,19 @@ export function calculateReactorFull(v){
  try {areaCheck={...Thermal.transferSizing(areaPower,p.K,areaMean),power:areaPower,delta:areaMean};}
  catch(e){areaCheck={error:'传热校核：'+e.message};}
  return {
-  state:'ready',title:'反应釜完整热工模型',level:'原版31项 · 待工程标定',
+  state:'ready',title:'反应釜完整热工模型',level:'32项参数 · 待工程标定',
   metrics:[
     metric('设计总时间',r.referenceMinutes,'分钟','物料段＋冷油预算，再乘一次设计余量'),
-    metric('设计总热量',r.designMJ,'MJ','显热、冷油、散热与预算余量合计'),
+    metric('设计总热量',designHeatMJ,'MJ','基础总热量＋按热损耗系数计算的附加预算'),
     metric('物料升温时间',r.minutes,'分钟'),
     metric('夹套油启动预算',r.oilMinutes,'分钟'),
     metric('有效加热功率',r.effectiveKW,'kW'),
     metric('平均供热功率',r.averageKW,'kW')
   ],
   notes:[...flags,...r.warnings],
-  formulas:['沿用旧版常物性积分模型：C·dT/dt = P(T) − h·A外·(T−T环境)','设计总时间 = (物料段时间＋冷油预算时间) × (1+margin)','参考总时间 = 设计总时间 × (1+margin)（原版显示规则，不额外重复计入物理计算）'],
+  formulas:['旧版常物性积分：C·dT/dt = P(T) − h·A外·(T−T环境)','设计时间 = (物料段时间＋冷油启动时间) × (1+设计预算余量)','热损耗量（附加预算）= 基础总热量 × 热损耗系数','设计总热量 = 基础总热量＋热损耗量；与已积分的环境散热分开列示'],
   refs:[],
-  reactor:{r,p,refTotal,m,flowCheck,areaCheck,flags,source:MODEL_SOURCE}
+  reactor:{r,p,refTotal,heatLossMJ,designHeatMJ,m,flowCheck,areaCheck,flags,source:MODEL_SOURCE}
  };
 }
 export const formatModel=n=>{

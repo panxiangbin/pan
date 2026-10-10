@@ -1,0 +1,16 @@
+/* 釜算 V0.6：热量账新增热损耗量，名称与计算式醒目红色，计算结果保持原数值颜色。 */
+.reactor-energy-table tr.reactor-heatloss-row td:first-child,
+.reactor-energy-table tr.reactor-heatloss-row td.calc{
+  color:#cf243a!important;
+  font-weight:800;
+}
+.reactor-energy-table tr.reactor-heatloss-row{
+  background:#fff8f9;
+}
+.reactor-energy-table tr.reactor-heatloss-row td{
+  border-bottom:1px solid #f3d6dd;
+}
+@media(max-width:600px){
+  .reactor-energy-table tr.reactor-heatloss-row td:first-child,
+  .reactor-energy-table tr.reactor-heatloss-row td.calc{font-size:11px;}
+}
