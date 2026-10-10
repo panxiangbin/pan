@@ -1,0 +1,32 @@
+name: Validate Fusuan V0.6 review
+on:
+  push:
+    branches:
+      - fusuan-v06-heat-loss-review
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check module syntax
+        run: |
+          for file in fusuan/*.mjs; do node --check "$file"; done
+      - name: Check source semantics
+        run: node fusuan/tests/verify-v06.mjs
+      - name: Confirm UI strings
+        run: |
+          grep -q "热损耗系数" fusuan/reactor_full.mjs
+          grep -q "reactor-heatloss-row" fusuan/reactor_ui.mjs
+          grep -q "基础热量 × 热损耗系数" fusuan/reactor_ui.mjs
+          if grep -q '预算增加量不是额外实测散热' fusuan/reactor_ui.mjs; then
+            echo "Outdated footnote remains" >&2
+            exit 1
+          fi
+          test -s fusuan/mobile_v06.css
