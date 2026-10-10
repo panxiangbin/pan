@@ -37,7 +37,7 @@ export function renderReactorModule(v){
  const help='本页显示旧版全部31项热工及搅拌参考参数。部分物性和传热系数是旧版演示数，不是默认工业经验值。';
  return '<div class="page reactor-page" data-module="heat">'+
   '<div class="breadcrumb"><a href="#home">首页</a> › <span>反应釜完整热工</span></div>'+
-  '<div class="reactor-intro"><div><div class="eyebrow">FU SUAN · REACTOR ENGINEERING</div><h1>反应釜热工计算</h1><p>电脑版完整计算模型 · 手机版重新排版 · 取消过程动画</p></div><span class="reactor-count">31 项参数 · 7 类分组</span></div>'+
+  '<div class="reactor-intro"><div><div class="eyebrow">FU SUAN · REACTOR ENGINEERING</div><h1>反应釜热工计算</h1><p>电脑版完整计算模型 · 手机版重新排版 · 取消过程动画</p></div><span class="reactor-count">32 项参数 · 7 类分组</span></div>'+
   '<div class="reactor-warning-head"><strong>演示参数</strong>　K、物性、余量及搅拌常数需按实际设备核定，结果并非设备性能保证。</div>'+
   '<div id="reactor-summary" class="reactor-summary" aria-live="polite"></div>'+
   '<p class="reactor-essential-note">冷油与物料按<b>顺序预算</b>（未模拟并行）；K=250、h=15和油物性为<b>演示参数</b>，请核实后使用。</p>'+
@@ -50,8 +50,8 @@ export function renderReactorModule(v){
    '<span class="mini-metric mini-green"><small>有效功率</small><strong id="reactor-sticky-power">—</strong><em>kW</em></span>'+
    '<span class="mini-metric mini-rose"><small>平均功率</small><strong id="reactor-sticky-average">—</strong><em>kW</em></span>'+
   '</span></button></div>'+
-  '<nav class="reactor-jump" aria-label="快速查看结果"><a href="#reactor-params">31项参数</a><a href="#reactor-chart-panel">温度曲线</a><a href="#reactor-energy-panel">热量账</a><a href="#reactor-sizing-panel">工程校核</a></nav>'+
-  '<div class="reactor-workspace"><section class="reactor-param-panel" id="reactor-params"><div class="reactor-panel-head"><div><h2>第一步 · 填写工程参数</h2><p>逐组展开31项输入，数据修改后结果自动更新</p></div><div class="reactor-parameter-actions"><button data-action="reactor-expand" type="button">全部展开</button><button data-action="reactor-collapse" type="button">全部收起</button></div></div>'+
+  '<nav class="reactor-jump" aria-label="快速查看结果"><a href="#reactor-params">32项参数</a><a href="#reactor-chart-panel">温度曲线</a><a href="#reactor-energy-panel">热量账</a><a href="#reactor-sizing-panel">工程校核</a></nav>'+
+  '<div class="reactor-workspace"><section class="reactor-param-panel" id="reactor-params"><div class="reactor-panel-head"><div><h2>第一步 · 填写工程参数</h2><p>逐组展开32项输入，数据修改后结果自动更新</p></div><div class="reactor-parameter-actions"><button data-action="reactor-expand" type="button">全部展开</button><button data-action="reactor-collapse" type="button">全部收起</button></div></div>'+
   modeSelector(v)+'<div class="reactor-groups">'+groups+'</div>'+
   '<div class="reactor-param-footer"><span>'+esc(help)+'</span><div class="reactor-params-buttons"><button type="button" class="btn btn-secondary" data-action="example">恢复旧版示例</button><button type="button" class="btn btn-ghost" data-action="clear">清空参数</button></div></div>'+
   '</section><div class="reactor-result-column" id="reactor-output"><h2 class="reactor-step-two">第二步 · 查看曲线、热量账与校核</h2><div id="reactor-details"></div></div></div>'+
@@ -92,8 +92,9 @@ function temperaturePanel(r){
   '<div class="reactor-curve-points"><span><small>起点</small><strong>'+formatModel(r.samples[0].T)+' °C</strong></span><span><small>中点</small><strong>'+formatModel(r.samples[Math.floor(r.samples.length/2)].T)+' °C</strong></span><span><small>终点</small><strong>'+formatModel(r.samples.at(-1).T)+' °C</strong></span></div>'+
   '<p class="reactor-panel-note">可在手机上左右滑动曲线。仅为物料段计算，冷油启动另行预算，未模拟并行升温。</p></section>';
 }
-const heatrow=(label,calc,value,isTotal)=>'<tr'+(isTotal?' class="highlight"':'')+'><td>'+esc(label)+'</td><td class="calc">'+esc(calc)+'</td><td class="value">'+formatModel(value)+'</td></tr>';
-function energyPanel(r){
+const heatrow=(label,calc,value,isTotal,isHeatLoss=false)=>'<tr'+(isTotal?' class="highlight"':isHeatLoss?' class="reactor-heatloss-row"':'')+'><td>'+esc(label)+'</td><td class="calc">'+esc(calc)+'</td><td class="value">'+formatModel(value)+'</td></tr>';
+function energyPanel(rc){
+ const r=rc.r;
  return '<section class="reactor-output-panel" id="reactor-energy-panel"><div class="reactor-output-heading"><h3>热量账</h3><span class="chip">单位 MJ</span></div>'+
   '<div class="reactor-table-wrap"><table class="reactor-energy-table"><thead><tr><th>组成</th><th>计算式</th><th>热量 MJ</th></tr></thead><tbody>'+
   heatrow('物料显热','m × cp × ΔT',r.fluidMJ)+
@@ -101,10 +102,10 @@ function energyPanel(r){
   heatrow('夹套油预热','m油 × cp油 × ΔT油',r.oilMJ)+
   heatrow('环境散热','∫h × A外 × ΔT dt',r.lossMJ)+
   heatrow('基础总热量','物料＋釜体＋夹套油＋散热',r.totalMJ,true)+
-  heatrow('预算增加量','基础热量 × 余量',r.marginMJ)+
-  heatrow('设计总热量','基础总热量 × (1+余量)',r.designMJ,true)+
+  heatrow('热损耗量','基础热量 × 热损耗系数',rc.heatLossMJ,false,true)+
+  heatrow('设计总热量','基础总热量＋热损耗量',rc.designHeatMJ,true)+
   '</tbody></table></div><div class="reactor-inline-calculation">物料段 '+formatModel(r.minutes)+' 分钟 + 冷油启动 '+formatModel(r.oilMinutes)+' 分钟，按设计余量 '+formatModel(r.p.margin*100)+'% 合成设计时间：<b>'+formatModel(r.referenceMinutes)+' 分钟</b>。</div>'+
-  '<p class="reactor-panel-note">热量账平衡残差：'+formatModel(r.balanceErrorJ)+' J。预算增加量不是额外实测散热。原版的“参考总时间”又乘一次同一余量，仅保留用于与电脑版对照。</p></section>';
+  '<p class="reactor-panel-note">热量账平衡残差：'+formatModel(r.balanceErrorJ)+' J。热损耗系数仅为自定义附加热量预算；基础热量已含积分环境散热，请按实际工况核定，避免重复计入。</p></section>';
 }
 function checkPanel(rc,v){
  const {r,flowCheck,areaCheck,m}=rc;
@@ -170,16 +171,16 @@ export function renderReactorResult(result,v){
  const editing=document.activeElement?.dataset?.input;
  const keepFocus=['sizePower','sizeDrop','areaPower','areaMean'].includes(editing)?editing:null;
  top.innerHTML=card('设计总时间',r.referenceMinutes,'分钟','顺序预算：物料＋冷油，再加一层设计余量','st-blue')+
-  card('设计总热量',r.designMJ,'MJ','含显热、环境散热和预算余量','st-sky')+
+  card('设计总热量',result.reactor.designHeatMJ,'MJ','基础总热量＋附加热损耗预算','st-sky')+
   card('物料升温段',r.minutes,'分钟','模型传热与散热积分','st-teal')+
   card('冷油启动预算',r.oilMinutes,'分钟','夹套油预热热量预算','st-coral')+
   card('有效加热功率',r.effectiveKW,'kW','额定×功率利用率','st-green')+
   card('平均供热功率',r.averageKW,'kW','基础热量÷基础时间','st-amber');
- details.innerHTML=temperaturePanel(r)+energyPanel(r)+checkPanel(result.reactor,v)+statusPanel(result.reactor);
+ details.innerHTML=temperaturePanel(r)+energyPanel(result.reactor)+checkPanel(result.reactor,v)+statusPanel(result.reactor);
   const legacy=document.getElementById('reactor-legacy-time');if(legacy)legacy.textContent=formatModel(result.reactor.refTotal);
   const compactMetrics=[
    ['reactor-sticky-time',r.referenceMinutes],
-   ['reactor-sticky-energy',r.designMJ],
+   ['reactor-sticky-energy',result.reactor.designHeatMJ],
    ['reactor-sticky-material',r.minutes],
    ['reactor-sticky-oil',r.oilMinutes],
    ['reactor-sticky-power',r.effectiveKW],
