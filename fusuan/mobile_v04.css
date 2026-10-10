@@ -1,0 +1,90 @@
+/* 釜算手机版V0.4：移动结果/折叠/点按/物性表细节，无计算公式改动。 */
+.reactor-field-note{display:block;font-size:10.5px;line-height:1.45;color:#a17133;background:#fff9ee;border-left:2px solid #ecc781;padding:4px 6px;border-radius:3px;}
+.reactor-step-two{font-size:15px;color:#326781;margin:0;padding:4px 3px 10px;}
+.reactor-essential-note{background:#fff8ed;border:1px solid #efd9af;color:#815f30;padding:11px 12px;border-radius:12px;font-size:12px;line-height:1.6;margin:8px 0 11px;}
+.reactor-essential-note b{color:#9a542c;}
+.reactor-legacy-reference{border:1px solid #dbe7ec;background:#f8fbfd;border-radius:12px;padding:0 12px;margin-bottom:12px;font-size:12px;color:#597484;}
+.reactor-legacy-reference>summary{list-style:none;min-height:44px;padding:10px 2px;cursor:pointer;display:flex;align-items:center;font-weight:650;color:#537186;}
+.reactor-legacy-reference summary::-webkit-details-marker{display:none;}
+.reactor-legacy-reference>summary:after{content:"＋";margin-left:auto;color:#7597a8;font-size:18px;}
+.reactor-legacy-reference[open]>summary:after{content:"−";}
+.reactor-legacy-reference p{margin:2px 0 12px;line-height:1.6;}
+.reactor-legacy-reference b{color:#315973;}
+.reactor-curve-points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 10px;}
+.reactor-curve-points>span{padding:8px 10px;border-radius:9px;background:#f4fafb;border:1px solid #e1edef;}
+.reactor-curve-points small{display:block;font-size:10px;color:#63848b;}
+.reactor-curve-points strong{font-size:13px;color:#146e7b;}
+.reactor-chart-scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:thin;overscroll-behavior-inline:contain;border:1px solid #ebeff0;border-radius:10px;}
+.reactor-chart-scroll .reactor-curve{min-width:620px;max-height:280px;}
+.reactor-swipe-hint{font-size:12px;color:#327c91;background:#eaf8fb;text-align:center;padding:9px 8px;border-radius:10px;margin:8px 0;}
+.reactor-oil-scroll{overflow-x:auto;max-width:100%;touch-action:pan-x;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;box-shadow:inset -18px 0 18px -18px #7fa4b9;}
+.reactor-oil-table{min-width:660px;border-collapse:collapse;}
+.reactor-oil-table th,.reactor-oil-table td{padding:9px 12px!important;white-space:nowrap;}
+.reactor-mobile-actions{display:none;}
+.reactor-sticky-result[hidden]{display:none!important;}
+.reactor-sticky-result{display:none;}
+/* Increase tap targets on mobile, without inflating the engineering results. */
+@media(max-width:600px){
+ .reactor-page{padding-bottom:205px;}
+ .reactor-summary .reactor-stat:first-child{grid-column:1/-1;background:#eff6ff;border-top-color:#287cdb;}
+ .reactor-summary .reactor-stat:first-child .reactor-stat-val b{font-size:34px;}
+ .reactor-stat small{font-size:12px;}
+ .reactor-jump a{min-height:45px;display:grid;place-items:center;white-space:nowrap;}
+ .reactor-group summary{min-height:54px;}
+ .reactor-group-count{font-size:10px;white-space:nowrap;}
+ .reactor-parameter-actions button{min-height:42px;padding:9px 7px;font-size:11px;}
+ .reactor-field-note{font-size:10.5px;}
+ .reactor-input-wrap{min-height:46px;}
+ .reactor-mode select{min-height:47px;font-size:14px;}
+ .reactor-desktop-actions{display:none!important;}
+ .reactor-mobile-actions{display:flex;align-items:stretch;gap:8px;padding:9px 12px;background:rgba(255,255,255,.98);backdrop-filter:blur(14px);border-top:1px solid #dce9ef;box-shadow:0 -3px 22px rgba(35,88,112,.07);position:fixed;bottom:calc(67px + env(safe-area-inset-bottom));left:0;right:0;z-index:23;}
+ .reactor-mobile-actions>.btn{min-width:0;flex:1.3;min-height:46px;font-size:13px;}
+ .reactor-mobile-more{position:relative;flex:.8;min-width:0;}
+ .reactor-mobile-more summary{min-height:46px;display:grid;place-items:center;border:1px solid #d6e5ea;border-radius:12px;color:#436f80;background:#f8fbfc;font-weight:700;font-size:13px;cursor:pointer;list-style:none;}
+ .reactor-mobile-more summary::-webkit-details-marker{display:none;}
+ .reactor-mobile-more>div{position:absolute;right:0;bottom:calc(100% + 9px);min-width:165px;display:flex;flex-direction:column;gap:7px;padding:10px;background:#fff;border:1px solid #dce8ec;border-radius:13px;box-shadow:0 8px 34px rgba(30,77,94,.15);}
+ .reactor-mobile-more>div button{min-height:46px;text-align:left;padding:0 13px;border-radius:9px;border:1px solid #e5edf1;background:#f8fbfc;color:#3e6b80;font-size:13px;}
+ .reactor-sticky-result{display:block;position:fixed;left:0;right:0;top:65px;z-index:20;padding:7px 12px;background:#f7fffc;border-bottom:1px solid #cce8e1;box-shadow:0 5px 16px rgba(30,87,95,.10);}
+ .reactor-sticky-result button{display:flex;align-items:center;width:100%;gap:14px;border:0;background:transparent;text-align:left;color:#184c62;padding:0;min-height:48px;}
+ .reactor-sticky-result button>span{display:flex;flex-direction:column;flex:1;min-width:0;}
+ .reactor-sticky-result small{font-size:10px;color:#65838c;}
+ .reactor-sticky-result strong{font-size:21px;letter-spacing:-.025em;color:#0c7e6f;font-variant-numeric:tabular-nums;line-height:1.2;}
+ .reactor-sticky-result em{font-size:10px;color:#657f8a;font-style:normal;}
+ .reactor-sticky-result button>b{font-size:11px;color:#3288a0;white-space:nowrap;}
+ body.reactor-scrolled .header{height:49px;}
+ body.reactor-scrolled .brand-mark{width:31px;height:31px;font-size:17px;border-radius:9px;}
+ body.reactor-scrolled .brand-text small,body.reactor-scrolled .version-tag{display:none;}
+ body.reactor-scrolled .brand-text strong{font-size:17px;}
+ body.reactor-scrolled .reactor-sticky-result{top:49px;}
+ body.reactor-scrolled .reactor-jump{position:static;}
+ #reactor-chart-panel,#reactor-energy-panel,#reactor-sizing-panel,#reactor-params{scroll-margin-top:130px;}
+ body:has(.reactor-page input:focus) .reactor-mobile-actions,
+ body:has(.reactor-page select:focus) .reactor-mobile-actions{display:none;}
+ body:has(.reactor-page input:focus) .reactor-sticky-result,
+ body:has(.reactor-page select:focus) .reactor-sticky-result{display:none;}
+ .reactor-oil-table{min-width:730px;}
+ .reactor-chart-scroll .reactor-curve{min-width:660px;}
+ .reactor-energy-table{font-size:12px;}
+ .reactor-legacy-reference summary{font-size:12px;}
+ .mini-btn{min-height:44px;padding:10px;}
+ .bottom-nav a{min-height:47px;}
+}
+@media(min-width:601px){.reactor-sticky-result{display:none!important}}
+@media print{
+ .reactor-mobile-actions,.reactor-sticky-result,.reactor-swipe-hint{display:none!important;}
+ .reactor-desktop-actions{display:none!important;}
+ .reactor-chart-scroll{overflow:visible;border:0;}
+ .reactor-chart-scroll .reactor-curve{min-width:0;width:100%;}
+ .reactor-oil-scroll{overflow:visible;}
+ .reactor-oil-table{min-width:0;width:100%;}
+}
+@media(max-width:600px){
+  .card-grid{grid-template-columns:1fr;}
+  .tool-card{min-height:90px;display:grid;grid-template-columns:44px minmax(0,1fr) 20px;grid-template-rows:auto auto auto;column-gap:12px;row-gap:0;padding:13px 15px;align-items:start;}
+  .tool-card .tool-icon{grid-column:1;grid-row:1/4;align-self:center;margin:0!important;width:44px;height:44px;}
+  .tool-card .arrow{position:static;grid-column:3;grid-row:1;}
+  .tool-card strong{grid-column:2;grid-row:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;font-size:16px;}
+  .tool-card small{grid-column:2;grid-row:2;font-size:12px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tool-card>div:last-child{grid-column:2;grid-row:3;padding-top:6px!important;}
+  .tool-card .chip{padding:2px 8px;}
+}

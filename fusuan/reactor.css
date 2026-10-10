@@ -1,0 +1,137 @@
+/* 釜算 V0.2：完整版反应釜·手机优先布局，沿用旧热工模型但不移入动画 */
+.reactor-page{padding-bottom:120px}
+.reactor-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
+.reactor-intro h1{font-size:clamp(23px,3vw,30px);line-height:1.3;margin:4px 0}
+.reactor-intro p{font-size:12px;color:#72899a;margin:0}
+.reactor-count{border:1px solid #c8ebe5;background:#ecfaf5;color:#0a9180;font-weight:750;white-space:nowrap;font-size:12px;border-radius:50px;padding:6px 12px}
+.reactor-warning-head{padding:10px 14px;border:1px solid #f7e2c2;background:#fffaf0;border-radius:12px;color:#9b7133;font-size:11px;line-height:1.65;margin:13px 0 14px}
+.reactor-warning-head strong{color:#a36d1e}
+.reactor-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:12px}
+.reactor-stat{min-width:0;background:#fff;border:1px solid #e2edf2;border-top:3px solid #80b5d2;border-radius:13px;padding:12px 15px 10px;box-shadow:0 4px 12px rgba(40,80,95,.02)}
+.reactor-stat small{display:block;font-size:11px;font-weight:780;color:#4b7196;margin-bottom:5px}
+.reactor-stat-val{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+.reactor-stat-val b{font-size:27px;font-weight:800;letter-spacing:-.04em;line-height:1.35;font-variant-numeric:tabular-nums;color:#1254a4}
+.reactor-stat-val span{font-size:11px;color:#7a8c9a;font-weight:600}
+.reactor-stat p{font-size:10px;color:#8192a0;margin:3px 0 0;line-height:1.4}
+.reactor-stat.st-blue{border-top-color:#2579d5;background:#eff5ff}.reactor-stat.st-sky{border-top-color:#5d9ded;background:#f5faff}
+.reactor-stat.st-teal{border-top-color:#11a8a0;background:#f5fffc}.reactor-stat.st-teal .reactor-stat-val b{color:#0a907f}
+.reactor-stat.st-coral{border-top-color:#e45b54;background:#fff9f6}.reactor-stat.st-coral .reactor-stat-val b{color:#c7483a}
+.reactor-stat.st-green{border-top-color:#27b875;background:#f5fff9}.reactor-stat.st-green .reactor-stat-val b{color:#108f56}
+.reactor-stat.st-amber{border-top-color:#e9a323;background:#fffef6}.reactor-stat.st-amber .reactor-stat-val b{color:#a97513}
+.reactor-top-error{grid-column:1/-1;background:#fffaf7;border:1px solid #f5d7cd;padding:18px;color:#9a624c;border-radius:12px;font-size:12px}
+.reactor-jump{position:sticky;top:76px;z-index:8;display:flex;gap:8px;margin-bottom:13px;padding:7px 0;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);overflow-x:auto;scrollbar-width:none}
+.reactor-jump::-webkit-scrollbar{display:none}
+.reactor-jump a{flex:1;text-align:center;border:1px solid #dcebf0;background:#f6fafb;padding:8px 10px;min-width:max-content;border-radius:10px;font-size:12px;color:#437584;font-weight:700}
+.reactor-jump a:hover{border-color:#93dbd0;color:#138776}
+.reactor-workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:13px;align-items:start}
+.reactor-param-panel{background:#fff;border:1px solid #e2edf1;border-radius:17px;padding:14px;min-width:0}
+.reactor-panel-head{display:flex;justify-content:space-between;align-items:center;gap:7px;margin:0 0 12px}
+.reactor-panel-head h2{font-size:16px;margin:0}.reactor-panel-head p{font-size:10px;color:#91a1ac;margin:2px 0 0}
+.reactor-parameter-actions{display:flex;gap:4px}
+.reactor-parameter-actions button{font-size:10px;border:1px solid #ddeaf0;border-radius:8px;background:#f9fbfd;color:#658292;padding:6px;white-space:nowrap}
+.reactor-mode{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:8px;background:#f5faff;padding:10px;border-radius:11px;margin-bottom:10px;border:1px solid #e4effa}
+.reactor-mode-text strong{font-size:12px;color:#365e7a;display:block}.reactor-mode-text small{font-size:10px;color:#90a0ae;display:block}
+.reactor-mode select{height:38px;width:100%;min-width:0;border-radius:8px;border:1px solid #ccdce8;background:#fff;color:#29516b;padding:0 8px;font-size:11px}
+.reactor-groups{display:flex;flex-direction:column;gap:8px}
+.reactor-group{background:#fcfdfd;border:1px solid #e5ecf1;border-radius:12px;overflow:hidden;min-width:0}
+.reactor-group[open]{background:#fff;border-color:#dfe9ef}
+.reactor-group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:10px 11px}
+.reactor-group summary::-webkit-details-marker{display:none}
+.reactor-group-accent{background:var(--accent);width:4px;border-radius:4px;align-self:stretch;min-height:29px;flex:none}
+.reactor-group-summary{flex:1;min-width:0}.reactor-group-summary strong{display:block;font-size:13px;color:#2d5368}
+.reactor-group-summary small{display:block;font-size:10px;color:#8496a5;font-weight:500}
+.reactor-group-count{font-size:10px;color:#7292a2;border-radius:20px;background:#f0f6fa;padding:3px 7px;white-space:nowrap}
+.reactor-group-chevron{font-size:17px;color:#9bb1bc}
+.reactor-group[open] .reactor-group-chevron{transform:rotate(180deg)}
+.reactor-group-body{padding:0 11px 13px}
+.reactor-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.reactor-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.reactor-field-name{font-size:10.5px;color:#617e91;font-weight:650;min-height:16px}
+.reactor-input-wrap{display:flex;align-items:center;gap:4px;min-height:35px;border:1px solid #d9e5ec;border-radius:9px;background:#f7fafc;padding:0 7px;min-width:0}
+.reactor-input-wrap:focus-within{border-color:#3ab7aa;background:#fff;box-shadow:0 0 0 2px #d8f5ee}
+.reactor-input-wrap input{width:100%;min-width:0;flex:1;border:0;background:transparent;padding:6px 0;color:#264c67;text-align:right;font-size:14px;font-weight:700;outline:none}
+.reactor-input-wrap input::-webkit-inner-spin-button,.reactor-input-wrap input::-webkit-outer-spin-button{margin:0}
+.reactor-input-wrap span{color:#8aa0af;font-size:9px;white-space:nowrap;flex:none}
+.reactor-param-footer{border-top:1px solid #e8f1f3;margin-top:13px;padding-top:12px;font-size:10px;color:#8298a5;line-height:1.6}
+.reactor-params-buttons{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.reactor-params-buttons button{min-height:35px;font-size:11px;padding:7px 10px}
+.reactor-result-column{display:flex;flex-direction:column;gap:11px;min-width:0}
+.reactor-output-panel{border:1px solid #e2ecf1;border-top:3px solid #08a88d;border-radius:14px;background:#fff;padding:12px;min-width:0}
+.reactor-output-panel:nth-child(2){border-top-color:#efa936}.reactor-output-panel:nth-child(3){border-top-color:#5888df}.reactor-output-panel:nth-child(4){border-top-color:#8763c3}
+.reactor-output-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:8px;border-bottom:1px solid #eef3f6;margin-bottom:8px}
+.reactor-output-heading h3{margin:0;font-size:15px;color:#26495d}
+.reactor-chart-legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:10px;font-weight:650;color:#607f8c;margin:10px 3px}
+.reactor-chart-legend span:before{content:"";display:inline-block;width:12px;height:3px;background:#098b84;margin-right:4px;vertical-align:middle;border-radius:3px}
+.reactor-chart-legend .legend-orange:before{background:#e78b35}.reactor-chart-legend .legend-blue:before{background:#4b82c2}
+.reactor-curve{display:block;width:100%;height:auto;max-height:280px}
+.reactor-panel-note{font-size:10.5px;color:#8196a4;line-height:1.65;margin:10px 2px 2px}
+.reactor-table-wrap{overflow-x:auto}.reactor-energy-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:11px}
+.reactor-energy-table th{background:#f4f8fa;color:#69818e;text-align:left;font-size:10px;font-weight:700;padding:6px 7px}
+.reactor-energy-table td{padding:7px 7px;border-bottom:1px solid #eff3f5;color:#416079}
+.reactor-energy-table td.calc{font-size:9px;color:#899fac}.reactor-energy-table td.value{text-align:right;font-weight:800;color:#235ea2;font-variant-numeric:tabular-nums}
+.reactor-energy-table tr.highlight td{background:#edf6ff;color:#124c91;font-weight:800}
+.reactor-inline-calculation{margin:10px 0 4px;padding:10px;border-radius:9px;background:#f7fbff;border:1px solid #dfeefa;font-size:11px;color:#647d91}
+.reactor-inline-calculation b{color:#0c7f75}
+.reactor-check-title{display:flex;justify-content:space-between;gap:5px;align-items:center;margin:12px 0 7px}
+.reactor-check-title strong{font-size:12px;color:#2c5877}.reactor-check-title small{font-size:10px;color:#91a3b1}
+.reactor-check-title.top-gap{padding-top:11px;border-top:1px solid #edf2f5}
+.reactor-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+.reactor-check-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.reactor-check-field>span:first-child{color:#7790a1;font-size:10px}
+.reactor-check-results{display:grid;gap:4px}
+.reactor-data-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:7px;background:#f7fafc;padding:6px 9px}
+.reactor-data-row strong{font-size:10px;color:#668395}.reactor-data-row small{display:block;font-size:9px;color:#8ca0af}
+.reactor-data-row b{font-size:13px;color:#295f9b;font-variant-numeric:tabular-nums;white-space:nowrap}
+.reactor-data-row b span{font-size:9px;font-weight:500;color:#899da9}
+.reactor-inline-alert{border-radius:9px;background:#fff9ed;border:1px solid #f7dfba;color:#a27a3f;padding:9px;margin:8px 0 2px;font-size:10px;line-height:1.6}
+.reactor-inline-error{border-radius:8px;background:#fff4f1;color:#be6152;padding:8px;font-size:10px}
+.reactor-operating-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.reactor-operating-grid>div{padding:8px;border-radius:10px;background:#f6f5ff;min-width:0}
+.reactor-operating-grid small{display:block;color:#8076a3;font-size:10px}
+.reactor-operating-grid strong{display:block;font-size:15px;color:#594c98;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.reactor-operating-grid strong span{font-size:9px;font-weight:500;color:#877f9e}
+.reactor-notes{margin:5px 0;padding-left:20px;font-size:11px;color:#6b8191}
+.reactor-notes li{margin-bottom:8px;line-height:1.65}
+.reactor-splash-error{background:#fffaf7;border:1px dashed #eec6b7;border-radius:15px;padding:32px 20px;text-align:center;color:#a86d5d;font-size:13px;line-height:1.7}
+.reactor-splash-error strong{display:block;font-size:16px}
+.reactor-splash-error p{margin:12px 0}
+.reactor-splash-error span{font-size:11px}
+.reactor-bottom-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
+.reactor-bottom-actions button{flex:1;white-space:nowrap;min-width:135px;font-size:11px}
+.reactor-page [data-mode="outlet"] .reactor-field[data-key="flow"]{opacity:.55}
+.reactor-page[data-mode="constant"] .reactor-field[data-key="flow"],.reactor-page[data-mode="constant"] .reactor-field[data-key="outlet"]{opacity:.55}
+#reactor-chart-panel,#reactor-energy-panel,#reactor-sizing-panel,#reactor-params{scroll-margin-top:155px}
+@media(max-width:980px){.reactor-workspace{grid-template-columns:1fr}.reactor-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.reactor-form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){
+ .reactor-page{padding-top:16px;padding-bottom:120px}
+ .reactor-intro{align-items:start;flex-wrap:wrap}.reactor-intro h1{font-size:23px}.reactor-intro p{font-size:11px}
+ .reactor-count{font-size:10px;padding:5px 9px}
+ .reactor-warning-head{font-size:10px;padding:9px}
+ .reactor-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .reactor-stat{padding:10px 11px;border-radius:11px}
+ .reactor-stat small{font-size:10px}
+ .reactor-stat-val b{font-size:23px}
+ .reactor-stat p{font-size:9px}
+ .reactor-jump{top:65px;margin:0 -2px 10px;gap:5px}
+ .reactor-jump a{font-size:10px;padding:8px}
+ .reactor-panel-head{align-items:start}
+ .reactor-panel-head h2{font-size:15px}
+ .reactor-param-panel{padding:12px 10px}
+ .reactor-mode{grid-template-columns:1fr;gap:6px}
+ .reactor-mode select{font-size:12px}
+ .reactor-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .reactor-field-name{font-size:11.5px}.reactor-group-summary small{font-size:10.5px}.reactor-panel-note{font-size:11px}.reactor-input-wrap input{font-size:16px}
+ .reactor-output-panel{padding:11px 9px}
+ .reactor-bottom-actions{gap:7px}.reactor-bottom-actions button{min-width:calc(50% - 7px)}
+ .reactor-energy-table{font-size:10px}
+ #reactor-chart-panel,#reactor-energy-panel,#reactor-sizing-panel,#reactor-params{scroll-margin-top:140px}
+}
+@media(max-width:360px){.reactor-form-grid{grid-template-columns:1fr}.reactor-stat-val b{font-size:21px}.reactor-check-grid{grid-template-columns:1fr}}
+@media print{
+ .reactor-jump,.reactor-bottom-actions,.reactor-parameter-actions,.reactor-params-buttons{display:none!important}
+ .reactor-workspace{display:block}
+ .reactor-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .reactor-param-panel,.reactor-output-panel{break-inside:avoid;margin:0 0 9px}
+ .reactor-group{break-inside:avoid}.reactor-group-body{display:block!important}
+ .reactor-curve{max-height:200px}
+}

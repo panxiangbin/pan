@@ -1,0 +1,102 @@
+/* 釜算V0.3手机易读性修订：减少小字，建立输入/结果快速跳转。 */
+#tools{scroll-margin-top:80px}
+.calc-jumps{display:flex;gap:8px;position:sticky;top:76px;z-index:12;margin:12px 0 15px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);padding:8px 0}
+.calc-jumps a{flex:1;text-align:center;background:#eff9f6;border:1px solid #cdebe4;border-radius:12px;padding:11px 12px;font-size:13px;font-weight:700;color:#218d79}
+.calc-jumps a:last-child{background:#f1f7ff;border-color:#d9e8fa;color:#3673af}
+#calc-form,#output-pane{scroll-margin-top:145px}
+.module-page .pane{padding:22px}
+.module-page .field label{font-size:13px}
+.module-page .field input,.module-page .field select,.module-page .field textarea{font-size:16px}
+.module-page .field textarea{width:100%;border:1px solid #dbe6ec;min-height:120px;background:#f9fbfc;border-radius:12px;padding:12px;line-height:1.55;resize:vertical;outline:none;color:#1d384a}
+.module-page .field textarea:focus{border-color:#39b6a1;box-shadow:0 0 0 3px #d9f4eb;background:#fff}
+.module-page .details summary{font-size:13px}
+.module-page .details p,.module-page .pill-notice{font-size:12px;line-height:1.65}
+.module-page .hint-list li{font-size:12.5px;line-height:1.7}
+.module-page .metric small{font-size:12px}
+.module-page .metric strong{font-size:28px}
+.module-page .metric:first-child strong{font-size:33px}
+.module-page .result-header h2{font-size:18px}
+.module-page .field{gap:7px}
+.module-page .form-grid{gap:16px 13px}
+.module-page .pane-title strong{font-size:16px}
+.module-page .field-full textarea{font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+.mccabe-figure{margin:17px 0 10px;padding:13px;border:1px solid #dcebef;background:#fbfdfe;border-radius:15px}
+.mccabe-topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mccabe-topline strong{font-size:13px;color:#30566c}
+.mccabe-topline small{font-size:11px;color:#7895a2}
+.mccabe-figure svg{width:100%;max-height:385px;display:block}
+.mccabe-legend{display:flex;flex-wrap:wrap;gap:8px 11px;font-size:10.5px;color:#647b89}
+.mccabe-legend>span:before{content:"";display:inline-block;width:11px;height:3px;vertical-align:middle;background:#13a79b;margin-right:5px;border-radius:2px}
+.mccabe-legend .c-rec:before{background:#2d73c6}.mccabe-legend .c-strip:before{background:#aa72c5}.mccabe-legend .c-steps:before{background:#e37354}
+.mccabe-figure figcaption{font-size:11.5px;color:#7a90a0;line-height:1.6;margin-top:11px}
+.tool-card .tool-icon{margin-bottom:12px}
+.tool-card strong{font-size:16px}
+.tool-card small{font-size:12px}
+.reactor-page .reactor-warning-head{font-size:12px}
+.reactor-page .reactor-field-name{font-size:12.5px}
+.reactor-page .reactor-group-summary strong{font-size:14px}
+.reactor-page .reactor-group-summary small{font-size:11.5px}
+.reactor-page .reactor-panel-note{font-size:12px}
+.reactor-page .reactor-stat small{font-size:12px}
+.reactor-page .reactor-stat p{font-size:11px}
+.reactor-page .reactor-stat-val b{font-size:26px}
+.reactor-page .reactor-energy-table{font-size:12px}
+.reactor-page .reactor-energy-table th{font-size:11px}
+.reactor-page .reactor-data-row strong{font-size:12px}
+.reactor-page .reactor-data-row b{font-size:15px}
+.reactor-page .reactor-input-wrap{min-height:43px}
+.reactor-page .reactor-input-wrap input{font-size:16px}
+.reactor-page .reactor-input-wrap span{font-size:11px}
+.reactor-page .reactor-operating-grid small{font-size:12px}
+.reactor-page .reactor-group-count{font-size:11px}
+.reactor-page .reactor-group summary{padding:13px 12px}
+.reactor-page .reactor-jump a{font-size:12px}
+@media(max-width:800px){
+ .module-page .workspace{grid-template-columns:1fr}
+ .module-page .pane{padding:20px}
+ .module-page .output{position:static}
+ .module-page .result-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tool-card strong{font-size:16px}
+ .reactor-page .reactor-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .calc-jumps{top:65px;gap:8px;margin-top:8px}
+ .calc-jumps a{padding:10px 11px;font-size:12px}
+ .module-page .pane{padding:17px 15px}
+ .module-page .section-head h1{font-size:25px}
+ .module-page .field label{font-size:13px}
+ .module-page .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 10px}
+ .module-page .field-full{grid-column:1/-1}
+ .module-page .field input,.module-page .field select,.module-page .field textarea{font-size:16px;min-height:51px}
+ .module-page .field textarea{min-height:150px}
+ .module-page .metric{padding:14px 12px}
+ .module-page .metric strong{font-size:26px}
+ .module-page .metric:first-child strong{font-size:32px}
+ .module-page .hint-list li{font-size:13px}
+ .module-page .formula-line{font-size:12px}
+ .module-page .details summary{padding:14px;font-size:13px}
+ .module-page .pane-title strong{font-size:17px}
+ .module-page .form-actions .btn,.module-page .result-actions .btn{font-size:13px;min-height:45px}
+ .tool-card{min-height:165px}
+ .tool-card strong{font-size:15.5px}
+ .tool-card small{font-size:11.7px}
+ .tool-card .chip{font-size:10.5px}
+ .reactor-page .reactor-jump{top:66px}
+ .reactor-page .reactor-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .reactor-page .reactor-stat-val b{font-size:24px}
+ .reactor-page .reactor-output-heading h3{font-size:16px}
+ .reactor-page .reactor-group-body{padding:0 11px 15px}
+ .reactor-page .reactor-check-field>span:first-child{font-size:12px}
+ .reactor-page .reactor-operating-grid strong{font-size:16px}
+ .reactor-page .reactor-energy-table td.calc{font-size:10px}
+ .reactor-page .reactor-count{font-size:11px}
+}
+@media(max-width:365px){
+ .module-page .form-grid{grid-template-columns:1fr}
+ .module-page .field-full{grid-column:auto}
+}
+@media(max-width:355px){
+ .reactor-page .reactor-form-grid{grid-template-columns:1fr}
+ .reactor-page .reactor-summary{grid-template-columns:1fr 1fr}
+}
+@media print{.calc-jumps{display:none!important}.module-page .pane{break-inside:avoid}.mccabe-figure{break-inside:avoid}}
