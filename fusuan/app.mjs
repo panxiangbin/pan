@@ -1,4 +1,6 @@
-import {VERSION,GROUPS,calculate} from './core.mjs';
+import {GROUPS,calculate} from './core.mjs';
+import {calcMixQuick,configureMixQuick,mixQuickInitial} from './mix_quick.mjs?v=061';
+const VERSION='0.6.1';
 import {calcDistillExpanded,calcMixExpanded,calcVacuumExpanded,calcPipe,calcDuty} from './advanced_core.mjs';
 import {configureAdvancedModules} from './advanced_specs.mjs';
 import {drawMcCabeXY} from './advanced_ui.mjs';
@@ -29,8 +31,8 @@ const list=[
 ];
 list.find(x=>x.id==='heat').status='31项热工';
 list.find(x=>x.id==='mix').name='搅拌与传动';
-list.find(x=>x.id==='mix').short='黏度、轴功率、电机校核';
-list.find(x=>x.id==='mix').status='分级校核';
+list.find(x=>x.id==='mix').short='三参数简算 / 详细校核';
+list.find(x=>x.id==='mix').status='简算＋校核';
 list.find(x=>x.id==='distill').name='精馏塔与蒸馏';
 list.find(x=>x.id==='distill').short='板式、填料、简单间歇';
 list.find(x=>x.id==='distill').status='5种计算';
@@ -160,7 +162,8 @@ const demos={
  convert:{group:'pressure',value:'1000',from:'mbar',to:'kPa'}
 };
 configureAdvancedModules(specs,F,S,demos);
-const initial=id=>id==='heat'?{...REACTOR_EXAMPLE}:id==='convert'?{group:'pressure',from:'Pa',to:'kPa'}:id==='distill'?{task:'fenske'}:id==='mix'?{muUnit:'mPa·s',rheology:'',impeller:'',viscMode:'manual',motorCheck:'no'}:id==='vacuum'?{speedMode:'constant'}:id==='duty'?{dutyMode:'cooling'}:{};
+configureMixQuick(specs,F,S,demos);
+const initial=id=>id==='heat'?{...REACTOR_EXAMPLE}:id==='convert'?{group:'pressure',from:'Pa',to:'kPa'}:id==='distill'?{task:'fenske'}:id==='mix'?{...mixQuickInitial(),muUnit:'mPa·s',rheology:'',impeller:'',viscMode:'manual',motorCheck:'no'}:id==='vacuum'?{speedMode:'constant'}:id==='duty'?{dutyMode:'cooling'}:{};
 const drafts={}; let active='home',currentResult=null,refreshTimer=null,toastTimer=null;
 const getDraft=id=>drafts[id]||(drafts[id]=initial(id));
 function parseHash(){const hash=location.hash.slice(1).split('?')[0];return list.some(x=>x.id===hash)||hash==='saved'?hash:'home';}
@@ -237,7 +240,7 @@ function recalc(){
   const panel=document.querySelector('.reactor-page');if(panel)panel.dataset.mode=draft.mode||'flow';
   renderReactorResult(r,draft);syncReactorSticky();return;
  }
- const calc=active==='mix'?calcMixExpanded:active==='distill'?calcDistillExpanded:active==='vacuum'?calcVacuumExpanded:active==='pipe'?calcPipe:active==='duty'?calcDuty:v=>calculate(active,v);
+ const calc=active==='mix'?(v=>v.mixMode==='detailed'?calcMixExpanded(v):calcMixQuick(v)):active==='distill'?calcDistillExpanded:active==='vacuum'?calcVacuumExpanded:active==='pipe'?calcPipe:active==='duty'?calcDuty:v=>calculate(active,v);
  renderResult(calc(getDraft(active)));
 }
 function setInput(e){
@@ -256,7 +259,7 @@ function setInput(e){
    v.from=first[0];v.to=first[1]||first[0];
    renderModuleCurrent();return;
  }
- if(['task','impeller','viscMode','speedMode','motorCheck','dutyMode'].includes(k)){
+ if(['task','impeller','viscMode','speedMode','motorCheck','dutyMode','mixMode'].includes(k)){
    renderModuleCurrent();return;
  }
  if(refreshTimer)clearTimeout(refreshTimer);
@@ -292,8 +295,8 @@ function executeAction(btn){
  if(a==='reactor-expand'){document.querySelectorAll('.reactor-page .reactor-group').forEach(el=>el.open=true);return;}
  if(a==='reactor-collapse'){document.querySelectorAll('.reactor-page .reactor-group').forEach(el=>el.open=false);return;}
  if(a==='reactor-curve'){if(currentResult?.state!=='ready'||!downloadCurveFile(currentResult))notify('请先得到有效计算结果。');return;}
- if(a==='example'){drafts[active]=active==='heat'?{...REACTOR_EXAMPLE}:{...initial(active),...demos[active]};renderModuleCurrent();notify('已载入旧版演示工况，请勿当作真实设备参数。');return;}
- if(a==='clear'){drafts[active]=active==='heat'?{...Object.fromEntries(ALL_FIELDS.map(k=>[k,''])),mode:'flow'}:initial(active);renderModuleCurrent();notify('已清空当前模块参数。');return;}
+ if(a==='example'){drafts[active]=active==='heat'?{...REACTOR_EXAMPLE}:{...initial(active),...(active==='mix'&&getDraft(active).mixMode==='detailed'?demos.mixDetailed:demos[active])};renderModuleCurrent();notify('已载入演示工况，请勿当作真实设备参数。');return;}
+ if(a==='clear'){const preservedMode=active==='mix'?getDraft(active).mixMode:null;drafts[active]=active==='heat'?{...Object.fromEntries(ALL_FIELDS.map(k=>[k,''])),mode:'flow'}:initial(active);if(active==='mix')drafts.mix.mixMode=preservedMode||'quick';renderModuleCurrent();notify(active==='mix'?'已清空当前模块参数；简算默认条件恢复初始假设。':'已清空当前模块参数。');return;}
  if(a==='save'){
   if(currentResult?.state!=='ready')return;
   const hist=getSaved();hist.unshift({module:active,version:VERSION,when:new Date().toLocaleString('zh-CN'),level:currentResult.level,values:{...getDraft(active)}});
@@ -305,6 +308,8 @@ function executeAction(btn){
  if(a==='restore'){const items=getSaved(),s=items[Number(btn.dataset.index)];if(s&&list.some(x=>x.id===s.module)){
   if(s.module==='heat'&&!Object.prototype.hasOwnProperty.call(s.values||{},'vesselVolume')){notify('旧版显热记录缺少完整热工参数，不能自动转为31项反应釜模型。');return;}
   const restored={...initial(s.module),...s.values};
+  // Older mix records belong to the original detailed model, never silently reinterpret.
+  if(s.module==='mix'&&!Object.prototype.hasOwnProperty.call(s.values||{},'mixMode'))restored.mixMode='detailed';
   if(s.module==='heat' && !s.version && restored.viscosity!==undefined && restored.viscosity!==''){
    // V0.3热工保存的是Pa·s，V0.4统一使用mPa·s；只迁移旧记录，不重写历史记录。
    restored.viscosity=String(Number(restored.viscosity)*1000);
