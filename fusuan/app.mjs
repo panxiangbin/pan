@@ -1,6 +1,7 @@
 import {GROUPS,calculate} from './core.mjs';
-import {calcMixQuick,configureMixQuick,mixQuickInitial} from './mix_quick.mjs?v=061';
-const VERSION='0.6.1';
+import {calcMixQuick,configureMixQuick,mixQuickInitial} from './mix_quick.mjs?v=062';
+import {renderMixMotorResult,mixCalculationText} from './mix_motor.mjs?v=062';
+const VERSION='0.6.2';
 import {calcDistillExpanded,calcMixExpanded,calcVacuumExpanded,calcPipe,calcDuty} from './advanced_core.mjs';
 import {configureAdvancedModules} from './advanced_specs.mjs';
 import {drawMcCabeXY} from './advanced_ui.mjs';
@@ -31,7 +32,7 @@ const list=[
 ];
 list.find(x=>x.id==='heat').status='31项热工';
 list.find(x=>x.id==='mix').name='搅拌与传动';
-list.find(x=>x.id==='mix').short='三参数简算 / 详细校核';
+list.find(x=>x.id==='mix').short='三参数配机参考 / 详细校核';
 list.find(x=>x.id==='mix').status='简算＋校核';
 list.find(x=>x.id==='distill').name='精馏塔与蒸馏';
 list.find(x=>x.id==='distill').short='板式、填料、简单间歇';
@@ -215,11 +216,17 @@ function renderResult(result){
  currentResult=result;
  const ready=result.state==='ready';
  tier.textContent=ready?(result.level||'条件估算'):'未完成';
- tier.className='tier '+(ready?(result.level?.includes('教学')?'tier-blue':result.level?.includes('条件')||result.level?.includes('受限')||result.level?.includes('用户')?'tier-amber':''):'tier-amber');
+ tier.className='tier '+(ready?(result.level?.includes('教学')?'tier-blue':result.level?.includes('条件')||result.level?.includes('受限')||result.level?.includes('用户')||result.level?.includes('未标定')?'tier-amber':''):'tier-amber');
  document.querySelectorAll('[data-action="save"],[data-action="copy"],[data-action="print"]').forEach(b=>b.disabled=!ready);
  if(!ready){
    box.innerHTML='<div class="result-empty '+(result.state==='blocked'?'result-error':'')+'"><div class="empty-orbit">'+icon(result.state==='blocked'?'vacuum':'empty')+'</div><strong>'+esc(result.title)+'</strong><p>'+esc(result.message)+'</p></div>';
    return;
+ }
+ if(active==='mix'&&result.motorSizing){
+  const opened=[...box.querySelectorAll('details[data-motor-details][open]')].map(x=>x.dataset.motorDetails);
+  box.innerHTML=renderMixMotorResult(result);
+  box.querySelectorAll('details[data-motor-details]').forEach(x=>{if(opened.includes(x.dataset.motorDetails))x.open=true;});
+  return;
  }
  const cards=result.metrics.map((m,i)=>'<div class="metric"><small>'+esc(m.label)+'</small><div><strong>'+valueFmt(m.value)+'</strong><span>'+esc(m.unit)+'</span></div>'+(m.description?'<p>'+esc(m.description)+'</p>':'')+'</div>').join('');
  const notes=(result.notes||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
@@ -287,7 +294,7 @@ function fallback(s){const x=document.createElement('textarea');x.value=s;x.styl
 function summaryText(){
  const r=currentResult;if(!r||r.state!=='ready')return '';
  const v=getDraft(active),meta=list.find(x=>x.id===active);
- return ['釜算手机版 '+VERSION,meta.name,r.title+' / '+r.level,'','输入条件:',...Object.entries(v).filter(([k,x])=>String(x).trim()!=='').map(([k,x])=>k+' = '+x),'','计算结果:',...r.metrics.map(m=>m.label+'：'+valueFmt(m.value)+' '+m.unit),'','模型边界:',...(r.notes||[]),'','公式:',...(r.formulas||[]),'','本结果非工程设计签章，不代替厂家确认。'].join('\n');
+ return ['釜算手机版 '+VERSION,meta.name,r.title+' / '+r.level,'','输入条件:',...Object.entries(v).filter(([k,x])=>String(x).trim()!=='').map(([k,x])=>k+' = '+x),'','计算结果:',...r.metrics.map(m=>m.label+'：'+valueFmt(m.value)+' '+m.unit),'',...mixCalculationText(r),'','模型边界:',...(r.notes||[]),'','公式:',...(r.formulas||[]),'','本结果非工程设计签章，不代替厂家确认。'].join('\n');
 }
 function executeAction(btn){
  const a=btn.dataset.action;
@@ -310,6 +317,8 @@ function executeAction(btn){
   const restored={...initial(s.module),...s.values};
   // Older mix records belong to the original detailed model, never silently reinterpret.
   if(s.module==='mix'&&!Object.prototype.hasOwnProperty.call(s.values||{},'mixMode'))restored.mixMode='detailed';
+  // V061 missing margin was zero; never silently migrate an old trial to 30%.
+  if(s.module==='mix'&&s.version==='0.6.1'&&restored.mixMode==='quick'&&!Object.prototype.hasOwnProperty.call(s.values||{},'qMargin'))restored.qMargin='0';
   if(s.module==='heat' && !s.version && restored.viscosity!==undefined && restored.viscosity!==''){
    // V0.3热工保存的是Pa·s，V0.4统一使用mPa·s；只迁移旧记录，不重写历史记录。
    restored.viscosity=String(Number(restored.viscosity)*1000);

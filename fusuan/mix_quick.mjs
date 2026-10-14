@@ -6,8 +6,9 @@
  * motor speed and drive efficiency below are editable assumptions, not data.
  * Keep the existing detailed calculation separate and unchanged.
  */
+import {completeMixMotorReference} from './mix_motor.mjs?v=062';
 export const MIX_REFERENCE = Object.freeze({diameterRatio:.585, widthRatio:.146, blades:2, heightRatio:1, clearanceRatio:.5});
-export function mixQuickInitial(){return {mixMode:'quick',qVolume:'',qMu:'',qRatio:'',qRho:'1000',qMotorRpm:'1440',qEfficiency:'85',qMargin:'0',qRheology:'newtonian'};}
+export function mixQuickInitial(){return {mixMode:'quick',qVolume:'',qMu:'',qRatio:'',qRho:'1000',qMotorRpm:'1440',qEfficiency:'85',qMargin:'30',qRheology:'newtonian'};}
 export function parseReductionRatio(raw){
  const text=String(raw??'').trim();
  if(!text)throw {state:'incomplete',message:'请填写减速速比，例如20或20:1。'};
@@ -70,22 +71,22 @@ export function calcMixQuick(v){
   if(rpm<60)notes.splice(1,0,'转速外推提示：文献试验转速60–540 rpm；当前低于60 rpm，仅作模型试算，不作为已验证工作点。');
   const metrics=[metric('电机轴功率需求（粗估）',motorKW,'kW','不是铭牌选型；未计独立附加损耗'),metric('搅拌轴转速',rpm,'rpm','电机运行转速 ÷ 减速速比'),metric('搅拌轴功率',shaftKW,'kW'),metric('稳态搅拌轴扭矩',torque,'N·m'),metric('参考桨叶直径',impellerD*1000,'mm','假设配置反推，非实测'),metric('参考雷诺数 Re',Re)];
   if(margin>0)metrics.splice(1,0,metric('含自定余量的功率比较值',allowanceKW,'kW','自定增加'+(margin*100).toFixed(1)+'%；不是服务系数'));
-  return {state:'ready',title:'假设参考配置 · 电机功率简算',level:'条件粗估（未标定）',metrics,notes,
+  return completeMixMotorReference({state:'ready',title:'假设参考配置 · 电机功率简算',level:'条件粗估（未标定）',metrics,notes,
    formulas:['i = 电机运行转速 / 搅拌轴转速；n = 电机rpm / i / 60（s⁻¹）','V = 实际装料升数 / 1000；参考釜径 T = (4V/π)^(1/3)；参考桨径 d = 0.585T','μ(Pa·s) = μ(mPa·s)/1000；Re = ρnd²/μ','Np采用Furukawa等2012文献表1无挡板关联式，固定几何取图4双叶平桨配置；不是通用常数','P轴(kW) = Np·ρ·n³·d⁵/1000；P电机轴需求 = P轴/传动总效率','扭矩 = P轴(W)/(2πn)；自定余量比较值 = P电机轴需求×(1+余量百分数/100)'],
    refs:[{label:'Furukawa et al., 2012, Table 1 / Fig.4 · 参考功率关联与实验条件',url:'https://doi.org/10.1155/2012/106496'},{label:'重要：密度1000、电机1440rpm、效率85%是本工具可编辑的初始假设，不是厂家确认值',url:''}],
-   audit:{volume,mu,ratio,rho,motorRpm,efficiency,margin,rpm,tankD,impellerD,Re,Np,shaftKW,motorKW,allowanceKW,torque}};
+   audit:{volume,mu,ratio,rho,motorRpm,efficiency,margin,rpm,tankD,impellerD,Re,Np,shaftKW,motorKW,allowanceKW,torque}});
  }catch(e){return fail(e?.message||'简算失败，请检查参数。',e?.state||'blocked');}
 }
 export function configureMixQuick(specs,F,S,demos){
  const previous=specs.mix.groups;
- specs.mix.subtitle='先填容量、黏度、速比做假设配置简算；已有实物参数时可切换详细校核。';
- specs.mix.guidance='简算结果不是最终电机选型。参考桨型与实际结构不同时不能照用；详细模式保留原来的缺参保护。';
+ specs.mix.subtitle='填写容量、黏度、速比，自动计算搅拌负载、功率余量、传动损耗及电机功率档位参考。';
+ specs.mix.guidance='档位参考是按假设计算值向上取档，不代表型号、启动或安全选型通过。参考配置与实物不同时不能照用。';
  specs.mix.groups=[
   {title:'选择计算方式',fields:[S('mixMode','计算模式',[['quick','简单算法 · 容量＋黏度＋速比'],['detailed','详细校核 · 实物几何与厂家参数']],{full:true})]},
   {title:'简单算法 · 主要填写这三项',only:v=>v.mixMode!=='detailed',desc:'按参考双叶平桨配置试算，非予华实物匹配。容量填写实际液体体积，不是公称釜容；黏度对应工作温度。',fields:[F('qVolume','实际装料容量',{unit:'L',placeholder:'例如 1000'}),F('qMu','动力黏度',{unit:'mPa·s（cP）',placeholder:'例如 1000'}),F('qRatio','减速速比',{kind:'text',unit:'输入转速 / 输出转速',placeholder:'例如 20 或 20:1',full:true})]},
-  {title:'默认条件 · 可展开修改',advanced:true,only:v=>v.mixMode!=='detailed',desc:'初始预设：密度1000 kg/m³、电机1440 rpm、效率85%、余量0%。都是试算假设，不是你设备的确认值。固定参考为无挡板平底圆筒和单层双叶平桨，H/T=1、d/T=0.585、b/T=0.146、C/H=0.5。',fields:[F('qMotorRpm','电机运行转速',{unit:'rpm'}),F('qRho','物料密度',{unit:'kg/m³'}),F('qEfficiency','传动总效率',{unit:'%'}),F('qMargin','自定功率余量',{unit:'%'}),S('qRheology','流体假设',[['newtonian','按牛顿流体试算'],['unknown','不确定 / 非牛顿流体']],{full:true})]},
+  {title:'默认条件 · 可展开修改',advanced:true,only:v=>v.mixMode!=='detailed',desc:'初始预设：密度1000 kg/m³、电机1440 rpm、效率85%、功率余量30%（乘1.3，可修改；不是厂家服务系数）。都是试算假设，不是你设备的确认值。固定参考为无挡板平底圆筒和单层双叶平桨，H/T=1、d/T=0.585、b/T=0.146、C/H=0.5。',fields:[F('qMotorRpm','电机运行转速',{unit:'rpm'}),F('qRho','物料密度',{unit:'kg/m³'}),F('qEfficiency','传动总效率',{unit:'%'}),F('qMargin','功率余量（可修改）',{unit:'%'}),S('qRheology','流体假设',[['newtonian','按牛顿流体试算'],['unknown','不确定 / 非牛顿流体']],{full:true})]},
   ...previous.map(g=>({...g,only:v=>v.mixMode==='detailed'&&(!g.only||g.only(v))}))
  ];
  demos.mixDetailed={...demos.mix,mixMode:'detailed'};
- demos.mix={...mixQuickInitial(),qVolume:'1000',qMu:'1000',qRatio:'20'};
+ demos.mix={...mixQuickInitial(),qVolume:'1000',qMu:'10000',qRatio:'20'};
 }
