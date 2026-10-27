@@ -122,3 +122,60 @@ canvas.draw{width:100%;height:auto;display:block;touch-action:none;cursor:crossh
 .loading{text-align:center;padding:90px 25px;color:var(--muted)}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.page-top{flex-direction:column}.controls{padding:21px}.stage{padding:18px}}
 @media(max-width:640px){.site-header{padding:11px 15px;min-height:64px;flex-wrap:wrap}.brand{font-size:16px}.header-links{gap:10px}.wrap{padding:0 15px}.page-top{padding-top:21px}.page-top h1{font-size:28px}.lab-picker select{width:190px}.panel-head{padding:17px}.stage{padding:13px;min-height:260px}.steps{gap:3px}.step{height:34px;border-radius:5px;font-size:9px}.step-name{width:48px;font-size:10px}.story-grid{grid-template-columns:repeat(2,1fr)}.mixer-tracks{gap:6px}.mixer-track{padding:13px 5px}.mixer-track .track-sub{font-size:10px}.fader{height:130px}.fader input{height:125px}.field{margin-bottom:12px}.artboard svg{max-height:none}}
+/* 第二批独立体验：动作规划、创作、写作和演说 */
+.movement-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.move-tile{border:2px solid #cfe3e7;border-radius:14px;background:#fff;min-height:105px;padding:16px 6px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#3e6473}
+.move-tile small{font-size:11px;color:#74929b}
+.move-tile strong{font-size:15px}
+.move-tile.picked{border-color:#107c84;background:#e9f8f5}
+.move-tile.current{background:#fce7ba;border-color:#e99e3b}
+.check-tile{border:1px solid var(--border);background:white;border-radius:10px;padding:12px 15px;width:100%;display:flex;text-align:left;align-items:center;gap:12px;margin:8px 0;color:var(--ink)}
+.check-tile b{font-size:23px;color:#6e9098}
+.check-tile.checked{background:#e8f7ee;border-color:#85c8a9}
+.check-tile.checked b{color:#1f936a}
+.mime-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mime-card{background:#fff;border:2px solid #d2e6e7;border-radius:13px;padding:19px 5px;display:flex;flex-direction:column;gap:4px;align-items:center;color:#335f6e}
+.mime-card.active{border-color:#0e8580;background:#e5f5f0}
+.mime-card b{font-size:12px}
+.mime-card small{font-size:11px;color:#6d858e}
+.mime-glyph{font-size:44px;line-height:1.5;color:#208282}
+.story-paper{min-height:235px;background:#fffefa;border:1px solid #f0e6c7;border-radius:12px;padding:25px 30px;margin:10px 0;font:19px/2.1 Georgia,"Songti SC",serif;white-space:normal;overflow-wrap:anywhere}
+.story-paper p{margin:15px 0 0}
+.story-label{font:12px/1.5 system-ui,sans-serif;color:#81928c}
+.poetry-paper{background:#fffdfa;border:1px solid #efead5;border-radius:13px;padding:15px 23px}
+.poem-line{width:100%;min-height:58px;display:flex;align-items:center;gap:18px;padding:10px 13px;border:0;border-bottom:1px dotted #d4e5db;background:transparent;text-align:left;color:#31546a;font:19px/1.55 Georgia,"Songti SC",serif}
+.poem-line:last-child{border-bottom:0}
+.poem-line span{color:#8ba6ac;font:12px system-ui,sans-serif}
+.poem-line.picked{background:#e9f6f3;border-radius:9px}
+.act-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.act-card{display:flex;flex-direction:column;gap:11px;border:2px solid #d4e5e8;border-radius:14px;padding:20px 14px;min-height:277px;background:#fff;text-align:left;color:#3d626e}
+.act-card.active{border-color:#0c8b86;background:#f0faf8}
+.act-card small{font-weight:800;color:#37898a;letter-spacing:1px}
+.act-card b{font-size:16px;color:#20566a}
+.act-card span{font-size:13px;line-height:1.5}
+.ad-preview{border-radius:18px;background:linear-gradient(135deg,#d4efe9,#f4fbf5);border:1px solid #c1e3d6;padding:30px;min-height:310px;display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:center;text-align:center}
+.ad-kicker{font-size:11px;letter-spacing:2px;color:#3d8281}
+.ad-product{font-size:92px;line-height:1;color:#087f83}
+.ad-preview h2{font-size:28px;margin:10px 0;color:#154f5e}
+.ad-preview p{font-size:16px;max-width:550px;color:#3a5f61}
+.ad-preview small{color:#6a8387}
+.argument-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.argument{padding:23px 17px;border-radius:14px;border:1px solid var(--border);min-height:180px}
+.argument.pro{background:#edf8f3}
+.argument.con{background:#fff8ef}
+.argument b{color:#226d73}
+.argument p{margin:16px 0 0}
+.translation>.source{background:#f0f9f8;padding:17px;border-radius:12px;margin-bottom:12px}
+.translation .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.translation .pair>div{border:1px solid var(--border);border-radius:13px;padding:17px;min-height:180px}
+.translation b{color:#137b79}
+.translation p{margin:12px 0;line-height:1.9}
+.timer-big{text-align:center;font-size:76px;font-weight:850;font-variant-numeric:tabular-nums;color:#158380;letter-spacing:3px}
+.speech-beats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.speech-beats>div{background:#fff;border:1px solid var(--border);border-radius:13px;padding:14px;min-height:158px}
+.speech-beats b{color:#16767d}
+.speech-beats p{margin:10px 0;font-size:14px}
+.comedy-paper{background:#fffefa;border:1px solid #f3e5ce;padding:26px;min-height:280px;border-radius:13px;font-size:20px;line-height:2}
+.comedy-paper p{margin:0 0 16px}
+.comedy-paper strong{color:#ab5c31}
+@media(max-width:700px){.movement-grid{grid-template-columns:repeat(2,1fr)}.mime-grid{grid-template-columns:repeat(2,1fr)}.act-grid,.speech-beats{grid-template-columns:1fr}.act-card{min-height:0}.argument-grid,.translation .pair{grid-template-columns:1fr}.timer-big{font-size:55px}.story-paper{font-size:16px;padding:17px}.poem-line{font-size:17px}.ad-preview{min-height:240px}}
