@@ -13,10 +13,10 @@ M[64]={
  hasArt:true,
  init(){return {angle:15,friction:0.12,time:2,mass:1,reason:"倾角增大会改变沿斜面的重力分量。"};},
  stage(s){const angle=s.angle*Math.PI/180,acc=Math.max(0,9.81*(Math.sin(angle)-s.friction*Math.cos(angle))),distance=.5*acc*s.time*s.time;
- const pos=Math.min(500,90+distance*35),height=330-(pos-90)*Math.tan(angle)*.55;
+ const pos=Math.min(500,90+distance*35),height=340-(620-pos)*Math.tan(angle)*.55;
  return '<div class="stage-frame"><div class="section-label">IDEAL INCLINE / PHYSICS MODEL</div><div class="artboard">'+
  '<svg class="art-export" viewBox="0 0 690 395" xmlns="http://www.w3.org/2000/svg"><rect width="690" height="395" fill="#eaf6fb"/>'+
- '<path d="M60 340 L620 '+Math.max(60,340-560*Math.tan(angle)*.55)+' L620 360 L60 360Z" fill="#bedbdc" stroke="#517f90" stroke-width="4"/>'+
+ '<path d="M60 '+Math.max(60,340-560*Math.tan(angle)*.55)+' L620 340 L620 360 L60 360Z" fill="#bedbdc" stroke="#517f90" stroke-width="4"/>'+
  '<path d="M'+(pos-26)+' '+(Math.max(30,height)-37)+' h52 v24 h-52z" rx="5" fill="#e3ab57" stroke="#345973" stroke-width="3"/>'+
  '<circle cx="'+(pos-17)+'" cy="'+(Math.max(30,height)-9)+'" r="8" fill="#345973"/><circle cx="'+(pos+17)+'" cy="'+(Math.max(30,height)-9)+'" r="8" fill="#345973"/>'+
  '<text x="36" y="30" fill="#557b88" font-size="15">理想斜坡角 '+s.angle+'°</text><text x="345" y="385" text-anchor="middle" fill="#6b8690" font-size="13">车辆示意位置按模拟位移缩放，并非实测轨迹</text></svg></div>'+
@@ -50,7 +50,7 @@ M[66]={
  hasArt:true,
  init(){return {phase:0,view:0,explain:"月相由日、地、月相对几何导致的可见受光部分变化。"};},
  stage(s){const angle=2*Math.PI*s.phase/100,cx=300+Math.cos(angle)*190,cy=180+Math.sin(angle)*120;
- const lit=(1-Math.cos(angle))/2;
+ const lit=(1+Math.cos(angle))/2;
  return '<div class="stage-frame"><div class="section-label">MOON PHASES / SIMPLIFIED GEOMETRY</div><div class="artboard">'+
  '<svg class="art-export" viewBox="0 0 700 410" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="410" fill="#132843"/>'+
  '<circle cx="300" cy="180" r="105" fill="none" stroke="#6d89a3" stroke-width="2" stroke-dasharray="7 10"/>'+
