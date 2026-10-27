@@ -22,7 +22,7 @@ function clean(){
 }
 function fresh(t){
  return {id:t.id,selected:null,selectedSet:new Set(),order:split(t.payload).map((_,i)=>i),draft:'',grid:Array(20).fill(0),color:1,
-  notes:[1,0,2,0,3,2,0,1],checks:new Set(),budget:[30,30,40],phase:'ready',timings:[],repeat:0,submitted:false,feedback:null,memStage:'intro',visibleUntil:0};
+  notes:[0,0,0,0,0,0,0,0],checks:new Set(),budget:[30,30,40],modified:false,phase:'ready',timings:[],repeat:0,submitted:false,feedback:null,memStage:'intro',visibleUntil:0};
 }
 function launch(id,replace){
  const t=topic(id);
@@ -141,7 +141,7 @@ function geometry(t,degrees,compact){
 function spatial(t){
  const rotations=[0,90,180,270];const k=t.originalId%4;
  const order=rotations.map((_,i)=>rotations[(i+k)%4]);
- return '<div class="space-row"><div><h3>初始形状（面向正北）</h3><div class="space-sample">'+geometry(t,0,false)+'</div><p class="panel-note">整体顺时针旋转90°。四个颜色小格是连接在一起的，注意不要做镜像。</p></div>'+
+ return '<div class="space-row"><div><h3>初始形状（面向正北）</h3><div class="space-sample">'+geometry(t,0,false)+'</div><p class="panel-note">按照本题要求进行整体旋转（'+(Number(t.answer)===270?'逆时针90°':'顺时针'+t.answer+'°')+'）。注意不要做镜像。</p></div>'+
  '<div><h3>选出旋转后的形状</h3><div class="space-options">'+order.map((degrees,i)=>'<button type="button" class="space-choice'+(s.selected===degrees?' selected':'')+'" data-action="spatial" data-value="'+degrees+'" aria-pressed="'+(s.selected===degrees)+'">'+geometry(t,degrees,true)+'<span>选项 '+String.fromCharCode(65+i)+'</span></button>').join('')+'</div></div></div>';
 }
 function memory(t){
@@ -206,7 +206,7 @@ function canSubmit(t){
  case 'a':return s.notes.filter(x=>x!==0).length>=2;
  case 'm':return s.memStage==='quiz'&&s.selected!==null;
  case 't':return s.timings.length===3;
- case 'n':return s.budget.reduce((a,b)=>a+b,0)<=100;
+ case 'n':return s.modified&&s.budget.reduce((a,b)=>a+b,0)<=100;
  case 'f':return s.checks.size>0||s.draft.trim().length>0;
  }
  return false;
@@ -388,13 +388,13 @@ app.addEventListener('input',e=>{
  }else if(s&&e.target.id&&e.target.id.startsWith('budget-')){
   const idx=Number(e.target.dataset.index);
   if(!Number.isInteger(idx)||idx<0||idx>2)return;
-  s.budget[idx]=Number(e.target.value);
+  s.budget[idx]=Number(e.target.value);s.modified=true;
   const total=s.budget.reduce((a,b)=>a+b,0);
   const l=document.getElementById('budget-label-'+idx),bar=document.getElementById('budget-bar-'+idx),count=document.getElementById('budget-total');
   if(l)l.textContent=s.budget[idx];
   if(bar)bar.style.width=s.budget[idx]+'%';
   if(count){count.textContent=total;count.className='budget-sum'+(total>100?' over':'');}
-  const b=app.querySelector('[data-action="submit"]');if(b)b.disabled=total>100;
+  const b=app.querySelector('[data-action="submit"]');if(b)b.disabled=!s.modified||total>100;
  }
 });
 app.addEventListener('change',e=>{
