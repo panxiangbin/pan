@@ -283,3 +283,43 @@ canvas.draw{width:100%;height:auto;display:block;touch-action:none;cursor:crossh
  .control-flow>span{font-size:17px}
  .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* 81—108 手工草图、记忆、空间、现实观察及安全反馈 */
+.memory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;padding:12px 0}
+.memory-tile{background:white;border:2px solid #d0e6e7;border-radius:13px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#3c6570}
+button.memory-tile{cursor:pointer}
+.memory-tile.selected{border-color:#0b8a85;background:#e7f8ef}
+.memory-tile strong{font-size:49px;line-height:1.15;color:#25828d}
+.memory-tile small{font-size:12px;color:#738c91}
+.memory-tile span{font-size:14px;color:#467383}
+.cylinder-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rule-card{margin:14px auto;padding:20px;max-width:240px;min-height:220px;background:linear-gradient(160deg,#f5fbfb,#dceee9);border-radius:15px;border:2px solid #bcd9d4;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px}
+.rule-card span{font-size:15px;color:#5f7d80}
+.rule-card b{font-size:79px;line-height:1.15;color:#167785}
+.rule-card small{font-size:13px;color:#577d85}
+.sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.symbol-story{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}
+.symbol-card{border:2px solid #ccdfdf;border-radius:14px;background:#fffdfa;min-height:130px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#295d6c}
+.symbol-card.active{border-color:#148984;background:#eaf8f4}
+.symbol-card strong{font-size:47px;font-weight:500;line-height:1}
+.symbol-card small{font-size:11px}
+.gantt-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:13px 0}
+.gantt-step{border:2px solid #d6e4e8;border-radius:13px;min-height:134px;background:#fff;padding:15px;text-align:left;color:#315b6c;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.gantt-step.selected{background:#ebf8f4;border-color:#168c88}
+.gantt-step strong{font-size:22px;color:#167f80}
+.gantt-step small{font-size:12px;color:#5e7984}
+.signal-disc{width:min(240px,60vw);height:min(240px,60vw);border-radius:50%;border:12px solid #d1e0e5;background:#9bb0bb;box-shadow:0 6px 21px #658b9f2a;margin:23px auto}
+.signal-disc.red{background:#dc7d70;box-shadow:0 0 0 13px #f8e2dc}
+.signal-disc.green{background:#1ebc79;box-shadow:0 0 0 13px #e5f9ec}
+.metric-grid strong{font-size:23px;color:#147f80}
+.sample-track{width:100%;height:16px;background:#e4eff2;border-radius:11px;overflow:hidden}
+@media(max-width:650px){
+ .memory-grid{gap:6px}
+ .memory-tile{min-height:95px}
+ .memory-tile strong{font-size:32px}
+ .symbol-story{gap:5px}
+ .symbol-card{min-height:96px}
+ .symbol-card strong{font-size:31px}
+ .gantt-list{grid-template-columns:1fr}
+ .gantt-step{min-height:90px}
+ .act-grid{grid-template-columns:1fr}
+}
