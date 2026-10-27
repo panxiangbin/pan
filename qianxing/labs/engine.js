@@ -90,7 +90,8 @@ root.addEventListener("input",e=>{
   const key=t.dataset.key,old=state[key];
   state[key]=typeof old==="number"?Number(t.value):t.value;
   mods[id].input?.(key,state[key],state,H);
-  if(!redrawLock){redrawLock=true;requestAnimationFrame(()=>{redrawLock=false;H.updateStage();});}
+  if(t.closest("#stage")){const readout=t.closest(".mixer-track")?.querySelector(".readout");if(readout)readout.textContent=String(state[key])+"%";}
+  else if(!redrawLock){redrawLock=true;requestAnimationFrame(()=>{redrawLock=false;H.updateStage();});}
   const v=document.getElementById("value-"+key);if(v)v.textContent=String(state[key])+(key==="tempo"?" BPM":"");
 });
 root.addEventListener("click",e=>{
