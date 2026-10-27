@@ -31,12 +31,12 @@
       ['ship','orange'],['stack','green'],['sensor','blue'],['crate','teal','circle']
     ]),change:{at:9,to:{kind:'barrel'}},explain:'第 10 号区域：之前是叠箱，之后变成了圆桶。',kind:'formal'}
   ];
-  let stage='intro',index=0,selected=null,remaining=0,startAt=0,ticker=null,maskTimer=null,answers=[],reviews=[0,0,0,0,0],paused=false;
+  let stage='intro',index=0,selected=null,remaining=0,startAt=0,timerBudget=0,ticker=null,maskTimer=null,answers=[],reviews=[0,0,0,0,0],paused=false;
   const trial=() => trials[index];
   const correctAt=t => t.change ? t.change.at : -1;
   const countFormal=()=>answers.filter(x=>x.index>0&&x.choice!==null).length;
   const totalCorrect=()=>answers.filter(x=>x.index>0&&x.correct).length;
-  const screen=(s,reset) => {stage=s;render();if(reset)window.scrollTo({top:0,behavior:'instant'});};
+  const screen=(s,reset) => {stage=s;render();if(reset)window.scrollTo(0,0);};
   function clearClocks(){if(ticker!==null)clearInterval(ticker);if(maskTimer!==null)clearTimeout(maskTimer);ticker=null;maskTimer=null;}
   function iconSvg(item) {
     const color=palette[item.tone] || palette.teal;
@@ -231,6 +231,7 @@
   }
   function runTimer(ms){
     remaining=ms;
+    timerBudget=ms;
     startAt=Date.now();
     if(ticker!==null)clearInterval(ticker);
     ticker=setInterval(()=>{
@@ -253,7 +254,7 @@
   }
   function pause(){
     if(stage!=='observe')return;
-    remaining=Math.max(0,remaining-(Date.now()-startAt));
+    remaining=Math.max(0,timerBudget-(Date.now()-startAt));
     clearClocks();screen('paused',false);
   }
   function submit(choice){
