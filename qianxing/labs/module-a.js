@@ -72,8 +72,8 @@ M[4]={
    noise.connect(filter).connect(gain).connect(ctx.destination);noise.start();
    const oscs=[];const scale=[60,64,67,72,69,67,64,60];
    for(let i=0;i<16;i++)oscs.push(H.midi(ctx,scale[i%8],ctx.currentTime+.13+i*.42,.31,.036*s.music/100,"triangle"));
-   if(Speech){const utter=new SpeechSynthesisUtterance("雨夜的最后一班车，驶过安静的街道。远处的灯光，渐渐亮了起来。");utter.lang="zh-CN";utter.rate=s.rate;utter.volume=Math.max(0,Math.min(1,s.voice/100));speechSynthesis.speak(utter);}
    H.setMedia({stop(){try{noise.stop()}catch(e){}oscs.forEach(o=>{try{o.stop()}catch(e){}});ctx.close().catch(()=>{});if(Speech)speechSynthesis.cancel();}});
+   if(Speech){const utter=new SpeechSynthesisUtterance("雨夜的最后一班车，驶过安静的街道。远处的灯光，渐渐亮了起来。");utter.lang="zh-CN";utter.rate=s.rate;utter.volume=Math.max(0,Math.min(1,s.voice/100));speechSynthesis.speak(utter);}
    H.addTimer(setTimeout(()=>H.stopMedia(),8100));
    s.previewed++;
  }
