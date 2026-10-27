@@ -251,3 +251,35 @@ canvas.draw{width:100%;height:auto;display:block;touch-action:none;cursor:crossh
 .sample-track>div{height:100%;border-radius:12px}
 .observ-item.selected{border:2px solid #0c8d87;background:#edf9f4}
 @media(max-width:680px){.metric-grid{grid-template-columns:1fr 1fr}.sample-grid{grid-template-columns:1fr}.options-grid{grid-template-columns:1fr}.allocation{min-height:48px}.allocation>div{font-size:10px}.gantt-row{grid-template-columns:76px 1fr 34px;gap:6px;font-size:11px}.metric-grid b{font-size:18px}.priority-row b{max-width:55%;font-size:12px}.chat-bubble{max-width:97%}}
+
+/* 64—80 科学和工程操作界面 */
+.beaker-row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:19px 0}
+.beaker-row>span{font-size:14px;font-weight:800;color:#567e8b}
+.beaker{width:110px;height:200px;border:6px solid #b6d9e2;border-top:0;border-radius:6px 6px 20px 20px;background:#f9fcfe;position:relative;overflow:hidden;display:flex;align-items:end}
+.beaker:before{content:"";position:absolute;top:0;left:0;right:0;border-top:4px solid #b6d9e2;z-index:2}
+.beaker>div{width:100%;background:#80c5d1}
+.cylinder-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.cylinder-card{display:flex;flex-direction:column;align-items:center;gap:11px;border:2px solid #d7e5e7;background:#fff;border-radius:13px;min-height:288px;padding:14px 9px;color:#3b6573}
+.cylinder-card.selected{border-color:#158d8c;background:#ecf9f6}
+.cylinder-card span{font-size:13px}
+.cylinder{max-width:100%;height:195px;border:5px solid #9dc9d5;border-top:0;border-radius:6px 6px 15px 15px;display:flex;align-items:end;overflow:hidden;background:#fafefe}
+.cylinder>div{background:#81cde2;width:100%}
+.cylinder-card strong{font-size:14px;color:#217687}
+.claim-quote{background:#fff7e8;border:1px solid #efd4ac;border-radius:13px;padding:28px 18px;text-align:center;color:#995521;font-size:24px;font-weight:900;margin:12px 0 17px}
+.claim-quote small{display:block;color:#957357;font-size:12px;margin-top:7px;font-weight:400}
+.control-flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0}
+.control-flow>div{border:1px solid #c5e1e0;border-radius:11px;padding:17px 12px;background:#fff;min-width:113px;text-align:center;font-size:13px;color:#587984;flex:1}
+.control-flow>div strong{display:block;margin-top:5px;font-size:16px;color:#147a7c}
+.control-flow>span{font-size:22px;color:#5ea1aa;flex:none}
+.status-light{padding:15px;border-radius:13px;text-align:center;font-size:17px;font-weight:850;margin:13px 0 0}
+.status-light.on{background:#e1f7e9;border:1px solid #a2dabc;color:#20855b}
+.status-light.off{background:#fff1e7;border:1px solid #eac8a7;color:#a46434}
+@media(max-width:650px){
+ .cylinder-card{min-height:235px}
+ .cylinder{height:145px}
+ .beaker{height:160px;width:80px}
+ .claim-quote{font-size:19px}
+ .control-flow>div{min-width:85px;padding:11px 6px}
+ .control-flow>span{font-size:17px}
+ .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
