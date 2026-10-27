@@ -1,0 +1,235 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>潜星计划｜乐器与乐感｜V0.9 互动体验</title>
+<style>
+
+:root{--navy:#0e2255;--deep:#193466;--blue:#2362db;--sky:#e8f1ff;--muted:#526b92;--border:#d5e2fb;--orange:#ff7727;--orange2:#ff9a35;--green:#14755b;--focus:#ffb72c}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--navy);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:linear-gradient(160deg,#e9f2ff 0%,#f8fbff 39%,#f1f6ff 100%);min-height:100vh}
+button,select{font:inherit}
+button{border:2px solid #c8dbff;min-height:54px;padding:11px 20px;border-radius:15px;background:#fff;color:var(--deep);font-weight:800;cursor:pointer;transition:transform .12s,box-shadow .18s,background .18s,border-color .18s;line-height:1.35}
+button:hover:not(:disabled){transform:translateY(-2px);background:#eef4ff;box-shadow:0 6px 16px rgba(20,65,137,.1)}
+button:active:not(:disabled){transform:translateY(0)}
+button:disabled{opacity:.48;cursor:not-allowed;box-shadow:none!important;transform:none!important}
+button.primary{background:linear-gradient(110deg,var(--orange),var(--orange2));border-color:var(--orange);color:white;box-shadow:0 8px 22px rgba(252,107,28,.23)}
+button.primary:hover:not(:disabled){background:linear-gradient(110deg,#f36613,#ff8a29);box-shadow:0 12px 25px rgba(252,107,28,.3)}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+header{background:#fff;box-shadow:0 3px 15px rgba(29,54,117,.06);border-bottom:1px solid #e1eaff}
+.bar{max-width:1200px;margin:auto;padding:19px clamp(17px,3vw,36px);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:13px;color:var(--navy);font-weight:900;font-size:18px;letter-spacing:.2px}
+.brand-logo{width:43px;height:43px;display:flex;align-items:center;justify-content:center;flex:none;border-radius:15px;background:linear-gradient(140deg,#0e347a,#3382ec);box-shadow:0 6px 14px #2457a638}
+.brand-logo svg{width:32px;height:32px}
+.brand em{font-style:normal;color:#7c90b4;margin:0 8px;font-weight:400}
+.version{background:#eaf2ff;border-radius:100px;padding:8px 16px;font-size:13px;color:#2158ae;white-space:nowrap;font-weight:800;border:1px solid #dae7ff}
+main{max-width:1220px;padding:26px clamp(10px,2.5vw,28px) 14px;margin:0 auto}
+.sheet{background:radial-gradient(ellipse at 2% 38%,rgba(255,176,64,.10),transparent 30%),radial-gradient(ellipse at 99% 40%,rgba(49,121,233,.11),transparent 32%),#fff;position:relative;isolation:isolate;border:1px solid #e1ebff;border-radius:29px;padding:clamp(22px,4.7vw,54px) 27px;box-shadow:0 22px 48px rgba(18,55,110,.11);min-height:630px;overflow:hidden}
+.musical-scene{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.scene-staff{position:absolute;top:135px;right:-60px;width:470px;opacity:.74}
+.scene-mic{position:absolute;top:205px;left:-45px;width:225px;filter:drop-shadow(0 16px 15px rgba(33,71,146,.15))}
+.scene-notes{position:absolute;left:17%;bottom:33px;color:#ff9c32;opacity:.75;transform:rotate(-14deg);font-size:40px;font-weight:900}
+.scene-equalizer{position:absolute;right:36px;bottom:54px;height:115px;display:flex;align-items:end;gap:7px;opacity:.40}
+.scene-equalizer i{display:block;width:9px;border-radius:10px 10px 0 0;background:linear-gradient(#5f9efb,#bbd4ff)}
+.scene-equalizer i:nth-child(10n+1){height:24%}.scene-equalizer i:nth-child(10n+2){height:42%}.scene-equalizer i:nth-child(10n+3){height:64%}.scene-equalizer i:nth-child(10n+4){height:92%}.scene-equalizer i:nth-child(10n+5){height:58%}.scene-equalizer i:nth-child(10n+6){height:33%}.scene-equalizer i:nth-child(10n+7){height:49%}.scene-equalizer i:nth-child(10n+8){height:74%}.scene-equalizer i:nth-child(10n+9){height:100%}.scene-equalizer i:nth-child(10n){height:45%}
+.content-wrap{position:relative;z-index:2;max-width:810px;margin:0 auto;width:100%;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:#1f5bc4;font-size:13px;font-weight:900;background:#eff5ff;border-radius:100px;padding:5px 14px;letter-spacing:.3px}
+.eyebrow::before{content:"♫";font-size:20px;color:var(--orange)}
+h1,h2,h3{color:var(--navy);line-height:1.28}
+h1{font-size:clamp(26px,3.8vw,40px);margin:18px 0 13px;font-weight:900;letter-spacing:.4px}
+h2{font-size:clamp(25px,3.4vw,34px);margin:17px 0 12px;font-weight:900}
+p{margin:11px 0}
+.lead{font-size:clamp(15px,1.75vw,18px);color:#516e9d;line-height:1.75;margin:11px auto 20px;max-width:710px}
+.muted{color:#5e7396;font-size:14px}
+.mini{font-size:13px;color:#657da3}
+.notice,.panel{max-width:810px;margin:17px auto;padding:16px 20px;border:1px solid #cbdcff;background:#f5f9ff;border-radius:17px;text-align:left;color:#233e73}
+.notice{background:#fff8ee;border-color:#ffe0bb}
+.notice p,.panel p{margin:5px 0 0}
+.grid4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:25px 0;text-align:left}
+.feature{position:relative;background:linear-gradient(145deg,#f5f9ff,#edf4ff);border:1px solid #d9e7ff;border-radius:16px;padding:15px 17px;min-height:94px;box-shadow:0 3px 8px #286ad00c}
+.feature b{display:block;font-size:17px}.feature p{font-size:13px;color:#506d98;line-height:1.55;margin:7px 0 0}
+.feature::before{content:'♪';font-size:20px;color:var(--orange);position:absolute;right:15px;top:8px;opacity:.8}
+label{font-size:15px;display:block;text-align:left;margin:11px 0 4px;font-weight:700;color:#1b3266}
+select{background:#fff;border:2px solid #d4e2fa;border-radius:13px;padding:11px 14px;width:100%;max-width:520px;color:var(--deep);display:block;outline:none;font-size:15px}
+.buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:23px 0 6px}
+.buttons button{min-width:150px}
+.controls{margin:25px auto 14px;padding:22px 22px 19px;border-radius:22px;border:1px solid #d9e6ff;background:linear-gradient(145deg,#f5f8ff,#eaf3ff)}
+.dual{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dual button{min-height:70px;border-radius:18px;background:linear-gradient(110deg,#ff7a26,#ffa33a);border-color:#ff7e2b;color:white;font-size:18px;box-shadow:0 8px 18px rgba(255,123,41,.2)}
+.dual button:nth-child(2){background:linear-gradient(120deg,#235dc9,#3e81f4);border-color:#2364d2;box-shadow:0 8px 18px rgba(38,105,221,.15)}
+.dual button:hover:not(:disabled){background:linear-gradient(110deg,#f36b18,#ff8e29);color:white}
+.dual button:nth-child(2):hover:not(:disabled){background:linear-gradient(110deg,#1751b9,#3172df)}
+audio{display:block;width:100%;height:54px;max-width:100%;margin:19px 0 4px;border-radius:30px;accent-color:#2e68dd}
+.status{min-height:28px;margin:11px 0 0;font-size:14px;color:#385d93;font-weight:600}
+.choicegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:23px auto}
+.choicegrid button{min-height:73px;text-align:center;padding:14px 12px;font-size:18px;line-height:1.5;border-radius:17px;background:linear-gradient(145deg,#f9fbff,#edf4ff);border:2px solid #8bb6ff;color:#0c3885}
+.choicegrid button:nth-child(2){background:linear-gradient(145deg,#fffaf3,#fff0e5);border-color:#ffa363;color:#b9420d}
+.choicegrid button:nth-child(3):not(#unsure){background:linear-gradient(145deg,#f5f4ff,#eceeff);border-color:#9bafff;color:#3e3c93}
+.choicegrid button:hover:not(:disabled){background:#e9f2ff;box-shadow:0 8px 18px #215ba619}
+.choicegrid button:nth-child(2):hover:not(:disabled){background:#fff0e5}
+.choicegrid button.selected{background:#e3efff;border-color:#2257c5}
+.choicegrid:has(> button:nth-child(4)[data-answer]){grid-template-columns:repeat(3,minmax(0,1fr))}
+.choicegrid button#unsure{grid-column:1/-1;background:white;border:1px dashed #bbcee9;min-height:46px;font-size:14px;font-weight:700;color:#5a7199}
+.choicegrid button:last-child:nth-child(odd):not(#unsure){grid-column:1/-1}
+.step{font-size:14px;color:#5d7aa7;font-weight:700;margin-top:16px}
+.progress{max-width:800px;background:#e0eaff;height:10px;border-radius:999px;overflow:hidden;margin:10px auto 24px}
+.progress div{height:100%;background:linear-gradient(90deg,#235ff2,#64a4ff);border-radius:999px;transition:width .2s}
+.rules{font-size:14px;text-align:left;margin:15px auto;line-height:1.55}
+.rules b{color:#2153a3}
+.measure-detail{border:1px solid #dfebfc;border-radius:14px;background:#f9fbff;text-align:left;padding:10px 16px;margin:10px auto 4px;font-size:14px;color:#48618b}
+.measure-detail summary{cursor:pointer;font-weight:800;color:#2d5baa}
+.measure-detail p{margin:8px 0 2px}
+.resultgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:22px auto}
+.res{position:relative;border:1px solid #ccdefa;background:linear-gradient(145deg,#f8fbff,#edf5ff);border-radius:18px;text-align:left;padding:20px}
+.res::after{content:"♪";position:absolute;right:14px;top:12px;font-size:20px;color:#ff8f32;opacity:.8}
+.res h3{font-size:18px;margin:0 0 11px}
+.res b{font-size:30px;color:#1b5ed1}.res p{font-size:13px;color:#4c648c;line-height:1.65}
+.answers{border-top:1px solid #d7e2fa;margin-top:26px;padding-top:18px;text-align:left;font-size:14px}
+.answers summary{font-weight:800;cursor:pointer;color:#234e9a}.answers p{padding:9px 3px;border-bottom:1px solid #e4edf9}
+.ready{color:var(--green);font-size:14px}.warn{color:#a45a16;font-size:14px}
+.hidden{display:none!important}
+.bottom{margin:20px auto 25px;color:#5e789e;max-width:1140px;text-align:center;font-size:12px;padding:0 22px;line-height:1.7}
+.bottom:before{content:'♫';font-size:16px;color:#ff8734;margin-right:6px}
+.sheet[data-stage="results"]{min-height:0}
+.sheet[data-stage="results"] .scene-mic{opacity:.08}.sheet[data-stage="results"] .scene-staff{opacity:.28}.sheet[data-stage="results"] .content-wrap{max-width:890px}
+.sheet[data-stage="home"] .content-wrap{max-width:800px}
+.sheet[data-stage="home"] .feature{border-left:4px solid #5396f7}
+.sheet[data-stage="home"] .buttons button.primary,.sheet[data-stage="check"] .buttons button.primary{min-width:230px}
+@media(max-width:1140px){.scene-mic{left:-66px;opacity:.22}.scene-staff{opacity:.33}.scene-equalizer{opacity:.14}.content-wrap{max-width:800px}}
+@media(max-width:700px){.bar{padding:13px 14px}.brand{gap:8px;font-size:14px}.brand-logo{height:35px;width:35px;border-radius:12px}.brand-logo svg{width:26px;height:26px}.brand em{margin:0 3px}.version{padding:7px 10px;font-size:11px}main{padding:14px 10px}.sheet{border-radius:22px;padding:27px 19px;min-height:0}.scene-mic{width:128px;top:28px;left:-47px;opacity:.13}.scene-staff{width:260px;top:44px;right:-100px;opacity:.23}.scene-notes,.scene-equalizer{display:none}.controls{padding:15px 12px}.grid4{gap:9px}.feature{padding:12px;min-height:90px}.feature b{font-size:14px}.feature p{font-size:12px}.resultgrid{gap:9px}.res{padding:14px}.res h3{font-size:16px}.choicegrid button{min-height:64px;font-size:16px}}
+@media(max-width:480px){h2{font-size:22px;overflow-wrap:anywhere;line-height:1.4}.scene-mic{width:112px;top:48px;left:auto;right:-68px;opacity:.25}.bar{flex-wrap:wrap;gap:8px}.version{margin-left:43px}.brand{font-size:14px}h1{font-size:25px}h2{font-size:24px}.sheet{padding:23px 14px}.lead{font-size:15px}.grid4,.resultgrid{grid-template-columns:1fr}.dual{gap:9px}.dual button{min-height:60px;font-size:16px;padding:10px 6px}.choicegrid{gap:9px}.choicegrid button{padding:12px 8px;min-height:61px;font-size:15px}.choicegrid:has(> button:nth-child(4)[data-answer]){grid-template-columns:repeat(2,minmax(0,1fr))}.choicegrid:has(> button:nth-child(4)[data-answer]) button:nth-child(3){grid-column:1/-1}.buttons{flex-direction:column}.buttons button{width:100%}.controls{padding:15px 10px}.res b{font-size:24px}.bottom{padding:0 8px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+</style></head><body>
+<header><div class="bar"><div class="brand"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M9 28 C13 13 24 9 34 9 C29 14 26 19 26 27 L20 30 Z" fill="#fff"/><path d="M22 4 L24.3 10.5 L31 12.4 L24.3 14.6 L22 21 L19.5 14.6 L13.1 12.4 L19.5 10.5 Z" fill="#ffc34a"/><circle cx="14" cy="28" r="4" fill="#ffc34a"/></svg></span><span>潜星计划 <em>|</em> 第01项：乐器与乐感</span></div><span class="version">♫ &nbsp; 声音感知体验 · V0.9</span></div></header>
+<main><div id="app" class="sheet"></div><div class="bottom"><a href="../">← 返回潜星计划首页</a> · 仅用于探索音乐感知，不直接判断声乐或乐器天赋。音频为离线数字合成，浏览器无需麦克风，不上传答题数据。结果仅说明本次作答情况。</div></main>
+<script>window.QX_AUDIO_PACK={};</script>
+<script src="./audio/pack00.js"></script>
+<script src="./audio/pack01.js"></script>
+<script src="./audio/pack02.js"></script>
+<script src="./audio/pack03.js"></script>
+<script src="./audio/pack04.js"></script>
+<script src="./audio/pack05.js"></script>
+<script src="./audio/pack06.js"></script>
+<script src="./audio/pack07.js"></script>
+<script src="./audio/pack08.js"></script>
+<script src="./audio/pack09.js"></script>
+<script src="./audio/pack10.js"></script>
+<script>
+'use strict';
+const soundPack=window.QX_AUDIO_PACK;
+const questions=[{"id":"m1","group":"melody","title":"短旋律里，有一个音被换了吗？","prompt":"先完整听A段，再听B段。两段使用相同音色和伴奏；判断旋律有没有发生变化。","tracks":["m1a","m1b"],"options":[["same","两段相同"],["diff","有一个音不同"]],"correct":"diff","why":"B段在第4个主旋律音处发生了音高变化，其余音型保持一致。"},{"id":"m2","group":"melody","title":"旋律是否保持原样？","prompt":"这次也允许两段完全相同。请根据听到的内容判断，不必猜一定会变化。","tracks":["m2a","m2b"],"options":[["same","两段相同"],["diff","有一个音不同"]],"correct":"same","why":"A、B的旋律、节奏与伴奏是相同的音频内容。"},{"id":"m3","group":"melody","title":"留意旋律靠近结尾的地方","prompt":"仍然只改变或不改变主旋律中的一处，背景保持不变。","tracks":["m3a","m3b"],"options":[["same","两段相同"],["diff","有一个音不同"]],"correct":"diff","why":"B段主旋律靠近尾声的第7个音与A段不同。"},{"id":"r1","group":"rhythm","title":"一句音乐中的敲击节奏改变了吗？","prompt":"两段的音高与音色相同，留意某个音进入的时间有没有改变。","tracks":["r1a","r1b"],"options":[["same","节奏相同"],["diff","节奏不同"]],"correct":"diff","why":"B段的第5个主旋律音提前进入，改变了第4与第5音之间的时间间隔。"},{"id":"r2","group":"rhythm","title":"这一对节奏是否相同？","prompt":"即使两个片段都比较轻快，也可能是同一个节奏。","tracks":["r2a","r2b"],"options":[["same","节奏相同"],["diff","节奏不同"]],"correct":"same","why":"A、B两段在每个音的开始时点上完全相同。"},{"id":"r3","group":"rhythm","title":"节奏靠中间的位置变了吗？","prompt":"请留意中间某个音是提前或延后出现，而不是比较哪首更好听。","tracks":["r3a","r3b"],"options":[["same","节奏相同"],["diff","节奏不同"]],"correct":"diff","why":"B段第4个主旋律音延后出现，前后间隔发生变化。"},{"id":"l1","group":"layer","title":"B段后来增加了什么？","prompt":"两段主旋律相同，请比较B段的后半部分与A段。","tracks":["l1a","l1b"],"options":[["high","较高的清脆点缀声"],["low","较低的伴奏声"],["none","没有新增"]],"correct":"high","why":"B段后半增加了三个较高的清脆点缀音，A段没有。"},{"id":"l2","group":"layer","title":"这一次，B段多出的声音在哪个音域？","prompt":"声音可能藏在旋律下方；也可能根本没有新增。","tracks":["l2a","l2b"],"options":[["high","较高的清脆点缀声"],["low","较低的伴奏声"],["none","没有新增"]],"correct":"low","why":"B段后半额外加入了一条较低的伴奏音型，A段没有。"},{"id":"l3","group":"layer","title":"真的多了一个声部吗？","prompt":"有时候两段完全一致。不要把重复听到的旋律误认为新增乐器。","tracks":["l3a","l3b"],"options":[["high","较高的清脆点缀声"],["low","较低的伴奏声"],["none","没有新增"]],"correct":"none","why":"A、B两段所有音轨一致，并没有新增声部。"},{"id":"t1","group":"transfer","title":"新旋律 A / B，哪段保持了示范重音？","prompt":"刚才示范的规则是每4次敲击：第1次重、第2次轻、第3次重、第4次轻。请选符合规则的片段。","tracks":["t1a","t1b"],"options":[["A","A符合示范规律"],["B","B符合示范规律"]],"correct":"A","why":"A的第1、第3次敲击更重；B把第二次也强调了。"},{"id":"t2","group":"transfer","title":"换一组音符，哪段仍遵守规律？","prompt":"音符高低和快慢有些变化，但规则仍是每4次敲击重在第1、第3次。","tracks":["t2a","t2b"],"options":[["A","A符合示范规律"],["B","B符合示范规律"]],"correct":"B","why":"B保持第1、第3次敲击较重；A的较重音出现在第1、第4次。"},{"id":"t3","group":"transfer","title":"最后一组新旋律，哪段更符合规律？","prompt":"认真听节奏里的轻重，而不是把旋律高低当成轻重。","tracks":["t3a","t3b"],"options":[["A","A符合示范规律"],["B","B符合示范规律"]],"correct":"A","why":"A保持第1、第3次更重；B的重音移动到了第2、第4次。"}],groupLabels={"melody":{"name":"旋律变化辨别","what":"听过两条相同音色、伴奏的短旋律，识别是否只有一个主旋律音发生变化","cannot":"这不等于唱准、作曲或演奏能力"},"rhythm":{"name":"节奏结构辨别","what":"在音高基本不变的情况下，注意音符进入的时点是否改变","cannot":"也受注意力、重复聆听和节奏经验影响"},"layer":{"name":"声部变化觉察","what":"在有主旋律和伴奏的片段中，判断是否增加较高或较低的声音层","cannot":"这不是听力医学检查，也不证明能编曲"},"transfer":{"name":"示范规则的应用","what":"听过并看到一个重音规律后，能否在不同音高与速度的片段中辨认该规律","cannot":"只有示范后的题目，没有基线与延时测试，不能据此推断学习速度"}};
+const app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let stage='home',idx=0,prior='未填',device='未填',answers={},listened=new Set(),plays={},aud=null,active='',allUrls={},picked=null,heardCheck=false;
+let pairTimer=null, playGeneration=0;
+const groups=['melody','rhythm','layer','transfer'];
+function urls(id){if(!allUrls[id]){let bytes=atob(soundPack[id]),a=new Uint8Array(bytes.length);for(let k=0;k<bytes.length;k++)a[k]=bytes.charCodeAt(k);allUrls[id]=URL.createObjectURL(new Blob([a],{type:'audio/mpeg'}))}return allUrls[id]}
+function stop(){
+  ++playGeneration;
+  if(pairTimer!==null){clearTimeout(pairTimer);pairTimer=null;}
+  if(aud){try{aud.pause();aud.onended=null;aud.onplaying=null;aud.onerror=null;aud.ontimeupdate=null;aud.removeAttribute('src');aud.load();}catch(e){}}
+  aud=null;active='';
+}
+const visualArtwork="<div class=\"musical-scene\" aria-hidden=\"true\">\n <svg class=\"scene-staff\" viewBox=\"0 0 500 320\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15 172 C155 44 276 314 510 119\" stroke=\"#9fc2ff\" stroke-width=\"2.5\"/><path d=\"M18 199 C155 71 276 341 510 146\" stroke=\"#b3cfff\" stroke-width=\"2\"/><path d=\"M12 145 C154 17 273 287 509 92\" stroke=\"#c2d8ff\" stroke-width=\"2\"/><path d=\"M12 118 C154 -10 273 260 509 65\" stroke=\"#c2d8ff\" stroke-width=\"2\"/><g fill=\"#ff9e32\"><path d=\"M418 50 v62 a13 10 0 1 1 -10 -10 V44z\"/><path d=\"M419 50 L458 37 v14 L419 62z\"/></g><g fill=\"#5d92f3\"><path d=\"M187 205 v45 a10 8 0 1 1 -7 -8 V197z\"/><path d=\"M186 196 L211 190 v10 L186 207z\"/></g></svg>\n <svg class=\"scene-mic\" viewBox=\"0 0 220 355\" xmlns=\"http://www.w3.org/2000/svg\">\n <defs><linearGradient id=\"micShell\" x1=\"0\" x2=\"1\"><stop stop-color=\"#0b2965\"/><stop offset=\".48\" stop-color=\"#3d84ed\"/><stop offset=\"1\" stop-color=\"#102d69\"/></linearGradient><linearGradient id=\"micMetal\" x1=\"0\" x2=\"1\"><stop stop-color=\"#a8d2ff\"/><stop offset=\".45\" stop-color=\"#f0faff\"/><stop offset=\"1\" stop-color=\"#4772b7\"/></linearGradient></defs>\n <g transform=\"translate(88 45) rotate(18)\"><rect x=\"-32\" y=\"5\" width=\"64\" height=\"172\" rx=\"31\" fill=\"url(#micShell)\" stroke=\"#0a2456\" stroke-width=\"5\"/><rect x=\"-26\" y=\"12\" width=\"52\" height=\"105\" rx=\"25\" fill=\"#5b9ff5\"/><path d=\"M-20 31 H19 M-21 45 H20 M-21 59 H20 M-20 73 H20 M-19 87 H19\" stroke=\"#183c88\" stroke-width=\"4\" stroke-dasharray=\"3 4\"/><rect x=\"-32\" y=\"107\" width=\"64\" height=\"15\" rx=\"6\" fill=\"url(#micMetal)\"/><rect x=\"-35\" y=\"170\" width=\"70\" height=\"14\" rx=\"7\" fill=\"#173768\"/><path d=\"M-50 103 v62 a50 50 0 0 0 100 0 v-62\" stroke=\"#14366a\" stroke-width=\"6\" fill=\"none\"/><path d=\"M-50 127 H-68 L-57 195 0 226 58 195 68 127 H50\" stroke=\"#2b65c6\" stroke-width=\"5\" fill=\"none\"/><path d=\"M0 230 v90\" stroke=\"#183c76\" stroke-width=\"9\" stroke-linecap=\"round\"/></g>\n <path d=\"M33 297 Q95 225 146 282\" fill=\"none\" stroke=\"#f2ad47\" stroke-width=\"5\" opacity=\".5\"/>\n </svg>\n <div class=\"scene-notes\">♫ ♪</div><div class=\"scene-equalizer\"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>";
+function swap(x){stop();app.dataset.stage=stage;app.dataset.group=(stage==='quiz'&&questions[idx])?questions[idx].group:'';app.innerHTML=visualArtwork+'<div class="content-wrap">'+x+'</div>';window.scrollTo(0,0)}
+async function play(id,what,qualify=false){
+  const player=document.getElementById('player'),info=document.getElementById('audio-status');
+  if(!player||!info)return;
+  stop();aud=player;active=id;
+  const generation=playGeneration;
+  const valid=()=>generation===playGeneration&&aud===player&&player.isConnected;
+  try{
+    player.src=urls(id);player.volume=1;player.load();info.textContent='加载中：'+what;
+    player.onplaying=()=>{if(valid())info.textContent='正在播放 '+what;};
+    player.onended=()=>{
+      if(!valid())return;
+      plays[id]=(plays[id]||0)+1;
+      if(qualify)listened.add(id);
+      info.textContent='完整播放：'+what;
+      updateAnswers();
+    };
+    player.onerror=()=>{if(valid())info.textContent='音频不能播放；可跳过，不能按错误答案处理。';};
+    await player.play();
+  }catch(e){if(valid())info.textContent='播放失败（'+(e?.name||'未知原因')+'）。检查浏览器/设备，不能听清请跳过。';}
+}
+/** Click once: A plays through, 700ms silent pause, then B. New actions cancel the queue. */
+async function playPair(first,second){
+  // For practice and question 1, use a physically joined MP3 to avoid mobile browser
+  // blocking the second play() call outside the original user gesture.
+  if(first==='p1a'&&second==='p1b')return playJoined('p1pair',first,second,5.746939);
+  if(first==='m1a'&&second==='m1b')return playJoined('m1pair',first,second,5.746939);
+  const player=document.getElementById('player'),info=document.getElementById('audio-status');
+  if(!player||!info)return;
+  stop();aud=player;
+  const generation=playGeneration;
+  const valid=()=>generation===playGeneration&&aud===player&&player.isConnected;
+  async function segment(id,label,isFirst){
+    if(!valid())return;
+    active=id;
+    try{
+      player.onended=null;player.onplaying=null;player.onerror=null;
+      player.src=urls(id);player.volume=1;player.load();
+      info.textContent='准备播放：'+label;
+      player.onplaying=()=>{if(valid())info.textContent='正在播放 '+label;};
+      player.onended=()=>{
+        if(!valid())return;
+        plays[id]=(plays[id]||0)+1;
+        listened.add(id);
+        updateAnswers();
+        if(isFirst){
+          info.textContent='A段完成，静音间隔约0.7秒，随后播放B段';
+          pairTimer=setTimeout(()=>{
+            pairTimer=null;
+            if(valid())void segment(second,'B段',false);
+          },700);
+        }else{
+          info.textContent='A、B已完整播放，可以回答或分别重听。';
+          updateAnswers();
+        }
+      };
+      player.onerror=()=>{if(valid())info.textContent=label+'播放失败；可单独重听或跳过。';};
+      await player.play();
+    }catch(e){if(valid())info.textContent=label+'播放失败（'+(e?.name||'未知原因')+'）；可单独重听或跳过。';}
+  }
+  await segment(first,'A段',true);
+}
+async function playJoined(combined,first,second,aDuration){
+  const player=document.getElementById('player'),info=document.getElementById('audio-status');
+  if(!player||!info)return;
+  stop();aud=player;active=combined;
+  const generation=playGeneration;
+  const valid=()=>generation===playGeneration&&aud===player&&player.isConnected;
+  try{
+    player.src=urls(combined);player.volume=1;player.load();
+    info.textContent='准备连续播放：A段 → 间隔 → B段';
+    player.ontimeupdate=()=>{
+      if(!valid())return;
+      const sec=player.currentTime;
+      info.textContent=sec<aDuration?'正在播放 A段':(sec<aDuration+.7?'A段播放完毕，间隔约0.7秒':'正在播放 B段');
+    };
+    player.onended=()=>{
+      if(!valid())return;
+      for(const k of [first,second]){listened.add(k);plays[k]=(plays[k]||0)+1;}
+      info.textContent='A、B已完整播放，可以回答或分别重听。';
+      updateAnswers();
+    };
+    player.onerror=()=>{if(valid())info.textContent='连续音频播放失败；可分别重听 A、B 或跳过。';};
+    await player.play();
+  }catch(e){if(valid())info.textContent='连续播放失败（'+(e?.name||'未知原因')+'）；可分别重听或跳过。';}
+}
+function clickBtn(id,fn){const b=document.getElementById(id);if(b)b.onclick=fn}
+function showHome(){stage='home';swap(`<div class="eyebrow">♫ 乐器与乐感 · 第1项</div><h1>用耳朵，发现音乐里的细节</h1><p class="lead">听两段短音乐，选择你听到的变化。四类音乐感知活动、12道正式题，不需要乐理基础，也不用唱歌。</p><div class="grid4">${groups.map(g=>`<div class="feature"><b>${groupLabels[g].name}</b><p>${groupLabels[g].what}</p></div>`).join('')}</div><div class="notice"><b>这里不判断“有没有声乐或乐器天赋”</b><p>回答问题能观察音乐感知，但无法知道你能否把声音唱准、掌握乐器动作或长期学得更快。每类只有3题，只能做产品探索，远不足以做能力等级评价。</p></div><label for="prior"><b>以前是否系统学过音乐？</b>（可不填）</label><select id="prior"><option value="未填">不填写</option><option value="没有系统学过">没有系统学过</option><option value="不足一年">不足一年</option><option value="一年或以上">一年或以上</option></select><label for="device"><b>使用什么听？</b>（可不填）</label><select id="device"><option value="未填">不填写</option><option value="耳机">耳机</option><option value="外放">外放</option></select><p class="muted">约8—12分钟 · 可反复听 · 可跳过 · 不计时</p><div class="buttons"><button class="primary" id="start">▶ 先试听，确认音质</button></div>`);clickBtn('start',()=>{prior=document.getElementById('prior').value;device=document.getElementById('device').value;showCheck()})}
+function showCheck(){stage='check';swap(`<div class="eyebrow">听前检查</div><h1>先确认：声音清楚、音量舒适</h1><p>先听一段有旋律、和声及点缀音的短音乐。不会弹出多个播放器；只有确认自己听清楚了才开始答题。</p><div class="controls"><div class="dual"><button id="preview" class="primary">▶ 试听完整音乐</button></div><audio id="player" controls preload="none"></audio><div class="status" id="audio-status" role="status">未播放</div></div><div class="buttons"><button class="primary" id="yes">确实听清楚了，开始练习</button><button id="no">音质仍不满意／听不清</button><button id="back">返回</button></div><div id="help" class="notice hidden">请检查音频设备、浏览器静音、Windows 音量混合器。若声音粗糙或太小，请停止本次实验，记为设备/素材问题，不要猜答案。</div>`);clickBtn('preview',()=>play('intro','完整试听'));clickBtn('yes',()=>{heardCheck=true;showPractice()});clickBtn('no',()=>document.getElementById('help').classList.remove('hidden'));clickBtn('back',showHome)}
+function showPractice(){stage='practice';listened.clear();picked=null;swap(`<div class="eyebrow">不计分练习</div><h1>练习：两段旋律是否一样？</h1><p class="lead">点击连续播放可一次听完A、B，也可以分别重听。这里有一个主旋律音发生变化。练习会告诉你变化在哪里；正式题不会马上公布答案。</p><div class="controls"><button id="ab" class="primary">▶ 连续播放 A → B</button><div class="dual"><button id="a">单独重听 A</button><button id="b">单独重听 B</button></div><audio id="player" controls preload="none"></audio><div id="audio-status" class="status" role="status">请先完整听完 A 和 B</div></div><div class="choicegrid"><button data-answer="same" disabled>相同</button><button data-answer="diff" disabled>有变化</button></div><div id="practice-fb" class="panel hidden"></div><div class="buttons"><button class="primary hidden" id="begin">开始正式体验</button><button id="skip">不做练习，直接开始</button></div>`);clickBtn('ab',()=>playPair('p1a','p1b'));clickBtn('a',()=>play('p1a','练习A',true));clickBtn('b',()=>play('p1b','练习B',true));document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{picked=b.dataset.answer;document.getElementById('practice-fb').classList.remove('hidden');document.getElementById('practice-fb').textContent=(picked==='diff'?'判断与音频变化一致。':'实际这里有一个音变化了。')+' B段第4个主旋律音更高。这只是练习，不计入结果。';document.getElementById('begin').classList.remove('hidden')});clickBtn('begin',()=>{idx=0;showQuestion()});clickBtn('skip',()=>{idx=0;showQuestion()});}
+function updateAnswers(){const q=questions[idx];if(stage==='practice') {const ok=listened.has('p1a')&&listened.has('p1b');document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=!ok);return;}if(stage!=='quiz'||!q)return;const ok=q.tracks.every(k=>listened.has(k));document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=!ok);const info=document.getElementById('listening');if(info)info.textContent=ok?'两段都已听完，可以回答；也可以继续重听。':'请按“连续播放A→B”或分别完整听完两段再作答；听不清可以跳过。';}
+function qShowGroup(q){return `<div class="eyebrow">${groupLabels[q.group].name}</div><div class="step">第 ${idx+1} / ${questions.length} 道正式题 · 不要求音乐基础</div><div class="progress"><div style="width:${Math.round((idx+1)/questions.length*100)}%"></div></div><h2>${q.title}</h2><p class="lead">${q.prompt}</p><details class="measure-detail"><summary>本题具体观察什么？</summary><p>${groupLabels[q.group].what}</p></details>`}
+function showQuestion(){const q=questions[idx];if(!q){showResults();return;}if(q.group==='transfer'&&idx===9&&!answers._taught){showTeaching();return;}stage='quiz';listened.clear();picked=null;swap(`${qShowGroup(q)}<div class="controls"><button id="ab" class="primary">▶ 连续播放 A → B</button><div class="dual"><button id="a">单独重听 A</button><button id="b">单独重听 B</button></div><audio id="player" controls preload="none"></audio><div id="audio-status" class="status" role="status">还没有播放</div><div id="listening" class="mini">请完整听完 A 和 B，才可选择答案</div></div><div class="choicegrid">${q.options.map(([x,t])=>`<button data-answer="${x}" disabled>${t}</button>`).join('')}<button id="unsure">听不清／不确定</button></div><div class="notice">正式题不立即揭示正确答案，避免前一题的反馈影响后续判断。完整解析将在结果页展示。</div><div class="buttons"><button id="skip">跳过本题</button><button id="finish">提前结束并查看记录</button></div>`);clickBtn('ab',()=>playPair(q.tracks[0],q.tracks[1]));clickBtn('a',()=>play(q.tracks[0],'A段',true));clickBtn('b',()=>play(q.tracks[1],'B段',true));document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>record(b.dataset.answer));clickBtn('unsure',()=>record(null));clickBtn('skip',()=>record(null));clickBtn('finish',showResults);}
+function record(ans){const q=questions[idx];answers[q.id]={status:ans===null?'unsure':'answered',choice:ans,correct:ans===null?null:ans===q.correct,group:q.group,heard: q.tracks.map(k=>listened.has(k)),plays:q.tracks.map(k=>plays[k]||0)};idx++;showQuestion()}
+function showTeaching(){stage='teaching';listened.clear();swap(`<div class="eyebrow">第四类：先学规则，再在新音乐中使用</div><h1>听一条简单规律</h1><p class="lead">四次敲击为一组，规则是：<b>强—轻—强—轻</b>（第1和第3下更重）。下面的示范会重复两组。接下来听不同音高、不同速度的片段，选出哪段沿用了这条规律。</p><div class="controls"><button id="playteach" class="primary">▶ 听示范：强—轻—强—轻</button><audio id="player" controls preload="none"></audio><div id="audio-status" class="status" role="status">请先听示范，再开始答题。</div></div><div class="buttons"><button class="primary" id="nextTeach">我知道规则，开始三道新题</button></div><p class="muted">这里只评估“看到解释和听到示范后能否辨认规则”，不能推出学习速度或先天天赋。</p>`);clickBtn('playteach',()=>play('teach','重音规律示范'));clickBtn('nextTeach',()=>{answers._taught=true;showQuestion()});}
+function showResults(){stage='results';const rows=groups.map(g=>{let qs=questions.filter(q=>q.group===g),valid=qs.filter(q=>answers[q.id]?.status==='answered'),good=valid.filter(q=>answers[q.id].correct).length;return {g,n:valid.length,good,skip:qs.length-valid.length};});const detail=questions.map((q,i)=>{const a=answers[q.id];return `<p><b>第${i+1}题 · ${groupLabels[q.group].name}</b> — ${!a||a.status==='unsure'?'未作答/不确定':(a.correct?'与预设变化一致':'与预设变化不一致')}<br><span class="muted">${q.why}</span></p>`}).join('');swap(`<div class="eyebrow">第1项体验记录 · 本次作答</div><h1>你尝试了哪些音乐感知活动？</h1><p class="lead">以下仅显示你在自编题目中的表现。<b>不是标准化音乐能力测验，也不是音乐天赋等级。</b></p><div class="resultgrid">${rows.map(a=>`<div class="res"><h3>${groupLabels[a.g].name}</h3><b>${a.n?a.good+' / '+a.n:'无有效作答'}</b><p>答题一致数 / 已回答数 · 跳过或不确定 ${a.skip}题</p><p><strong>观察：</strong>${groupLabels[a.g].what}</p><p><strong>不能推断：</strong>${groupLabels[a.g].cannot}</p></div>`).join('')}</div><div class="panel"><b>这次试验还不能告诉你的事情</b><p>你能否唱准、演奏乐器、在现实中持续学得快，尚未测试；每项只有3题且未建立常模，设备、语言、练习及猜测都可能影响结果。实际研究需平行新素材、跨日复测和真实音乐学习任务。</p><p class="mini">以往音乐学习：${esc(prior)}；播放设备：${esc(device)}。这些信息只在本页临时保存，不会上传。</p></div><details class="answers"><summary>展开每题说明与真实变化</summary>${detail}</details><div class="buttons"><button id="again" class="primary">重新体验</button><button id="export">主动下载本次记录</button><button id="clear">清除并返回</button></div>`);clickBtn('again',reset);clickBtn('clear',reset);clickBtn('export',download)}
+function reset(){prior='未填';device='未填';answers={};idx=0;listened.clear();plays={};picked=null;heardCheck=false;showHome()}
+function download(){const payload={version:'V0.9-first-question-fixed',purpose:'音乐感知小样本体验；非天赋诊断',prior,device,results:groups.map(g=>({group:g,questions:questions.filter(q=>q.group===g).map(q=>({id:q.id,...(answers[q.id]||{status:'not_reached'})}))}))};const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='潜星V09_音乐感知体验记录.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1200)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
+window.addEventListener('pagehide',()=>{stop();Object.values(allUrls).forEach(x=>URL.revokeObjectURL(x))});
+// Read-only inspection for test harness; no scoring API and no network use.
+window.QX_V09_QA={questions,groups,getState:()=>({stage,idx,answers,playerCount:document.querySelectorAll('audio').length,plays,loadedTracks:Object.keys(allUrls).length})};
+if(new URLSearchParams(location.search).get('first')==='1'){idx=0;showQuestion();}else{showHome();}
+</script></body></html>
