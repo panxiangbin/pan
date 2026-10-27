@@ -27,10 +27,14 @@ const items={
 26:{name:"演讲演说",desc:"规划两分钟表达并进行计时和自我复盘。",tag:"表达练习"},
 27:{name:"脱口秀幽默表达",desc:"设计一段有铺垫、预期和反转的生活段子。",tag:"幽默创作"}
 };
+Object.assign(items,window.QX_LAB_CATALOG||{});
 const raw=Number(new URLSearchParams(location.search).get("id")||3);
-let id=Number.isInteger(raw)&&raw>=3&&raw<=27?raw:3, state=null, media=null, timers=[], redrawLock=false;
+let id=Number.isInteger(raw)&&raw>=3?raw:3, state=null, media=null, timers=[], redrawLock=false;
 const root=document.getElementById("lab-app");
 const mods=window.QX_MODULES||{};
+const avail=Object.keys(mods).map(Number).filter(n=>Number.isInteger(n)&&items[n]).sort((a,b)=>a-b);
+if(!mods[id])id=avail[0]||3;
+const neighbors=()=>{const i=avail.indexOf(id);return [avail[Math.max(0,i-1)]||id,avail[Math.min(avail.length-1,i+1)]||id];};
 const esc=x=>String(x===null||x===undefined?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const field=(label,key,value,kind,ext)=>{
@@ -77,11 +81,11 @@ const H={esc,clamp,field,btn,download,save,exportArt,cleanTimers,stopMedia,
 function render(){
   const m=mods[id];if(!m){root.textContent="模块正在加载，请刷新重试。";return;}
   const desc=items[id];
-  const options=Object.entries(items).map(([n,x])=>'<option value="'+n+'"'+(Number(n)===id?' selected':'')+'>第'+String(n).padStart(2,"0")+'项 · '+esc(x.name)+'</option>').join('');
+  const options=avail.map(n=>[n,items[n]]).map(([n,x])=>'<option value="'+n+'"'+(Number(n)===id?' selected':'')+'>第'+String(n).padStart(2,"0")+'项 · '+esc(x.name)+'</option>').join('');
   root.innerHTML='<header class="site-header"><a href="../explore/" class="brand"><span class="brand-mark">✦</span><span>潜星计划 · 实验室</span></a><nav class="header-links"><a href="../">首页</a><a href="../explore/">108项活动目录</a></nav></header>'+
   '<div class="wrap"><div class="page-top"><div><div class="eyebrow">EXPLORATION '+String(id).padStart(3,"0")+' / 108 · '+esc(desc.tag)+'</div><h1>第'+String(id).padStart(2,"0")+'项：'+esc(desc.name)+'</h1><p class="sub">'+esc(desc.desc)+'</p></div>'+
-  '<div class="lab-picker"><a class="prevnext" href="?id='+Math.max(3,id-1)+'">← 上一项</a><select id="lab-select" aria-label="选择探索项目">'+options+'</select><a class="prevnext" href="?id='+Math.min(27,id+1)+'">下一项 →</a></div></div>'+
-  '<div class="lab-menu">'+Object.entries(items).map(([n,x])=>'<a class="'+(Number(n)===id?'active':'')+'" href="?id='+n+'">'+String(n).padStart(2,'0')+' '+esc(x.name)+'</a>').join('')+'</div>'+
+  '<div class="lab-picker"><a class="prevnext" href="?id='+neighbors()[0]+'">← 上一项</a><select id="lab-select" aria-label="选择探索项目">'+options+'</select><a class="prevnext" href="?id='+neighbors()[1]+'">下一项 →</a></div></div>'+
+  '<div class="lab-menu">'+avail.map(n=>[n,items[n]]).map(([n,x])=>'<a class="'+(Number(n)===id?'active':'')+'" href="?id='+n+'">'+String(n).padStart(2,'0')+' '+esc(x.name)+'</a>').join('')+'</div>'+
   '<div class="layout"><section class="panel"><div class="panel-head"><div class="eyebrow">可操作的探索任务</div><h2>'+esc(m.heading||desc.name)+'</h2><p>'+esc(m.goal||desc.desc)+'</p></div><div id="stage" class="stage">'+m.stage(state,H)+'</div></section>'+
   '<aside class="panel controls"><div class="eyebrow">操作与调整</div><h2>你的实验台</h2><p>'+esc(m.instruction||"先尝试一次，再调整参数或作品，比较前后的变化。")+'</p>'+m.controls(state,H)+
   '<div class="control-row">'+btn('保存项目数据','export','primary')+(m.hasArt?btn('导出画面','art',''):'')+'</div><div class="note">'+esc(m.boundary||"这只是探索性活动，不代表已经测得先天天赋。")+'</div>'+
@@ -91,7 +95,7 @@ function render(){
 }
 function initialize(){const m=mods[id];state=m.init(H);render();}
 root.addEventListener("change",e=>{
-  const t=e.target;if(t.id==="lab-select"){const n=Number(t.value);if(n>=3&&n<=27)location.href="?id="+n;return;}
+  const t=e.target;if(t.id==="lab-select"){const n=Number(t.value);if(mods[n])location.href="?id="+n;return;}
   if(!t.dataset.key)return;
   const key=t.dataset.key,old=state[key];state[key]=typeof old==="number"?Number(t.value):t.value;
   const m=mods[id];m.change?.(key,state[key],state,H);
