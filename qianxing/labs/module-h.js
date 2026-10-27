@@ -62,7 +62,7 @@ M[66]={
  '<text x="32" y="128" fill="#f9e8ac" font-size="16">日光 →</text>'+
  '<text x="300" y="234" text-anchor="middle" font-size="15" fill="#f1f8fc">地球</text>'+
  '<text x="520" y="355" font-size="13" fill="#dcecf4">月亮位置指示</text>'+
- '<circle cx="590" cy="90" r="55" fill="#273c59"/><path d="M590 35 A55 55 0 0 1 590 145 Z" fill="#e5e8e9" transform="rotate('+(s.phase*3.6)+' 590 90)"/>'+
+ '<circle cx="590" cy="90" r="55" fill="#273c59"/><defs><clipPath id="moonphaseclip"><circle cx="590" cy="90" r="55"/></clipPath></defs><rect x="535" y="35" width="'+(110*lit)+'" height="110" fill="#e5e8e9" clip-path="url(#moonphaseclip)"/>'+
  '<text x="590" y="175" font-size="14" text-anchor="middle" fill="#e9f4fa">明亮比例约 '+Math.round(lit*100)+'%</text></svg></div>'+
  panel("受光比例（示意）",Math.round(lit*100)+"%。真实月相还取决于观察几何，这张演示不作为精确天文历算。")+'</div>';},
  controls(s,H){return H.field("轨道相位（0—100）","phase",s.phase,"range",{min:0,max:100,step:5})+
