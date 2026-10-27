@@ -220,3 +220,34 @@ canvas.draw{width:100%;height:auto;display:block;touch-action:none;cursor:crossh
  .family-record{flex-direction:column;align-items:start}
  .source-row{padding:10px}
 }
+/* 42—63 沟通决策、财务分析与群体研究 */
+.options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.option-tile{background:#fff;border:2px solid #d4e4e8;color:#345f69;padding:14px;text-align:left;border-radius:12px;line-height:1.5;min-height:53px}
+.option-tile.selected{border-color:#138b87;background:#e8f9f5;font-weight:800}
+.chat{padding:14px;background:#f0f7fa;border:1px solid #d7e8eb;border-radius:16px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin:12px 0}
+.chat-bubble{padding:15px 17px;max-width:88%;border-radius:15px;line-height:1.8;font-size:16px;white-space:pre-line}
+.chat-bubble.peer{background:#fff;border:1px solid #d0e4e8;border-bottom-left-radius:3px}
+.chat-bubble.you{background:#dcf4ee;border:1px solid #b8e0d6;border-bottom-right-radius:3px;align-self:flex-end}
+.priority-row{padding:12px 8px;border-bottom:1px solid #dfeaec;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.priority-row b{font-size:14px;max-width:60%}
+.action-pill{border:1px solid #94c8cb;cursor:pointer}
+.allocation{display:flex;min-height:54px;background:#e9f2f4;border-radius:12px;overflow:hidden;margin:12px 0 20px}
+.allocation>div{display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;color:#fff;font-size:12px;font-weight:850;white-space:nowrap;overflow:hidden}
+.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}
+.metric-grid>div{padding:17px 12px;background:#eaf8f5;border:1px solid #c9e8df;border-radius:12px;display:flex;flex-direction:column}
+.metric-grid b{font-size:23px;color:#117f7e;word-break:break-all}
+.metric-grid small{font-size:12px;color:#5c7981}
+.gantt-row{display:grid;grid-template-columns:105px 1fr 43px;gap:12px;align-items:center;padding:8px 0;font-size:13px}
+.gantt-row>span{font-weight:700;line-height:1.5}
+.gantt-track{height:27px;background:#e9f1f5;border-radius:7px;position:relative;overflow:hidden}
+.gantt-track>div{position:absolute;top:1px;height:25px;border-radius:5px}
+.gantt-row b{font-size:12px;white-space:nowrap;text-align:right}
+.legal-text{background:#fffefa;border:1px solid #e6dbc5;border-radius:12px;font-size:21px;line-height:2.2;padding:24px;margin:13px 0}
+.sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sample-grid>div{padding:15px;border:1px solid #d7e6e8;border-radius:12px;background:white;display:flex;flex-direction:column;gap:10px}
+.sample-grid strong{font-size:26px;color:#237b81}
+.sample-grid small{font-size:12px;color:#67828a}
+.sample-track{width:100%;height:16px;background:#e4eff2;border-radius:12px;overflow:hidden}
+.sample-track>div{height:100%;border-radius:12px}
+.observ-item.selected{border:2px solid #0c8d87;background:#edf9f4}
+@media(max-width:680px){.metric-grid{grid-template-columns:1fr 1fr}.sample-grid{grid-template-columns:1fr}.options-grid{grid-template-columns:1fr}.allocation{min-height:48px}.allocation>div{font-size:10px}.gantt-row{grid-template-columns:76px 1fr 34px;gap:6px;font-size:11px}.metric-grid b{font-size:18px}.priority-row b{max-width:55%;font-size:12px}.chat-bubble{max-width:97%}}
