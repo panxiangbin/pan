@@ -4,7 +4,7 @@ const items=window.QX_ACTIVITIES||[];
 const all=[{id:1,name:"乐器与乐感",url:"../music/?first=1",mode:"media"},{id:2,name:"视觉观察与变化察觉",url:"../vision/",mode:"media"},...items];
 const el=document.getElementById("app");
 const modes={create:"创作与表达",offline:"线下实践",research:"证据与研究",dialogue:"换位与沟通",strategy:"规划与取舍",experiment:"观察与验证",media:"独立互动体验"};
-const enhanced=new Set(Array.from({length:61},(_,i)=>i+3));
+const enhanced=new Set(Array.from({length:78},(_,i)=>i+3));
 let current=null,phase="catalog",record=[],editing="",filter="all",keyword="",draft="";
 const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const no=(n)=>String(n).padStart(3,"0");
@@ -13,7 +13,7 @@ function nav(hash){location.hash=hash;route();}
 function header(){return '<header class="top"><div class="site-wrap top-inner"><a class="brand" href="../">✦ 潜星计划 <span>跨领域探索</span></a><nav><a href="../">项目首页</a><a href="../music/?first=1">第01项</a><a href="../vision/">第02项</a><a href="#catalog">108项活动目录</a></nav></div></header>';}
 function card(x){const isEnhanced=enhanced.has(x.id);const url=x.url||(isEnhanced?'../labs/?id='+x.id:'#item-'+x.id);const label=x.url?'进入独立体验':isEnhanced?'打开可操作的互动实验':'进入活动并制作作品';return '<article class="item"><div class="item-top"><span>EXPLORE '+no(x.id)+'</span><span class="chip">'+esc(isEnhanced?'互动实验室':choiceLabel(x.mode))+'</span></div><h3>'+esc(x.name)+'</h3><p>'+esc(x.prompt||"已独立制作的体验项目，保留原页面。")+'</p><a class="open" href="'+url+'">'+label+' →</a></article>';}
 function catalog(){const results=all.filter(x=>(filter==="all"||x.mode===filter)&&(!keyword||String(x.id).includes(keyword)||x.name.includes(keyword)||String(x.prompt||"").includes(keyword)));
-return '<section class="hero site-wrap"><div class="eyebrow">QIANXING / 108 EXPLORATION OPPORTUNITIES</div><h1>108项探索机会，<br><em>不急着给人贴标签。</em></h1><p>每项都有独立主题和操作入口：前两项为已有互动；第03—108项为第一版具体活动工作台。第01—02项保留原有完整体验，第03—63项已经升级成可操作的互动实验室；第64—108项目前为首版活动与作品记录台，后续逐项深化。</p><div class="counts"><strong>108</strong><span>个主题入口</span><strong>63</strong><span>项独立互动体验</span><strong>45</strong><span>项基础活动工作台</span></div></section>'+
+return '<section class="hero site-wrap"><div class="eyebrow">QIANXING / 108 EXPLORATION OPPORTUNITIES</div><h1>108项探索机会，<br><em>不急着给人贴标签。</em></h1><p>每项都有独立主题和操作入口：前两项为已有互动；第03—108项为第一版具体活动工作台。第01—02项保留原有完整体验，第03—80项已经升级成可操作的互动实验室；第81—108项目前为首版活动与作品记录台，后续逐项深化。</p><div class="counts"><strong>108</strong><span>个主题入口</span><strong>80</strong><span>项独立互动体验</span><strong>28</strong><span>项基础活动工作台</span></div></section>'+
 '<section class="site-wrap"><div class="panel"><h2>活动目录</h2><p class="hint">不是108种已经被验证的天赋；也不是108张相同的选择题。真实体能和嗅味觉必须在现实生活中尝试。</p><div class="tools"><input id="find" type="search" placeholder="搜索编号、领域或关键词…" value="'+esc(keyword)+'" aria-label="搜索活动"><select id="mode" aria-label="按活动形式筛选"><option value="all">全部活动形式</option>'+Object.keys(modes).map(k=>'<option value="'+k+'"'+(filter===k?' selected':'')+'>'+choiceLabel(k)+'</option>').join('')+'</select></div><p class="hint" id="count">当前显示 '+results.length+' 项</p><div class="cards" id="list">'+results.map(card).join('')+'</div></div></section>';}
 function activity(x){
 const first=['create','research','dialogue','strategy','experiment','offline'].includes(x.mode);
