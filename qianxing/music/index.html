@@ -231,5 +231,5 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
 window.addEventListener('pagehide',()=>{stop();Object.values(allUrls).forEach(x=>URL.revokeObjectURL(x))});
 // Read-only inspection for test harness; no scoring API and no network use.
 window.QX_V09_QA={questions,groups,getState:()=>({stage,idx,answers,playerCount:document.querySelectorAll('audio').length,plays,loadedTracks:Object.keys(allUrls).length})};
-const requestedQuestion=Number(new URLSearchParams(location.search).get('first'));if(Number.isInteger(requestedQuestion)&&requestedQuestion>=1&&requestedQuestion<=questions.length){idx=requestedQuestion-1;showQuestion();}else{showHome();}
+const routeParams=new URLSearchParams(location.search);if(routeParams.get('first')==='2'){location.replace('../vision/');}else{const qs=routeParams.get('question')||routeParams.get('first');const requestedQuestion=Number(qs);if(qs!==null&&Number.isInteger(requestedQuestion)&&requestedQuestion>=1&&requestedQuestion<=questions.length){idx=requestedQuestion-1;showQuestion();}else{showHome();}}
 </script></body></html>
