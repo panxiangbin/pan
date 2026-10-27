@@ -12,10 +12,23 @@ const items={
 11:{name:"平面视觉设计",desc:"现场设计可调整文字、配色和信息层级的活动海报。",tag:"平面设计"},
 12:{name:"建筑室内空间设计",desc:"在3×4米平面图中安排家具位置，尝试保证门口通行。",tag:"空间规划"},
 13:{name:"服饰造型审美",desc:"为不同情境搭配服装颜色、廓形和配饰，观察整体视觉效果。",tag:"服装搭配"},
-14:{name:"插画原画",desc:"制作同一棵树的绘本风格和科学插画风格，控制形象细节。",tag:"插画创作"}
+14:{name:"插画原画",desc:"制作同一棵树的绘本风格和科学插画风格，控制形象细节。",tag:"插画创作"},
+15:{name:"舞蹈律动",desc:"编排八拍动作并观察节奏衔接；真实舞蹈需要线下实践。",tag:"身体表达"},
+16:{name:"戏剧影视表演",desc:"以不同表情、手势和停顿设计同一段台词。",tag:"情境表演"},
+17:{name:"杂技肢体控制",desc:"规划安全条件下的现实动作观察，网页不替代身体测试。",tag:"线下实践"},
+18:{name:"武术身法",desc:"在网格上设计安全的前后左右步伐路线。",tag:"方向规划"},
+19:{name:"默剧表达",desc:"用四个手势动作画面创作一段无声故事。",tag:"非语言表达"},
+20:{name:"写作",desc:"围绕两名人物和一个车站场景，写出一篇有转折的小故事。",tag:"文学创作"},
+21:{name:"诗歌创作",desc:"编辑六行短诗，对比意象、重复和语言节奏。",tag:"诗歌写作"},
+22:{name:"剧本编剧",desc:"用三幕结构设计人物目标、主要障碍和剧情转折。",tag:"戏剧结构"},
+23:{name:"文案创意",desc:"为不同受众写产品文案，并核查具体卖点和夸大表达。",tag:"商品表达"},
+24:{name:"杂文评论",desc:"针对一个议题建立正反观点、证据和修改方案。",tag:"思辨写作"},
+25:{name:"翻译",desc:"把一段请求转换成正式与日常两种语域的英文表达。",tag:"语言转换"},
+26:{name:"演讲演说",desc:"规划两分钟表达并进行计时和自我复盘。",tag:"表达练习"},
+27:{name:"脱口秀幽默表达",desc:"设计一段有铺垫、预期和反转的生活段子。",tag:"幽默创作"}
 };
 const raw=Number(new URLSearchParams(location.search).get("id")||3);
-let id=Number.isInteger(raw)&&raw>=3&&raw<=14?raw:3, state=null, media=null, timers=[], redrawLock=false;
+let id=Number.isInteger(raw)&&raw>=3&&raw<=27?raw:3, state=null, media=null, timers=[], redrawLock=false;
 const root=document.getElementById("lab-app");
 const mods=window.QX_MODULES||{};
 const esc=x=>String(x===null||x===undefined?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -67,7 +80,7 @@ function render(){
   const options=Object.entries(items).map(([n,x])=>'<option value="'+n+'"'+(Number(n)===id?' selected':'')+'>第'+String(n).padStart(2,"0")+'项 · '+esc(x.name)+'</option>').join('');
   root.innerHTML='<header class="site-header"><a href="../explore/" class="brand"><span class="brand-mark">✦</span><span>潜星计划 · 实验室</span></a><nav class="header-links"><a href="../">首页</a><a href="../explore/">108项活动目录</a></nav></header>'+
   '<div class="wrap"><div class="page-top"><div><div class="eyebrow">EXPLORATION '+String(id).padStart(3,"0")+' / 108 · '+esc(desc.tag)+'</div><h1>第'+String(id).padStart(2,"0")+'项：'+esc(desc.name)+'</h1><p class="sub">'+esc(desc.desc)+'</p></div>'+
-  '<div class="lab-picker"><a class="prevnext" href="?id='+Math.max(3,id-1)+'">← 上一项</a><select id="lab-select" aria-label="选择探索项目">'+options+'</select><a class="prevnext" href="?id='+Math.min(14,id+1)+'">下一项 →</a></div></div>'+
+  '<div class="lab-picker"><a class="prevnext" href="?id='+Math.max(3,id-1)+'">← 上一项</a><select id="lab-select" aria-label="选择探索项目">'+options+'</select><a class="prevnext" href="?id='+Math.min(27,id+1)+'">下一项 →</a></div></div>'+
   '<div class="lab-menu">'+Object.entries(items).map(([n,x])=>'<a class="'+(Number(n)===id?'active':'')+'" href="?id='+n+'">'+String(n).padStart(2,'0')+' '+esc(x.name)+'</a>').join('')+'</div>'+
   '<div class="layout"><section class="panel"><div class="panel-head"><div class="eyebrow">可操作的探索任务</div><h2>'+esc(m.heading||desc.name)+'</h2><p>'+esc(m.goal||desc.desc)+'</p></div><div id="stage" class="stage">'+m.stage(state,H)+'</div></section>'+
   '<aside class="panel controls"><div class="eyebrow">操作与调整</div><h2>你的实验台</h2><p>'+esc(m.instruction||"先尝试一次，再调整参数或作品，比较前后的变化。")+'</p>'+m.controls(state,H)+
@@ -78,7 +91,7 @@ function render(){
 }
 function initialize(){const m=mods[id];state=m.init(H);render();}
 root.addEventListener("change",e=>{
-  const t=e.target;if(t.id==="lab-select"){const n=Number(t.value);if(n>=3&&n<=14)location.href="?id="+n;return;}
+  const t=e.target;if(t.id==="lab-select"){const n=Number(t.value);if(n>=3&&n<=27)location.href="?id="+n;return;}
   if(!t.dataset.key)return;
   const key=t.dataset.key,old=state[key];state[key]=typeof old==="number"?Number(t.value):t.value;
   const m=mods[id];m.change?.(key,state[key],state,H);
