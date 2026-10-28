@@ -1,0 +1,57 @@
+:root{--qx-ink:#172e2a;--qx-muted:#66746f;--qx-accent:#176b5c;--qx-line:#e5eae7}
+body[data-qx-page]{background:#fff;color:var(--qx-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+body[data-qx-page] button:focus-visible,
+body[data-qx-page] a:focus-visible,
+body[data-qx-page] select:focus-visible{outline:3px solid #6aab9b;outline-offset:3px}
+/* 第01项：保留完整音频互动，隐藏不影响操作的装饰和介绍 */
+body[data-qx-page="music"] header{border-bottom:1px solid var(--qx-line);box-shadow:none}
+body[data-qx-page="music"] .bar{max-width:1080px;padding:16px 22px;min-height:68px}
+body[data-qx-page="music"] .brand{color:var(--qx-ink);font-size:16px}
+body[data-qx-page="music"] .brand-logo,
+body[data-qx-page="music"] .brand em{display:none}
+body[data-qx-page="music"] .go-catalog{font-size:14px;color:var(--qx-muted);text-decoration:none}
+body[data-qx-page="music"] main{max-width:1080px;padding-top:30px}
+body[data-qx-page="music"] .sheet{min-height:0;background:#fff;border:1px solid var(--qx-line);border-radius:15px;box-shadow:none;padding:35px 30px}
+body[data-qx-page="music"] .musical-scene{display:none}
+body[data-qx-page="music"] .sheet[data-stage="home"] .grid4,
+body[data-qx-page="music"] .sheet[data-stage="home"] .notice,
+body[data-qx-page="music"] .sheet[data-stage="home"] label[for="prior"],
+body[data-qx-page="music"] .sheet[data-stage="home"] label[for="device"],
+body[data-qx-page="music"] .sheet[data-stage="home"] #prior,
+body[data-qx-page="music"] .sheet[data-stage="home"] #device{display:none}
+body[data-qx-page="music"] .eyebrow{background:transparent;color:var(--qx-accent);padding:0}
+body[data-qx-page="music"] .eyebrow::before{display:none}
+body[data-qx-page="music"] h1,
+body[data-qx-page="music"] h2{color:var(--qx-ink);letter-spacing:-.035em}
+body[data-qx-page="music"] .lead{color:var(--qx-muted)}
+body[data-qx-page="music"] button.primary{background:var(--qx-accent);border-color:var(--qx-accent);box-shadow:none;color:white}
+body[data-qx-page="music"] button.primary:hover:not(:disabled){background:#10594d;box-shadow:none}
+body[data-qx-page="music"] button:not(.primary){box-shadow:none}
+body[data-qx-page="music"] .controls{background:#f7faf8;border:1px solid var(--qx-line);border-radius:12px}
+body[data-qx-page="music"] .bottom{color:var(--qx-muted);max-width:1080px}
+/* 第02项：只展示开始按钮与需要观察的画面，保持计时和场景完整 */
+body[data-qx-page="vision"] .site-header{height:auto;min-height:68px;padding:0 max(22px,calc((100vw - 1080px)/2));background:#fff;backdrop-filter:none;border-color:var(--qx-line)}
+body[data-qx-page="vision"] .brand{color:var(--qx-ink);font-size:16px}
+body[data-qx-page="vision"] .brand-logo,
+body[data-qx-page="vision"] .brand small{display:none}
+body[data-qx-page="vision"] .header-nav{color:var(--qx-muted)}
+body[data-qx-page="vision"] #app{max-width:1080px;padding-top:32px}
+body[data-qx-page="vision"] .hero{display:block;padding:50px 5px 30px}
+body[data-qx-page="vision"] .hero h1{font-size:clamp(34px,5vw,48px);color:var(--qx-ink);margin:12px 0 16px}
+body[data-qx-page="vision"] .hero-art,
+body[data-qx-page="vision"] .how,
+body[data-qx-page="vision"] .info-rail{display:none}
+body[data-qx-page="vision"] .task{box-shadow:none;border-color:var(--qx-line);border-radius:14px}
+body[data-qx-page="vision"] .btn{border-radius:10px;box-shadow:none}
+body[data-qx-page="vision"] .btn.primary{background:var(--qx-accent);border-color:var(--qx-accent)}
+body[data-qx-page="vision"] .btn.primary:hover:not(:disabled){background:#10594d;box-shadow:none}
+body[data-qx-page="vision"] h1{color:var(--qx-ink)}
+body[data-qx-page="vision"] .site-footer{background:#fff}
+@media(max-width:650px){
+body[data-qx-page="music"] .bar{padding:12px 16px;gap:12px}
+body[data-qx-page="music"] .brand{font-size:14px}
+body[data-qx-page="music"] .sheet{padding:25px 16px}
+body[data-qx-page="vision"] .site-header{padding:12px 16px;gap:10px}
+body[data-qx-page="vision"] .hero{padding-top:24px}
+body[data-qx-page="vision"] #app{padding:18px 16px 32px}
+}

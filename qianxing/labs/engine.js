@@ -79,21 +79,24 @@ const H={esc,clamp,field,btn,download,save,exportArt,cleanTimers,stopMedia,
   midi(ctx,n,time,dur=0.3,gain=0.07,wave="sine"){const osc=ctx.createOscillator(),vol=ctx.createGain();osc.type=wave;osc.frequency.setValueAtTime(440*Math.pow(2,(n-69)/12),time);vol.gain.setValueAtTime(0.0001,time);vol.gain.exponentialRampToValueAtTime(Math.max(.0001,gain),time+.018);vol.gain.exponentialRampToValueAtTime(.0001,time+Math.max(.05,dur));osc.connect(vol).connect(ctx.destination);osc.start(time);osc.stop(time+Math.max(.05,dur)+.06);return osc}
 };
 function render(){
-  const m=mods[id];if(!m){root.textContent="模块正在加载，请刷新重试。";return;}
+  const m=mods[id];
+  if(!m){root.textContent="模块加载失败，请刷新重试。";return;}
   const desc=items[id];
-  const options=avail.map(n=>[n,items[n]]).map(([n,x])=>'<option value="'+n+'"'+(Number(n)===id?' selected':'')+'>第'+String(n).padStart(2,"0")+'项 · '+esc(x.name)+'</option>').join('');
-  root.innerHTML='<header class="site-header"><a href="../explore/" class="brand"><span class="brand-mark">✦</span><span>潜星计划 · 实验室</span></a><nav class="header-links"><a href="../">首页</a><a href="../explore/">108项活动目录</a></nav></header>'+
-  '<div class="wrap"><div class="page-top"><div><div class="eyebrow">EXPLORATION '+String(id).padStart(3,"0")+' / 108 · '+esc(desc.tag)+'</div><h1>第'+String(id).padStart(2,"0")+'项：'+esc(desc.name)+'</h1><p class="sub">'+esc(desc.desc)+'</p></div>'+
-  '<div class="lab-picker"><a class="prevnext" href="?id='+neighbors()[0]+'">← 上一项</a><select id="lab-select" aria-label="选择探索项目">'+options+'</select><a class="prevnext" href="?id='+neighbors()[1]+'">下一项 →</a></div></div>'+
-  '<div class="lab-menu">'+avail.map(n=>[n,items[n]]).map(([n,x])=>'<a class="'+(Number(n)===id?'active':'')+'" href="?id='+n+'">'+String(n).padStart(2,'0')+' '+esc(x.name)+'</a>').join('')+'</div>'+
-  '<div class="layout"><section class="panel"><div class="panel-head"><div class="eyebrow">可操作的探索任务</div><h2>'+esc(m.heading||desc.name)+'</h2><p>'+esc(m.goal||desc.desc)+'</p></div><div id="stage" class="stage">'+m.stage(state,H)+'</div></section>'+
-  '<aside class="panel controls"><div class="eyebrow">操作与调整</div><h2>你的实验台</h2><p>'+esc(m.instruction||"先尝试一次，再调整参数或作品，比较前后的变化。")+'</p>'+m.controls(state,H)+
-  '<div class="control-row">'+btn('保存项目数据','export','primary')+(m.hasArt?btn('导出画面','art',''):'')+'</div><div class="note">'+esc(m.boundary||"这只是探索性活动，不代表已经测得先天天赋。")+'</div>'+
-  '<div class="status" id="lab-note" role="status" aria-live="polite">'+esc(m.status||"操作会即时更新左侧作品。")+'</div></aside></div></div>'+
-  '<footer class="footer">潜星计划 · 互动实验室 V1.0 · 仅在本机运行和导出作品，不上传个人答案。单次尝试不能评定天赋。</footer>';
+  const index=avail.indexOf(id);
+  const prev=index<=0?"../vision/":"?id="+avail[index-1];
+  const next=index>=avail.length-1?"../explore/":"?id="+avail[index+1];
+  const nextLabel=index>=avail.length-1?"全部项目":"下一项 →";
+  root.innerHTML='<header class="site-header"><a href="../" class="brand">潜星计划</a><a class="catalog-link" href="../explore/">全部项目</a></header>'+
+    '<main class="wrap"><div class="page-top"><div class="eyebrow">第 '+String(id).padStart(2,"0")+' / 108 项</div><h1>'+esc(desc.name)+'</h1><p class="sub">'+esc(m.goal||desc.desc)+'</p></div>'+
+    '<div class="layout"><section class="panel workspace" aria-label="互动内容"><div id="stage" class="stage">'+m.stage(state,H)+'</div></section>'+
+    '<section class="panel controls" aria-label="操作和调整"><p class="lab-instruction">'+esc(m.instruction||"试一试，调整后看看有什么变化。")+'</p>'+m.controls(state,H)+
+    '<div class="control-row">'+btn("保存作品","export","primary")+(m.hasArt?btn("导出图片","art",""):"")+'</div>'+
+    '<div class="status" id="lab-note" role="status" aria-live="polite">'+esc(m.status||"")+'</div>'+
+    '<details class="safety"><summary>说明与注意</summary><p>'+esc(m.boundary||"本活动只是探索体验，不能凭一次结果判断天赋。")+'</p></details></section></div>'+
+    '<nav class="bottom-nav" aria-label="项目切换"><a href="'+prev+'">← 上一项</a><a href="../explore/">目录</a><a href="'+next+'">'+nextLabel+'</a></nav></main>';
   m.afterStage?.(state,H);
 }
-function initialize(){const m=mods[id];state=m.init(H);render();}
+function initialize(){const m=mods[id];try{localStorage.setItem("qianxing-last-id",String(id))}catch(e){}state=m.init(H);render();}
 root.addEventListener("change",e=>{
   const t=e.target;if(t.id==="lab-select"){const n=Number(t.value);if(mods[n])location.href="?id="+n;return;}
   if(!t.dataset.key)return;
