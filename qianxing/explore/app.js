@@ -8,7 +8,7 @@
   const app=document.getElementById("app");
   const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const two=x=>String(x).padStart(2,"0");
-  const url=x=>x.id===1?"../music/?first=1":x.id===2?"../vision/":x.id===72?"../labs/gear-v2/":"../labs/?id="+x.id;
+  const url=x=>x.id===1?"../music/?first=1":x.id===2?"../vision/":x.id===45?"../labs/dialogue-v2/":x.id===72?"../labs/gear-v2/":"../labs/?id="+x.id;
   const legacy=/^#item-(\d+)$/.exec(location.hash);
   if(legacy){
     const n=Number(legacy[1]);
