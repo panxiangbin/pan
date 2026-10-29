@@ -10,6 +10,7 @@ const scene=()=>CASES[s.idx],current=()=>s.session;
 const btn=(label,action,cls="",extra="")=>'<button class="btn '+cls+'" type="button" data-action="'+action+'" '+extra+'>'+label+'</button>';
 const image=c=>'<img src="./assets/'+c.scene+'.svg" alt="'+esc(c.world)+'的单一场景原创插画" loading="eager">';
 function begin(i){
+ if(i===0)window.QX_PROGRESS?.start(45);
  s.idx=i;s.screen="investigate";
  s.session={id:scene().id,phase:scene().phase,sources:[],tags:[null,null],
    hypotheses:[],actionId:null,followId:null,draft:"",selfChecks:[],clueOrder:[],started:Date.now(),seconds:0};
@@ -158,6 +159,7 @@ function commit(){
 }
 function report(){
  const logs=s.records.filter(x=>x.phase!=="practice");
+ window.QX_PROGRESS?.finish(45,s.started,{done:logs.length,total:6,skipped:0});
  const group=phase=>logs.filter(x=>x.phase===phase);
  const total=arr=>arr.reduce((a,b)=>a+b,0);
  const stats={

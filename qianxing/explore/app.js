@@ -14,7 +14,7 @@
     const n=Number(legacy[1]);
     if(Number.isInteger(n)&&n>=1&&n<=108){location.replace(url({id:n}));return;}
   }
-  app.innerHTML='<header class="top"><div class="container top-inner"><a class="brand" href="../">潜星计划</a><a class="top-link" href="../">首页</a></div></header>'+
+  app.innerHTML='<header class="top"><div class="container top-inner"><a class="brand" href="../">潜星计划</a><nav class="top-nav"><a class="top-link" href="../">首页</a><a class="top-link" href="../progress/">我的记录</a></nav></div></header>'+
     '<main class="container main"><h1>全部探索项目</h1><p class="intro">选一个感兴趣的，直接开始。</p>'+
     '<div class="search-row"><label class="sr-only" for="find">搜索项目或编号</label><input id="find" type="search" placeholder="搜索名称或编号" autocomplete="off" aria-controls="activity-list"><span class="count" id="count" aria-live="polite"></span></div>'+
     '<div class="list" id="activity-list"></div></main>'+

@@ -40,6 +40,7 @@ function move(screen,preserveScroll=false){
 }
 function start(index=0){
  s=newState();s.index=index;s.trial=newTrial();
+ window.QX_PROGRESS?.start(77);
  try{localStorage.setItem("qianxing-last-id","77");}catch(e){}
  move("analyze");
 }
@@ -209,6 +210,7 @@ function learn(){
 function report(){
  const records=s.logs.filter(x=>!x.skipped&&x.phase!=="practice");
  const all=s.logs.filter(x=>x.phase!=="practice");
+ window.QX_PROGRESS?.finish(77,s.startedAt,{done:all.filter(x=>!x.skipped).length,total:8,skipped:all.filter(x=>x.skipped).length});
  const matches=key=>records.filter(x=>x.evaluation?.[key]).length;
  const questionable=all.filter(x=>x.focus==="none").length;
  const independent=all.filter(x=>x.checks.includes("independent")).length;
