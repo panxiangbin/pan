@@ -34,6 +34,7 @@ if(id===72){location.replace("./gear-v2/");return;}
 if(id===45){location.replace("./dialogue-v2/");return;}
 if(id===6){location.replace("./paint-v2/");return;}
 if(id===77){location.replace("./data-v2/");return;}
+if(id===52){location.replace("./lead-v2/");return;}
 const root=document.getElementById("lab-app");
 const mods=window.QX_MODULES||{};
 const avail=Object.keys(mods).map(Number).filter(n=>Number.isInteger(n)&&items[n]).sort((a,b)=>a-b);
