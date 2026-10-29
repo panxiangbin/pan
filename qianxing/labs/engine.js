@@ -30,6 +30,7 @@ const items={
 Object.assign(items,window.QX_LAB_CATALOG||{});
 const raw=Number(new URLSearchParams(location.search).get("id")||3);
 let id=Number.isInteger(raw)&&raw>=3?raw:3, state=null, media=null, timers=[], redrawLock=false;
+if(id===72){location.replace("./gear-v2/");return;}
 const root=document.getElementById("lab-app");
 const mods=window.QX_MODULES||{};
 const avail=Object.keys(mods).map(Number).filter(n=>Number.isInteger(n)&&items[n]).sort((a,b)=>a-b);
