@@ -1,5 +1,6 @@
 "use strict";
-import {VERSION,CASES,PHASES,DAYS,EVIDENCE,makeRows,summarize,forDay,evidence,evaluate,validateAll} from "./data-core.mjs";
+import {VERSION,CASES,PHASES,DAYS,EVIDENCE,FORM_IDS,caseForForm,makeRows,summarize,forDay,evidence,evaluate,validateAll} from "./data-core.mjs?v=20261029data21";
+import {createVerification,evaluateVerification} from "./verification-core.mjs?v=20261029data21";
 const app=document.getElementById("app");
 const KEY="qianxing-data-v2-session";
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -10,12 +11,15 @@ const metricName=(c,m)=>({total:c.columns[0],hits:c.columns[1],rate:c.columns[2]
 const label=g=>g==="all"?"全部分组":g==="0"?"分组一":"分组二";
 const btn=(s,a,style="",extra="")=>'<button type="button" class="btn '+style+'" data-act="'+a+'" '+extra+'>'+esc(s)+'</button>';
 const newState=()=>({version:VERSION,startedAt:new Date().toISOString(),screen:"intro",index:0,
- hints:0,logs:[],trial:null});
+ hints:0,logs:[],trial:null,mode:"deep",form:"A"});
 const newTrial=()=>({startAt:new Date().toISOString(),metric:"rate",group:"all",focus:null,
- lastDay:null,views:["all-rate"],checks:[],hypothesis:null,plan:null,confidence:"不确定",note:""});
+ lastDay:null,views:["all-rate"],checks:[],hypothesis:null,plan:null,confidence:"不确定",note:"",
+ verification:{input:"",skipped:false,checked:false,correct:false}});
 let s=newState(),hasSaved=false;
 function validateResume(x){
- return !!(x&&x.version===VERSION&&["intro","analyze","evidence","decide","feedback","learning","report"].includes(x.screen)&&
+ return !!(x&&x.version===VERSION&&["intro","analyze","evidence","verify","decide","feedback","learning","report"].includes(x.screen)&&
+ (x.form===undefined||FORM_IDS.includes(x.form))&&
+ (x.mode===undefined||["quick","deep"].includes(x.mode))&&
  Number.isInteger(x.index)&&x.index>=0&&x.index<9&&
  Number.isInteger(x.hints)&&x.hints>=0&&x.hints<=3&&Array.isArray(x.logs)&&x.logs.length<=9&&
  x.trial&&typeof x.trial==="object"&&Array.isArray(x.trial.checks)&&x.trial.checks.length<=3&&
@@ -38,20 +42,28 @@ function move(screen,preserveScroll=false){
  if(preserveScroll)window.scrollTo(0,oldY);
  else window.scrollTo({top:0,behavior:"instant"});
 }
-function start(index=0){
- s=newState();s.index=index;s.trial=newTrial();
+function start(mode="deep"){
+ s=newState();s.mode=mode==="quick"?"quick":"deep";
+ if(s.mode==="deep"){
+  let round=0;
+  try{round=Number(localStorage.getItem("qianxing-data-v21-round")||0);}catch(e){}
+  const index=Number.isSafeInteger(round)&&round>=0?round:0;
+  s.form=FORM_IDS[index%FORM_IDS.length];
+  try{localStorage.setItem("qianxing-data-v21-round",String(index+1));}catch(e){}
+ }else s.form="A";
+ s.index=0;s.trial=newTrial();
  window.QX_PROGRESS?.start(77);
  try{localStorage.setItem("qianxing-last-id","77");}catch(e){}
  move("analyze");
 }
-const cur=()=>CASES[s.index];
+const cur=()=>caseForForm(CASES[s.index],s.form||"A");
 const trial=()=>s.trial;
-const rows=()=>makeRows(cur().id);
+const rows=()=>makeRows(cur().id,s.form||"A");
 const phaseName=()=>PHASES[cur().phase];
 function titleBlock(h1,sub){
  const i=s.index;
  return '<div class="topline"><span class="eyebrow">'+esc(phaseName())+' · '+(i===0?"练习":"挑战 "+i+" / 8")+'</span>'+
- '<span class="small">77 / 108 · 2026年9月合成日报</span></div>'+
+ '<span class="small">77 / 108 · 合成材料 '+esc(s.form||'A')+' · '+(s.mode==='quick'?'快速':'深度')+'模式</span></div>'+
  '<div class="progress" aria-label="多阶段调查进度"><span style="width:'+Math.round(i/8*100)+'%"></span></div>'+
  '<h1 class="step-title">'+esc(h1)+'</h1>'+
  '<p class="step-lead">'+esc(sub)+'</p>';
@@ -63,9 +75,10 @@ function hero(){
  '<p>九份模拟业务报表，九种不同的陷阱。筛选群组、切换比例与总量、调查日志、验证异常，再决定怎么处理。</p>'+
  '<div class="hero-example" aria-hidden="true"><b>模拟监测总览 · 包含需要调查的变化和正常波动</b>'+
  '<div class="mini-bars">'+bars.map((x,i)=>'<span class="'+(i===9?"hot":"")+'" style="--bar:'+x+'%"></span>').join("")+'</div></div>'+
- '<div class="btn-row">'+btn("开始数据调查 →","start","primary large")+
+ '<div class="btn-row">'+btn("开始深度调查（含计算） →","start-deep","primary large")+
+ btn("快速体验旧版流程","start")+
  (hasSaved?btn("继续本机调查记录","resume"):"")+
- '<span class="small">一轮练习、三轮首试、三轮新数据、两轮跨行业挑战</span></div>'+
+ '<span class="small">九轮题本。深度模式每次自动更换A/B/C数据材料，加入独立数值核对。</span></div>'+
  '<p class="small" style="margin-top:19px">数据全部为程序生成的虚构数据，不连接真实店铺/客户。不提供先天天赋判断。</p></section>'+
  '<div class="intro-points"><div><b>看见现象</b>亲自筛选比例、数量与分组</div>'+
  '<div><b>核实证据</b>在有限的调查机会里选可信来源</div>'+
@@ -107,7 +120,7 @@ function analysis(){
  const selectedData=focus&&focus!=="none"?forDay(data,focus,t.group):null;
  app.innerHTML=titleBlock("第一步：在图表里找到值得核查的变化。","这份数据没有自动高亮“正确答案”。先切换分组或指标，再选择一个可疑日期；也可以判断尚未发现可确认的新异常。")+
  '<div class="story-note"><b>'+esc(c.title)+'：</b>'+esc(c.story)+'</div>'+
- '<div class="workbench"><section class="panel"><div class="panel-head"><strong>交互式数据检查台</strong><span>完全虚构 · 固定可复核题本</span></div>'+
+ '<div class="workbench"><section class="panel"><div class="panel-head"><strong>交互式数据检查台</strong><span>完全虚构 · 数据材料'+esc(s.form||'A')+' · 可复核</span></div>'+
  '<div class="dashboard"><div class="filters">'+
  '<label for="group">筛选对象<select id="group">'+
  [['all','全部分组'],['0',c.groups[0]],['1',c.groups[1]]].map(x=>'<option value="'+x[0]+'" '+(t.group===x[0]?"selected":"")+'>'+esc(x[1])+'</option>').join("")+
@@ -153,8 +166,33 @@ function evidencePage(){
  '<p>分组比例、实际分母、独立系统记录和流程日志回答的是不同问题。未经核实的群聊推测不应当成事实。</p>'+
  '<div class="status-box"><strong>当前已核对 '+t.checks.length+' 条来源</strong><span>你仍可以保留不确定性，不必猜测谁“故意”造成事故。</span></div>'+
  '<div class="next-row">'+btn("暂时跳过这一轮","skip","quiet")+
- btn("进入假设与处置 →","next","primary",t.checks.length<2?"disabled":"")+'</div></aside></div>';
+ btn(s.mode==="deep"?"先做数值核对 →":"进入假设与处置 →","next","primary",t.checks.length<2?"disabled":"")+'</div></aside></div>';
 }
+
+function verification(){
+ const c=cur(),t=trial(),data=rows(),v=createVerification(c,data,t.focus);
+ const day=v.day;
+ const visible=c.id==="weekends"?
+   ["09-06","09-13"].map(d=>{const x=forDay(data,d);return {name:"9月"+d.slice(3)+"日全部",total:x.total,hits:x.hits,reference:x.reference};}):
+   [0,1].map(g=>{const x=forDay(data,day,String(g));return {name:c.groups[g],total:x.total,hits:x.hits,reference:x.reference};});
+ app.innerHTML=titleBlock("第三步：动手核对一个数字。","只核算一次真实分子、分母或交叉来源差额。这个数字来自你当前选定的日期和本轮数据材料，不按计算速度给天赋评分。")+
+ '<div class="story-note"><b>你的调查焦点：</b>'+(t.focus==="none"?"暂未确定新异常":t.focus?"9月"+t.focus.slice(3)+"日":"尚未选择")+
+ '。此步骤可以选择跳过，不影响继续分析原因。</div>'+
+ '<div class="workbench"><section class="panel"><div class="panel-head"><strong>核对所需原始汇总</strong><span>'+esc(c.subtitle)+'</span></div>'+
+ '<div class="dashboard"><div class="table-wrapper"><table class="data-table"><thead><tr><th>分组或日期</th>'+
+ [c.columns[0],c.columns[1],c.columns[3]].map(x=>'<th>'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+
+ visible.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+fmt(x.total)+'</td><td>'+fmt(x.hits)+'</td><td>'+fmt(x.reference)+'</td></tr>').join("")+
+ '</tbody></table></div><p class="detail-text">可根据上方数字手算，也可下载原始CSV、使用自己的计算器。单位及题目已说明保留位数。</p>'+
+ '</div></section><aside class="panel sidebar"><h2>独立核对题</h2><p>'+esc(v.question)+'</p>'+
+ '<label for="verification-value" class="q-label">你计算出的结果（'+esc(v.unit)+'）</label>'+
+ '<input id="verification-value" type="text" inputmode="decimal" maxlength="24" autocomplete="off" '+
+ 'style="height:46px;width:100%;border:1px solid #bed7c7;border-radius:9px;padding:8px 12px" placeholder="例如 12.5" value="'+esc(t.verification?.input||"")+'">'+
+ '<p class="small">你可以写下估算值。正确与否会在最后的报告解释，不会提前透露模拟根因。</p>'+
+ '<div class="next-row">'+btn("这一题先不计算","verify-skip","quiet")+
+ btn("记录核对结果 →","verify-check","primary",String(t.verification?.input||"").trim()?"":"disabled")+
+ '</div></aside></div>';
+}
+
 function decision(){
  const c=cur(),t=trial();
  const allCauses=[...c.causes,["unsure","证据仍不足，暂时无法判断根因"]];
@@ -215,16 +253,21 @@ function report(){
  const questionable=all.filter(x=>x.focus==="none").length;
  const independent=all.filter(x=>x.checks.includes("independent")).length;
  const rumor=all.filter(x=>x.checks.includes("rumor")).length;
+ const checked=all.filter(x=>x.verification&&!x.verification.skipped);
+ const confirmed=checked.filter(x=>x.verification.correct).length;
  const metrics=[["有完整结论的轮次",records.length+" / 8","完成焦点、证据、假设与行动"],
  ["定位与模拟题本一致",matches("focusMatches")+" / "+records.length,"仅相对预设的合成数据答案"],
  ["解释与模拟根因一致",matches("causeMatches")+" / "+records.length,"不等于真实因果证明"],
  ["行动与模拟方案一致",matches("actionMatches")+" / "+records.length,"不同方案可能同样合理"]];
  const table=all.map(x=>{
-  const c=CASES.find(c=>c.id===x.id);
+  const c=caseForForm(CASES.find(c=>c.id===x.id),x.form||"A");
   const focus=x.skipped?"跳过":x.focus==="none"?"未确认异常":"9月"+x.focus.slice(3)+"日";
   const expected=c.signal===null?"无明确新异常":("9月"+DAYS[c.signal].slice(3)+"日");
   return '<tr><td>'+esc(c.title)+'</td><td>'+esc(focus)+'</td><td>'+expected+'</td>'+
-  '<td>'+esc(x.skipped?"跳过":x.evaluation.explanation)+'</td><td>'+x.checks.length+'</td></tr>';
+  '<td>'+esc(x.skipped?"跳过":x.evaluation.explanation)+'</td><td>'+x.checks.length+'</td>'+
+ '<td>'+esc(x.verification?
+    (x.verification.skipped?"未计算":x.verification.input+" "+(x.verification.correct?"（与数据一致）":"（需复核，参考 "+x.verification.expected+"）")):
+    "快速模式")+'</td></tr>';
  }).join("");
  const btnExport=btn("下载完整调查记录（JSON）","json","primary large");
  app.innerHTML='<section class="report"><span class="eyebrow">潜星计划 · 第77项 · 结果与可验证过程</span>'+
@@ -233,8 +276,12 @@ function report(){
  '<div class="report-metrics">'+metrics.map(m=>'<div class="metric"><span>'+m[0]+'</span><strong>'+m[1]+'</strong><span>'+m[2]+'</span></div>').join("")+'</div>'+
  '<h2>你尝试过的调查方式</h2><p>选择“尚无可确认异常” '+questionable+' 次；查看独立来源 '+independent+' 轮；查看未经核实的说法 '+rumor+' 轮；阅读可选方法 '+s.hints+' / 3 条。</p>'+
  '<p>练习之后包括3轮首次调查、3轮新数据调查和2轮跨行业迁移。它们的难度、影响因素和题本形式并未做等价性研究，因此不作前后能力增长推断。</p>'+
+ '<p>本次使用合成材料 '+esc(s.form||"A")+'。'+(s.mode==="deep"?
+ '深度模式实际完成 '+checked.length+' / 8 次数值核对，其中 '+confirmed+' 次计算与当前材料一致。':
+ '本次选择快速模式，没有增加数值核对环节。')+
+ ' 不同材料未经标准化难度等价性检验，不得将这些次数视为“能力分数”。</p>'+
  '<h2>这份结果不能判断什么</h2><p>现阶段没有正式信效度、常模、真人样本及专业测评验证。统计操作受既有知识、设备、题目熟悉度和阅读方式影响。不能据此判断智力、职业或天赋。</p>'+
- '<details><summary>展开每一轮的预设数据真相与调查记录</summary><div class="scroll"><table><thead><tr><th>模拟情境</th><th>你的关注</th><th>预设重点</th><th>模拟解释</th><th>已查证据</th></tr></thead><tbody>'+table+'</tbody></table></div></details>'+
+ '<details><summary>展开每一轮的预设数据真相与调查记录</summary><div class="scroll"><table><thead><tr><th>模拟情境</th><th>你的关注</th><th>预设重点</th><th>模拟解释</th><th>已查证据</th><th>数值复核</th></tr></thead><tbody>'+table+'</tbody></table></div></details>'+
  '<div class="btn-row">'+btnExport+btn("重新做一套","restart")+
  '<a class="btn quiet" href="../../explore/">返回108项</a></div>'+
  '<p class="notice">当前调查记录自动保存在本机浏览器，不上传到服务器。只有主动下载才会生成个人JSON文件。</p></section>';
@@ -244,6 +291,7 @@ function render(){
  if(s.screen==="intro"){hero();return;}
  if(s.screen==="analyze"){analysis();return;}
  if(s.screen==="evidence"){evidencePage();return;}
+ if(s.screen==="verify"){verification();return;}
  if(s.screen==="decide"){decision();return;}
  if(s.screen==="feedback"){feedback();return;}
  if(s.screen==="learning"){learn();return;}
@@ -253,6 +301,7 @@ function log(skip=false){
  const c=cur(),t=trial();
  const evaluation=skip?null:evaluate(c,t.focus,t.hypothesis,t.plan);
  s.logs.push({id:c.id,title:c.title,phase:c.phase,skipped:skip,
+  form:s.form||"A",mode:s.mode||"quick",verification:s.mode==="deep"&&!skip?clone(t.verification):null,
   focus:t.focus,metric:t.metric,group:t.group,views:[...t.views],
   checks:[...t.checks],hypothesis:t.hypothesis,plan:t.plan,confidence:t.confidence,
   note:t.note,startedAt:t.startAt,submittedAt:new Date().toISOString(),evaluation});
@@ -263,9 +312,9 @@ function next(){
  s.index++;s.trial=newTrial();move("analyze");
 }
 function skip(){log(true);next();}
-function confirmStart(){
+function confirmStart(mode="deep"){
  if(hasSaved&&!confirm("开始新体验会替换当前浏览器中未下载的调查记录，是否继续？"))return;
- start();
+ start(mode);
 }
 function download(blob,filename){
  const a=document.createElement("a"),url=URL.createObjectURL(blob);
@@ -274,7 +323,7 @@ function download(blob,filename){
 }
 function exportJSON(){
  const payload={project:"潜星计划",module:77,version:VERSION,startedAt:s.startedAt,
-  exportedAt:new Date().toISOString(),hintsViewed:s.hints,
+  exportedAt:new Date().toISOString(),hintsViewed:s.hints,formId:s.form||"A",mode:s.mode||"quick",
   purpose:"九套合成业务数据的过程式分析探索；不构成正式能力或职业评估",
   nonDiagnostic:true,notValidated:true,privacy:"本机浏览器存储，主动导出，未上传",
   rounds:clone(s.logs),current:{index:s.index,screen:s.screen,trial:clone(s.trial)}};
@@ -300,7 +349,8 @@ function switchView(key,value){
 app.addEventListener("click",e=>{
  const b=e.target.closest("[data-act]");if(!b||b.disabled||!app.contains(b))return;
  const a=b.dataset.act;
- if(a==="start"||a==="restart")return confirmStart();
+ if(a==="start-deep")return confirmStart("deep");
+ if(a==="start"||a==="restart")return confirmStart(a==="restart"?"deep":"quick");
  if(a==="resume"){if(!hasSaved)return;render();return;}
  if(a==="day")return chooseDate(b.dataset.day);
  if(a==="none"&&s.screen==="analyze"){s.trial.focus="none";s.trial.lastDay=null;persist();render();return;}
@@ -314,7 +364,17 @@ app.addEventListener("click",e=>{
  if(a==="hyp"&&s.screen==="decide"){s.trial.hypothesis=b.dataset.id;persist();render();return;}
  if(a==="plan"&&s.screen==="decide"){s.trial.plan=b.dataset.id;persist();render();return;}
  if(a==="json")return exportJSON();
- if(a==="skip"&&["analyze","evidence","decide"].includes(s.screen))return skip();
+ if(a==="verify-skip"&&s.screen==="verify"){
+  s.trial.verification=evaluateVerification(createVerification(cur(),rows(),s.trial.focus),null,true);
+  move("decide");return;
+ }
+ if(a==="verify-check"&&s.screen==="verify"){
+  const input=String(s.trial.verification?.input||"").trim();
+  if(!input||!/^[-+]?\d+(?:\.\d+)?$/.test(input))return;
+  s.trial.verification=evaluateVerification(createVerification(cur(),rows(),s.trial.focus),input);
+  move("decide");return;
+ }
+ if(a==="skip"&&["analyze","evidence","verify","decide"].includes(s.screen))return skip();
  if(a==="hint"&&s.screen==="learning"){s.hints=Math.min(3,s.hints+1);move("learning");return;}
  if(a==="continue"&&s.screen==="learning"){s.index=4;s.trial=newTrial();move("analyze");return;}
  if(a==="submit"&&s.screen==="decide"){
@@ -323,7 +383,7 @@ app.addEventListener("click",e=>{
  }
  if(a==="next"){
   if(s.screen==="analyze"&&s.trial.focus!==null)move("evidence");
-  else if(s.screen==="evidence"&&s.trial.checks.length>=2)move("decide");
+  else if(s.screen==="evidence"&&s.trial.checks.length>=2)move(s.mode==="deep"?"verify":"decide");
   else if(s.screen==="feedback")next();
  }
 });
@@ -335,6 +395,11 @@ app.addEventListener("change",e=>{
 });
 app.addEventListener("input",e=>{
  if(s.screen==="decide"&&e.target.id==="note"){s.trial.note=e.target.value.slice(0,1600);persist();}
+ if(s.screen==="verify"&&e.target.id==="verification-value"){
+  s.trial.verification.input=e.target.value.slice(0,24);persist();
+  const btn=document.querySelector('[data-act="verify-check"]');
+  if(btn)btn.disabled=!/^[-+]?\d+(?:\.\d+)?$/.test(s.trial.verification.input.trim());
+ }
 });
 app.addEventListener("keydown",e=>{
  const b=e.target.closest('[data-day][role="button"]');
@@ -342,10 +407,10 @@ app.addEventListener("keydown",e=>{
  if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseDate(b.dataset.day);}
 });
 window.QX_DATA_V2_QA={
- snapshot:()=>({screen:s.screen,index:s.index,id:cur().id,trial:clone(s.trial),rounds:s.logs.length,hints:s.hints}),
- cases:()=>CASES.map(c=>({id:c.id,title:c.title,phase:c.phase,signal:c.signal===null?"none":DAYS[c.signal]})),
+ snapshot:()=>({screen:s.screen,index:s.index,id:cur().id,trial:clone(s.trial),rounds:s.logs.length,hints:s.hints,mode:s.mode||"quick",form:s.form||"A"}),
+ cases:()=>CASES.map(c=>{const x=caseForForm(c,s.form||"A");return {id:x.id,title:x.title,phase:x.phase,signal:x.signal===null?"none":DAYS[x.signal]}}),
  rounds:()=>clone(s.logs),
- getValues:(id,group,metric)=>summarize(makeRows(id),group,metric)
+ getValues:(id,group,metric)=>summarize(makeRows(id,s.form||"A"),group,metric)
 };
 if(s.screen==="intro"||!validateResume(s)){s=newState();render();}
 else{hasSaved=true;const x=s;s={...x};render();}

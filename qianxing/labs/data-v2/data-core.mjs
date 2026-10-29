@@ -76,6 +76,22 @@ export const CASES=META.map((a,i)=>({
 }));
 export const PHASES={practice:"操作练习",baseline:"首次调查",after:"新数据挑战",transfer:"跨领域迁移"};
 export const DAYS=Array.from({length:14},(_,i)=>"09-"+String(i+1).padStart(2,"0"));
+
+// 三份平行“数据材料”不对应经过标准化研究证明的等价难度；
+// 用相同的业务逻辑但不同日期和规模的表格减少直接背答案的价值。
+export const FORM_IDS=["A","B","C"];
+const SIGNAL_DAYS={
+ A:{},B:{duplicate:4,carrier:7,small:9,mix:6,units:5,lag:13,returns:8,alarms:3},
+ C:{duplicate:13,carrier:4,small:6,mix:12,units:8,lag:7,returns:5,alarms:10}
+};
+export function caseForForm(c,form="A"){
+ if(!FORM_IDS.includes(form))throw Error("unknown data form");
+ if(!c||!CASES.some(x=>x.id===c.id))throw Error("invalid source case");
+ const newDay=SIGNAL_DAYS[form]?.[c.id];
+ const signal=c.signal===null?null:(newDay?newDay-1:c.signal);
+ return {...c,signal,form};
+}
+
 export const EVIDENCE=[
  ["segments","查看各分组在相同日期的比例"],
  ["denominator","查看分子、分母与样本规模"],
@@ -90,7 +106,7 @@ function base(c,g,day){
  const b={duplicate:127,carrier:225,small:98,mix:45,units:195,weekends:200,lag:165,returns:195,alarms:210}[c.id];
  return (g?b:a)+jitter*(["carrier","weekends"].includes(c.id)?2:1);
 }
-export function makeRows(id){
+function makeBaseRows(id){
  const c=CASES.find(x=>x.id===id);if(!c)throw Error("case not found");
  const result=[];
  for(let day=1;day<=14;day++)for(let g=0;g<2;g++){
@@ -110,6 +126,50 @@ export function makeRows(id){
  }
  return result;
 }
+
+/**
+ * 保留A版本的原始生成逻辑供旧版会话使用。
+ * B/C按同一生成事件的分组/日期双向交换，并按一致系数缩放分子、分母和核对来源。
+ * 不会发生“标签里说异常但数据记录没有相同事件”的问题。
+ */
+export function makeRows(id,form="A"){
+ if(!FORM_IDS.includes(form))throw Error("invalid form");
+ const source=makeBaseRows(id);
+ if(form==="A")return source;
+ const c=CASES.find(x=>x.id===id);
+ const sourceDay=c.signal===null?null:c.signal+1;
+ const targetDay=c.signal===null?null:caseForForm(c,form).signal+1;
+ const flip=day=>sourceDay!==null&&sourceDay!==targetDay?
+     (day===sourceDay?targetDay:day===targetDay?sourceDay:day):day;
+ const out=source.map(r=>{
+  const dest=flip(r.dayNo);
+  // Scale whole groups consistently (except 5-person small sample), preserving the
+  // evidence-producing phenomenon rather than fabricating unrelated causes.
+  const tinySample=c.id==="small"&&r.group===1&&r.dayNo===11;
+  const signalFactor=form==="B"?(.87+((dest*7+r.group*5+c.index*3)%11)*.025)
+      :(.83+((dest*11+r.group*7+c.index*5)%13)*.026);
+  const factor=tinySample?1:signalFactor;
+  const total=Math.max(1,Math.round(r.total*factor));
+  const hits=Math.max(0,Math.round(r.hits*factor));
+  const reference=Math.max(1,Math.round(r.reference*factor));
+  return {...r,day:DAYS[dest-1],dayNo:dest,total,hits,reference,
+    rate:total>0?hits/total*100:0};
+ });
+ out.sort((a,b)=>a.dayNo-b.dayNo||a.group-b.group);
+ return out;
+}
+export function validateParallelForms(){
+ const result=[];
+ for(const form of FORM_IDS)for(const c of CASES){
+  const rows=makeRows(c.id,form),caseInfo=caseForForm(c,form);
+  if(rows.length!==28||new Set(rows.map(r=>r.day)).size!==14||
+     rows.some(r=>!Number.isFinite(r.rate)||r.total<1||r.reference<1||r.hits<0))
+   throw Error("invalid parallel form "+form+"/"+c.id);
+  result.push({form,id:c.id,signal:caseInfo.signal,rows:rows.length});
+ }
+ return result;
+}
+
 export function summarize(rows,group="all",metric="rate"){
  if(!["total","hits","rate","reference"].includes(metric))throw Error("invalid measure");
  const m=new Map();
@@ -142,7 +202,7 @@ export function evidence(c,rows,key,focus=null){
  if(key==="segments")result="核对日 "+day+"："+c.groups[0]+"为"+pct(a.rate)+"（其余日约"+pct(avg(ap))+"），"+c.groups[1]+"为"+pct(b.rate)+"（其余日约"+pct(avg(bp))+"）。";
  else if(key==="denominator"){
   result=day+"两组分母分别为"+a.total+"和"+b.total+"。总体分子"+all.hits+"、分母"+all.total+"。只有分子、分母同时明确才能比较比例。";
-  if(c.id==="small"&&day==="09-11"){
+  if(c.id==="small"&&day===DAYS[c.signal]){
    const interval=wilson(b.hits,b.total);
    result+=" 新渠道4/5的示意性95% Wilson区间约"+Math.round(100*interval[0])+"%至"+Math.round(100*interval[1])+"%（需独立样本假设），区间很宽，不能直接认定长期改善。";
   }
