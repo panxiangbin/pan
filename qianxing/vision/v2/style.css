@@ -43,7 +43,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #7d
 .scene-frame{position:relative;aspect-ratio:12/7;border-radius:15px;background:#e7efed;border:1px solid #d9e5df;overflow:hidden;isolation:isolate}
 .scene-frame img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;user-select:none;-webkit-user-drag:none}
 .scene-frame .photo-label{position:absolute;z-index:2;left:13px;top:12px;background:rgba(17,51,44,.82);color:white;font-size:12px;font-weight:700;border-radius:8px;padding:6px 10px;letter-spacing:.03em}
-.spot{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);z-index:3;display:grid;place-items:center;min-width:37px;min-height:37px;width:4.65%;aspect-ratio:1;border-radius:50%;font-size:13px;font-weight:850;border:2px solid #fff;background:rgba(24,67,61,.69);color:white;box-shadow:0 3px 8px #0005;line-height:1}
+.spot{position:absolute;left:var(--x);top:calc(var(--y) + 5%);transform:translate(-50%,-50%);z-index:3;display:grid;place-items:center;min-width:37px;min-height:37px;width:4.65%;aspect-ratio:1;border-radius:50%;font-size:13px;font-weight:850;border:2px solid #fff;background:rgba(24,67,61,.69);color:white;box-shadow:0 3px 8px #0005;line-height:1}
 button.spot{transition:transform .1s,background .1s}
 button.spot:hover{background:var(--deep);transform:translate(-50%,-50%) scale(1.11)}
 button.spot.selected{background:#f6bb47;color:#172f27;border-color:#fff;transform:translate(-50%,-50%) scale(1.13)}
