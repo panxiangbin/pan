@@ -165,6 +165,7 @@ function statusName(r){
 }
 function renderReport(){
  const official=state.logs.filter(r=>r.phase!=="practice");
+ window.QX_PROGRESS?.finish(2,state.sessionStarted,{done:official.filter(r=>r.choice!==-2).length,total:8,skipped:official.filter(r=>r.choice===-2).length});
  const groups=["baseline","after","transfer","motion"];
  const by=phase=>official.filter(r=>r.phase===phase);
  const correct=phase=>by(phase).filter(r=>r.correct).length;
@@ -271,6 +272,7 @@ app.addEventListener("click",e=>{
  const act=b.dataset.action;
  if(act==="start"||act==="restart"){
   state={screen:"intro",idx:0,selected:null,logs:[],hintLevel:0,observed:0,replays:0,answerStarted:0,observeStarted:0,videoPlays:0,sessionStarted:new Date().toISOString()};
+  window.QX_PROGRESS?.start(2);
   beginRound(0);
  }else if(act==="advance")advance();
  else if(act==="pick"&&["answer","motion-pick"].includes(state.screen)){

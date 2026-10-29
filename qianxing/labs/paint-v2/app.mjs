@@ -31,6 +31,7 @@ function message(s){
 function destroy(){painter?.dispose();painter=null}
 function move(to){
  destroy();phase=to;
+ if(to==="practice")window.QX_PROGRESS?.start(6);
  if(WORK_KEYS.includes(to))ensureWork(project,to);
  persist();render();window.scrollTo({top:0,behavior:"instant"});
 }
@@ -152,6 +153,7 @@ function learn(){
 }
 function report(){
  const m=projectSummary(project),works=project.works;
+ window.QX_PROGRESS?.finish(6,project.startedAt,{done:m.completedWorks,total:4,skipped:4-m.completedWorks});
  const cards=[
  ["完成的独立作品",m.completedWorks+" / 4","各阶段独立保存，不拼图"],
  ["苹果作品修订",m.appleDelta.added+" 笔","新增笔画；可能也删除原有笔画"],

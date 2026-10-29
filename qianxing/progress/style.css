@@ -1,0 +1,55 @@
+:root{--ink:#172f29;--accent:#176c5b;--muted:#65776d;--line:#e2e9e5;--light:#f7faf8}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #81bcaa;outline-offset:3px}
+.shell{width:min(calc(100% - 40px),860px);margin:0 auto}
+.topbar{border-bottom:1px solid var(--line)}
+.header-inner{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:17px}
+.brand{font-size:17px;font-weight:850}
+nav{display:flex;align-items:center;gap:18px;font-size:13px;color:var(--muted)}
+nav a:hover{color:var(--accent)}
+#app{padding:58px 0 76px;min-height:76vh}
+.loading{text-align:center;color:var(--muted);padding:60px 20px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--accent)}
+h1{font-size:clamp(34px,5.5vw,47px);letter-spacing:-.045em;line-height:1.25;margin:11px 0 14px}
+.lead{font-size:16px;color:var(--muted);margin:0 0 30px;max-width:640px}
+.kpis{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap;padding:17px 0 22px;border-bottom:1px solid var(--line)}
+.kpi strong{display:block;font-size:28px;font-variant-numeric:tabular-nums;color:var(--accent);line-height:1.25}
+.kpi span{font-size:12px;color:var(--muted)}
+.list{margin-top:13px;border-top:1px solid var(--line)}
+.item{border-bottom:1px solid var(--line);padding:17px 0 16px}
+.item-main{display:grid;grid-template-columns:39px minmax(0,1fr) auto;align-items:center;gap:15px}
+.number{color:#8a9b91;font-size:13px;font-variant-numeric:tabular-nums}
+.name{font-size:17px;font-weight:750}
+.item-detail{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:4px}
+.status{font-weight:700;color:#4b7163}
+.status.completed{color:var(--accent)}
+.status.inprogress{color:#987038}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #c6dcd1;color:var(--accent);background:#fff;padding:9px 14px;min-height:39px;font-weight:700;font-size:13px;white-space:nowrap}
+.btn:hover:not(:disabled){background:#f0f7f3}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover:not(:disabled){background:#115244}
+.feedback{margin:12px 0 0 54px;font-size:13px}
+.feedback summary{cursor:pointer;color:#557368;user-select:none}
+.feedback summary:hover{color:var(--accent)}
+.feedback-body{padding:16px 17px;margin-top:12px;border:1px solid #dce9df;background:#f8fbf9;border-radius:12px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.fields label,.feedback-body label{display:block;color:#355a4b;font-weight:700;font-size:13px}
+.fields select{display:block;width:100%;margin-top:6px;min-height:42px;border:1px solid #c9dcd1;border-radius:8px;padding:6px 9px;background:#fff;color:var(--ink)}
+.feedback-body textarea{display:block;min-height:74px;margin-top:7px;width:100%;border:1px solid #c9dcd1;border-radius:8px;padding:9px 11px;resize:vertical;color:var(--ink)}
+.feedback-body .button-row{margin-top:12px}
+.button-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:24px}
+.small{color:var(--muted);font-size:12px}
+.section-title{font-size:19px;margin:32px 0 7px}
+.notice{color:var(--muted);font-size:13px;line-height:1.8}
+.warning{color:#865b2b;font-size:13px}
+.action-footer{border-top:1px solid var(--line);padding-top:21px;margin-top:30px}
+#status-msg{color:#366f5a;font-size:13px;min-height:22px;margin:14px 0 0}
+.foot{border-top:1px solid var(--line);padding:20px 0 30px;color:#8b9890;font-size:12px}
+@media(max-width:610px){.shell{width:min(calc(100% - 28px),860px)}#app{padding-top:34px}.item-main{grid-template-columns:30px minmax(0,1fr) auto;gap:8px}.number{font-size:12px}.name{font-size:15px}.btn{padding:8px 10px;font-size:12px;min-height:37px}.feedback{margin-left:38px}.feedback-body{padding:13px}.fields{grid-template-columns:1fr}.kpis{gap:24px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}

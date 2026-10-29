@@ -64,6 +64,7 @@ function log(skipped=false){
   trialData:s.runs.map(r=>({config:clone(r.config),outputRpm:r.metrics.outputRpm,dir:r.metrics.outputDir,spanMm:r.metrics.span,pass:r.metrics.pass}))});
 }
 function begin(n){
+ if(n===0)window.QX_PROGRESS?.start(72);
  dispose();s.idx=n;s.config=clone(t().initial);s.screen="task";s.runs=[];s.last=null;s.adjusts=0;s.t0=performance.now();s.playing=false;
  try{localStorage.setItem("qianxing-last-id","72")}catch(e){}
  taskPage();
@@ -75,6 +76,7 @@ function next(){
 }
 function report(){
  const a=s.logs.filter(x=>x.phase!=="practice"),c=p=>a.filter(x=>x.phase===p&&x.succeeded).length;
+ window.QX_PROGRESS?.finish(72,s.started,{done:a.filter(x=>!x.skipped).length,total:8,skipped:a.filter(x=>x.skipped).length});
  const b=c("baseline"),f=c("after"),total=a.reduce((sum,x)=>sum+x.attempts,0),skips=a.filter(x=>x.skipped).length;
  app.innerHTML='<section class="report"><span class="badge">第72项 · 机械故障实验室 · 完成记录</span><h1>你完成了一轮机械结构探索。</h1><p class="lead">从初次排故到复合机械、陌生设备，系统记录你如何测试和修复。不是一个神秘天赋分数。</p>'+
  '<div class="report-grid"><div class="report-item"><span>首次排故</span><strong>'+b+' / 3</strong></div><div class="report-item"><span>新故障</span><strong>'+f+' / 3</strong></div><div class="report-item"><span>综合迁移</span><strong>'+c("transfer")+' / 2</strong></div><div class="report-item"><span>试运行次数</span><strong>'+total+'</strong></div></div>'+

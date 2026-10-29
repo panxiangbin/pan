@@ -19,7 +19,8 @@ function nextScreen(screen,scroll=true){
  s.screen=screen;persist();render();if(scroll)window.scrollTo({top:0,behavior:"instant"});
 }
 function start(){
- s=fresh();s.current=initSession(c());try{localStorage.setItem("qianxing-last-id","52");}catch(e){}
+ s=fresh();s.current=initSession(c());
+ window.QX_PROGRESS?.start(52);try{localStorage.setItem("qianxing-last-id","52");}catch(e){}
  nextScreen("plan");
 }
 function nextRound(){
@@ -208,6 +209,7 @@ function learningPage(){
 }
 function reportPage(){
  const official=s.rounds.filter(x=>x.phase!=="practice");
+ window.QX_PROGRESS?.finish(52,s.started,{done:official.length,total:6,skipped:0});
  const old=official.reduce((n,x)=>n+x.ignoredEvent.hardConflicts,0);
  const after=official.reduce((n,x)=>n+x.after.hardConflicts,0);
  const unassigned=official.reduce((n,x)=>n+x.after.unscheduled,0);

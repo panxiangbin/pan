@@ -19,6 +19,7 @@ a:focus-visible{outline:3px solid #6aab9b;outline-offset:4px}
 .brand{font-size:17px;font-weight:800;letter-spacing:.04em}
 .nav{font-size:14px;color:#52645e}
 .nav:hover,.quiet:hover{color:var(--accent)}
+.site-nav{display:flex;align-items:center;gap:18px}
 .hero{padding-top:clamp(84px,15vh,155px);padding-bottom:120px;flex:1}
 .eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.06em}
 h1{font-size:clamp(40px,6.5vw,66px);letter-spacing:-.055em;line-height:1.24;margin:20px 0 22px;font-weight:800}
@@ -32,9 +33,10 @@ footer{padding:23px 0 28px;border-top:1px solid var(--line);color:#88928d;font-s
 @media(max-width:600px){.shell{width:min(100% - 36px,860px)}.hero{padding-top:90px;padding-bottom:80px}.actions{gap:21px}.primary{width:100%;justify-content:space-between}.quiet{padding:8px 0}h1{letter-spacing:-.045em}}
 @media(prefers-reduced-motion:reduce){.primary{transition:none}}
 </style>
+<link rel="icon" type="image/svg+xml" href="./progress/favicon.svg">
 </head>
 <body>
-<header class="site-header"><div class="shell"><a class="brand" href="./">潜星计划</a><a class="nav" href="./explore/">全部项目</a></div></header>
+<header class="site-header"><div class="shell"><a class="brand" href="./">潜星计划</a><nav class="site-nav" aria-label="主要导航"><a class="nav" href="./explore/">全部项目</a><a class="nav" href="./progress/">我的记录</a></nav></div></header>
 <main class="hero shell">
   <span class="eyebrow">108 项自由探索</span>
   <h1>你的可能，<br>不止一种。</h1>
